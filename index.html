@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aaryav Sharma</title>
+<meta name="description" content="High school student at Eastview High School, Apple Valley, MN. Neuroscience research, lab work, and neurotech projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="/">Aaryav Sharma</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+    <ul class="nav-links">
+      <li><a href="/" aria-current="page">Home</a></li>
+      <li><a href="/projects.html">Projects</a></li>
+      <li><a href="/involvement.html">Involvement</a></li>
+      <li><a href="/opportunities.html">Opportunities</a></li>
+      <li><a href="/contact.html" class="nav-cta">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="page-header">
+    <p class="eyebrow">Aaryav Sharma. High school student.</p>
+    <h1>I build and test tools that read signals from the brain and body</h1>
+    <p class="lede">
+      Eastview High School, Apple Valley, MN. Lab assistant in the Moriarty/Webber Lab at the
+      University of Minnesota. I spend my time outside of class running my own neuroscience
+      research on public datasets and building toward a neurotech company of my own.
+    </p>
+  </header>
+
+  <main id="main">
+
+    <section id="about">
+      <div class="section-head">
+        <p class="eyebrow">About</p>
+        <h2>What I actually do</h2>
+      </div>
+      <p style="max-width:66ch; color:var(--ink-soft); margin:0 0 16px;">
+        I am a sophomore who got interested in neuroscience through a hand injury a family
+        member had, and it turned into a habit of taking public brain recordings and rebuilding
+        the analysis from the ground up. Seven of those projects are on this site, covering
+        EEG, ECoG, fMRI, MRI, and EMG. I write up what worked, what did not, and why, and I put
+        the code and a working demo online for each one.
+      </p>
+      <p style="max-width:66ch; color:var(--ink-soft); margin:0;">
+        At the University of Minnesota I work as a lab assistant in the Moriarty/Webber Lab
+        under Dr. Richa Kaushal, where I help with iPSC culture, macrophage differentiation,
+        and gene editing work. I have also watched two live neurosurgeries under Dr. Anant Naik.
+        Outside of the lab, I am building a smartphone based peripheral nerve health screening
+        concept, and I am active in HOSA, Science Olympiad, and a neuroscience club I helped
+        start at my school.
+      </p>
+    </section>
+
+    <section id="featured">
+      <div class="section-head">
+        <p class="eyebrow">Featured work</p>
+        <h2>Three of the seven projects</h2>
+        <p>Each one starts from a public brain recording dataset and ends with a working demo you can run in your browser. Full write-ups for all seven are on the projects page.</p>
+      </div>
+      <div class="card-grid">
+        <article class="pcard">
+          <span class="modality">ECoG, speech</span>
+          <h3>NeuroSpeech</h3>
+          <p>Reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024.</p>
+          <a href="/projects.html#neurospeech">Read the write-up</a>
+        </article>
+        <article class="pcard">
+          <span class="modality">EEG, SSVEP</span>
+          <h3>Octaves in the Visual Cortex</h3>
+          <p>Reads which of four flickering rates a person is looking at from eight dry EEG electrodes. The standard method was quietly wrong.</p>
+          <a href="/projects.html#octaves">Read the write-up</a>
+        </article>
+        <article class="pcard">
+          <span class="modality">fMRI, nerve injury</span>
+          <h3>neuroswitch</h3>
+          <p>Does the brain reorganize after someone loses the use of a hand to nerve damage. Still running as more scans finish processing.</p>
+          <a href="/projects.html#neuroswitch">Read the write-up</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="pattern">
+      <div class="section-head">
+        <p class="eyebrow">A pattern across the work</p>
+        <h2>The number before the check, and the number after</h2>
+        <p>The same mistake shows up again and again in this kind of analysis. Split the data the easy way and a model looks great. Split it the way a real device would actually see the world, and most of that greatness disappears. This is something I check for in every project, and it is usually the most important finding in the whole write-up.</p>
+      </div>
+
+      <div class="toggle-row">
+        <button class="toggle" id="splitToggle" type="button" aria-pressed="false">
+          <span class="dot"></span>
+          <span id="toggleLabel">show the quick split</span>
+        </button>
+        <span class="toggle-hint">click to flip every number below</span>
+      </div>
+
+      <div id="reversalList">
+        <div class="reversal-row">
+          <span class="rname">SliceWise, Alzheimer's stage from MRI</span>
+          <span class="rvals"><span class="num flag" data-quick="98.9%" data-honest="33.7%" data-quick-class="flag" data-honest-class="trace">98.9%</span></span>
+        </div>
+        <div class="reversal-row">
+          <span class="rname">Gait speed from EEG</span>
+          <span class="rvals"><span class="num flag" data-quick="92.3%" data-honest="52.8%" data-quick-class="flag" data-honest-class="trace">92.3%</span></span>
+        </div>
+        <div class="reversal-row">
+          <span class="rname">MyoDecode, EMG hand gestures</span>
+          <span class="rvals"><span class="num flag" data-quick="98.7%" data-honest="93.4%" data-quick-class="flag" data-honest-class="trace">98.7%</span></span>
+        </div>
+        <div class="reversal-row">
+          <span class="rname">Octaves, SSVEP flicker decoding</span>
+          <span class="rvals"><span class="num flag" data-quick="59%" data-honest="83.9%" data-quick-class="flag" data-honest-class="trace">59%</span></span>
+        </div>
+        <div class="reversal-row">
+          <span class="rname">CorticalTap, transformer vs linear model</span>
+          <span class="rvals"><span class="num flag" data-quick="85.8%" data-honest="87.9%" data-quick-class="flag" data-honest-class="trace">85.8%</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="stats">
+      <div class="section-head">
+        <p class="eyebrow">In numbers</p>
+        <h2>The work so far</h2>
+      </div>
+      <div class="ledger">
+        <div class="ledger-item"><span class="ledger-num">7</span><span class="ledger-label">research projects</span></div>
+        <div class="ledger-item"><span class="ledger-num">6</span><span class="ledger-label">public datasets</span></div>
+        <div class="ledger-item"><span class="ledger-num">240+</span><span class="ledger-label">people recorded</span></div>
+        <div class="ledger-item"><span class="ledger-num">1,000+</span><span class="ledger-label">electrodes and sensors</span></div>
+        <div class="ledger-item"><span class="ledger-num">2</span><span class="ledger-label">live neurosurgeries observed</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>
+      Every project on this site starts from a public dataset and gets checked for the kind of
+      leak that quietly inflates most machine learning results on brain data. None of it is a
+      medical device or medical advice.
+    </p>
+    <div class="foot-links">
+      <a href="/projects.html">Projects</a>
+      <a href="/involvement.html">Involvement</a>
+      <a href="/opportunities.html">Opportunities</a>
+      <a href="/contact.html">Contact</a>
+      <a href="https://github.com/aaryavvatts-lab" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="fineprint">Built and written by Aaryav Sharma.</p>
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
