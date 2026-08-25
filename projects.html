@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects, Aaryav Sharma</title>
+<meta name="description" content="Seven neuroscience and brain-computer interface research projects, built from public datasets. ECoG, EEG, fMRI, MRI, and EMG.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="/">Aaryav Sharma</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects.html" aria-current="page">Projects</a></li>
+      <li><a href="/involvement.html">Involvement</a></li>
+      <li><a href="/opportunities.html">Opportunities</a></li>
+      <li><a href="/contact.html" class="nav-cta">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="page-header">
+    <p class="eyebrow">Projects</p>
+    <h1>Seven projects, five kinds of brain data</h1>
+    <p class="lede">
+      Each project below starts from a public research dataset. I rebuild the analysis myself,
+      check it for the mistakes that usually make these numbers look better than they are, and
+      publish the code and a working demo alongside the write-up. Two of the projects are mirrored
+      on a second domain, which is why nine links point to seven projects.
+    </p>
+  </header>
+
+  <main id="main">
+    <section>
+
+      <article class="project" id="corticaltap">
+        <div class="project-num">01</div>
+        <div>
+          <div class="project-title-row">
+            <h3>CorticalTap</h3>
+            <span class="modality">ECoG</span>
+          </div>
+          <p class="desc">I pointed a next word predictor, the kind used for text, at 735 electrodes sitting on the brain surface of 8 epilepsy patients. It was trained to predict movement from a tapping game. Then I built the tests that proved my own headline number wrong.</p>
+          <p class="why"><strong>Why I built it:</strong> everyone assumes a bigger, fancier model wins. I wanted to actually check that against the simplest possible baseline, in public.</p>
+          <p class="stat-line">plain logistic regression <span class="trace">0.879</span> <span class="sep">·</span> transformer <span class="flag">0.858</span> <span class="sep">·</span> training on other patients made it worse in all 8 patients, not better</p>
+          <p class="project-meta">OpenNeuro ds005931, Wayne State University, CC0</p>
+          <div class="project-links">
+            <a href="https://corticaltap.vercel.app/" target="_blank" rel="noopener">Live decoder</a>
+            <a class="secondary" href="https://neurotap-gray.vercel.app/" target="_blank" rel="noopener">Mirror</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="octaves">
+        <div class="project-num">02</div>
+        <div>
+          <div class="project-title-row">
+            <h3>Octaves in the Visual Cortex</h3>
+            <span class="modality">EEG, SSVEP</span>
+          </div>
+          <p class="desc">Eight dry electrodes on the back of the head can tell which of four flickering rates someone is looking at. That is the core of an interface that lets a person who cannot speak or move pick an answer just by looking at it. The standard method looked fine until I checked what it was actually answering.</p>
+          <p class="why"><strong>Why I built it:</strong> this is the same signal used in real assistive spellers for people with paralysis. I wanted to know if the textbook method people cite actually holds up on real hardware.</p>
+          <p class="stat-line">textbook method <span class="flag">59%</span> <span class="sep">·</span> fixed to read the whole spectrum <span class="trace">83.9%</span> <span class="sep">·</span> live, given two seconds <span class="trace">99.4%</span></p>
+          <p class="project-meta">OpenNeuro ds004745, CC0</p>
+          <div class="project-links">
+            <a href="https://ssvep-harmonic-decoder.vercel.app/#project" target="_blank" rel="noopener">Live demo</a>
+            <a class="secondary" href="https://github.com/aaryavvatts-lab/octaves-in-the-visual-cortex" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="gait">
+        <div class="project-num">03</div>
+        <div>
+          <div class="project-title-row">
+            <h3>Reading Walking Speed From the Scalp</h3>
+            <span class="modality">EEG + EMG</span>
+          </div>
+          <p class="desc">EEG and leg muscle sensors from 58 people walking at three speeds. I used it to drive a simulated wheelchair speed control. Brain signal alone needs about twelve seconds to settle on an answer. Add the muscle sensors and it takes three.</p>
+          <p class="why"><strong>Why I built it:</strong> this is directly related to the peripheral nerve health idea I am developing. I wanted to see for myself how much a muscle sensor adds over brain signal alone.</p>
+          <p class="stat-line">random split <span class="flag">92.3%</span> (means almost nothing) <span class="sep">·</span> held out person, brain only <span class="flag">52.8%</span> <span class="sep">·</span> brain and muscle together <span class="trace">97.6%</span></p>
+          <p class="project-meta">PhysioNet, Katmah et al. 2026, CC BY 4.0</p>
+          <div class="project-links">
+            <a href="https://eeg-gait-speed.vercel.app/" target="_blank" rel="noopener">Live demo</a>
+            <a class="secondary" href="https://github.com/aaryavvatts-lab/eeg-gait-speed" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="neurospeech">
+        <div class="project-num">04</div>
+        <div>
+          <div class="project-title-row">
+            <h3>NeuroSpeech</h3>
+            <span class="modality">ECoG, speech motor cortex</span>
+          </div>
+          <p class="desc">Reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024. I also looked at what the model's mistakes say about how the brain plans mouth movement.</p>
+          <p class="why"><strong>Why I built it:</strong> a short video called this kind of work telepathy, and that word is wrong in a way that matters. Part of the write-up is about what this technology actually is and is not.</p>
+          <p class="stat-line">word error rate <span class="trace">17.08%</span> <span class="sep">·</span> gets the whole sentence right <span class="trace">37.2%</span> of the time <span class="sep">·</span> built from 10,948 attempted sentences</p>
+          <p class="project-meta">Card et al. 2024, NEJM, Dryad 10.5061/dryad.dncjsxm85</p>
+          <div class="project-links">
+            <a href="https://neurospeech-chi.vercel.app/" target="_blank" rel="noopener">Live demo</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="neuroswitch">
+        <div class="project-num">05</div>
+        <div>
+          <div class="project-title-row">
+            <h3>neuroswitch</h3>
+            <span class="modality">fMRI, nerve injury</span>
+            <span class="modality status-amber">still running</span>
+          </div>
+          <p class="desc">Does the brain reorganize after someone loses the use of a hand to nerve damage, not brain damage. fMRI from 25 patients and 46 people with no injury, recorded while they drew with each hand. I built four separate tests meant to prove the result wrong before I would believe it.</p>
+          <p class="why"><strong>Why I built it:</strong> this question sits right next to the nerve health work I want to build a company around. If the brain does adapt after nerve injury, that changes what a monitoring device should actually be looking for.</p>
+          <p class="stat-line">the basic hand effect showed up in <span class="trace">19 of 19</span> people checked so far <span class="sep">·</span> 17 of about 66 people processed</p>
+          <p class="project-meta">OpenNeuro ds008162, Washington University in St. Louis, CC0</p>
+          <div class="project-links">
+            <a href="https://neuroswitch.vercel.app/" target="_blank" rel="noopener">Live demo</a>
+            <a class="secondary" href="https://github.com/aaryavvatts-lab/neuroswitch" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="slicewise">
+        <div class="project-num">06</div>
+        <div>
+          <div class="project-title-row">
+            <h3>SliceWise</h3>
+            <span class="modality">MRI, Alzheimer's</span>
+          </div>
+          <p class="desc">A model that reads Alzheimer's stage from one MRI slice scored 99 percent, until I noticed the same person's scans were landing on both sides of the train and test split. Once I fixed that, most of the accuracy was gone. I also built a general checker anyone can use to find the same mistake in their own dataset.</p>
+          <p class="why"><strong>Why I built it:</strong> a video made this look like a weekend project. It is, but the honest version of it is a much smaller result than the video showed, and I wanted to show exactly why.</p>
+          <p class="stat-line">split by slice <span class="flag">98.9%</span> <span class="sep">·</span> split by patient <span class="trace">33.7%</span> <span class="sep">·</span> dementia vs none, judged per patient <span class="trace">0.94 AUC</span></p>
+          <p class="project-meta">OASIS, Washington University in St. Louis</p>
+          <div class="project-links">
+            <a href="https://slicewise-mri.vercel.app/" target="_blank" rel="noopener">Live demo</a>
+            <a class="secondary" href="https://neurolink-ecru.vercel.app/" target="_blank" rel="noopener">Mirror</a>
+            <a class="secondary" href="https://github.com/aaryavvatts-lab/neurolink-alzheimers-mri" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="myodecode">
+        <div class="project-num">07</div>
+        <div>
+          <div class="project-title-row">
+            <h3>MyoDecode</h3>
+            <span class="modality">EMG, hand gestures</span>
+          </div>
+          <p class="desc">Reads five hand gestures from four muscle sensors on the forearm in under half a second. A method published in 1993 beats a modern neural network here. Most of the accuracy people report for this kind of task turns out to come from how the data gets split, not from the model.</p>
+          <p class="why"><strong>Why I built it:</strong> muscle sensors are the other half of the nerve health idea. I wanted to know how few sensors and how little time I could get away with and still read a gesture reliably.</p>
+          <p class="stat-line">leaky split <span class="flag">98.7%</span> <span class="sep">·</span> tested on a person it had never seen <span class="trace">93.4%</span> <span class="sep">·</span> still works with one sensor <span class="trace">80.6%</span></p>
+          <p class="project-meta">8 subject EMG set, leakage checked against Kapoor and Narayanan, 2023</p>
+          <div class="project-links">
+            <a href="https://myodecode.vercel.app/#latent" target="_blank" rel="noopener">Live demo</a>
+            <a class="secondary" href="https://github.com/aaryavvatts-lab/myodecode" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>None of these projects are medical devices or medical advice. Data credited on each project's own page.</p>
+    <div class="foot-links">
+      <a href="/">Home</a>
+      <a href="/involvement.html">Involvement</a>
+      <a href="/opportunities.html">Opportunities</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
