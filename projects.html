@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Projects, Aaryav Sharma</title>
-<meta name="description" content="Seven neuroscience and brain-computer interface research projects, built from public datasets. ECoG, EEG, fMRI, MRI, and EMG.">
+<meta name="description" content="Eight neuroscience and brain-computer interface research projects, built from public datasets. ECoG, EEG, fMRI, MRI, and EMG.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -31,12 +31,12 @@
 
   <header class="page-header">
     <p class="eyebrow">Projects</p>
-    <h1>Seven projects, five kinds of brain data</h1>
+    <h1>Eight projects, five kinds of brain data</h1>
     <p class="lede">
       Each project below starts from a public research dataset. I rebuild the analysis myself,
       check it for the mistakes that usually make these numbers look better than they are, and
       publish the code and a working demo alongside the write-up. Two of the projects are mirrored
-      on a second domain, which is why nine links point to seven projects.
+      on a second domain, which is why ten links point to eight projects.
     </p>
   </header>
 
@@ -166,6 +166,24 @@
           <div class="project-links">
             <a href="https://myodecode.vercel.app/#latent" target="_blank" rel="noopener">Live demo</a>
             <a class="secondary" href="https://github.com/aaryavvatts-lab/myodecode" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" id="artifactscope">
+        <div class="project-num">08</div>
+        <div>
+          <div class="project-title-row">
+            <h3>EEG Artifact Scope</h3>
+            <span class="modality">EEG, data quality</span>
+          </div>
+          <p class="desc">A tool that checks whether an EEG recording actually holds brain activity or just blinks, jaw clenches, and cable movement. Calibrated against 30 people wearing five headsets at once, each doing 20 cued blinks, so the same blink from the same person at the same instant was recorded five different ways.</p>
+          <p class="why"><strong>Why I built it:</strong> most people check this by eye, which stops working once you have forty recordings and a deadline. I wanted a number you could actually put in a methods section instead of a guess. I found four separate bugs while building it, one that scored every recording the same, one that mistook a filter for muscle noise, one that called broken electrodes healthy during heavy blinking, and one that penalized headsets just for having more electrodes to check. All four are written up.</p>
+          <p class="stat-line">blinks found <span class="trace">88 to 100%</span>, depending on headset <span class="sep">·</span> jaw clench scored worse than rest in <span class="trace">30 of 30</span> people <span class="sep">·</span> nothing uploaded, runs in your browser</p>
+          <p class="project-meta">30 subject, 5 headset open dataset, cued blink and jaw clench protocol</p>
+          <div class="project-links">
+            <a href="https://eeg-artifact-scope.vercel.app/" target="_blank" rel="noopener">Live tool</a>
+            <a class="secondary" href="https://github.com/aaryavvatts-lab/eeg-artifact-scope" target="_blank" rel="noopener">Code</a>
           </div>
         </div>
       </article>

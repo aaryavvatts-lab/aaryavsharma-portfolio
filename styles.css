@@ -108,7 +108,7 @@ section + section{ border-top:1px solid var(--line); }
 .ledger-label{ font-size:.74rem; color:var(--ink-faint); margin-top:2px; }
 
 /* ---------------- cards (home preview) ---------------- */
-.card-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:1px solid var(--line); }
+.card-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid var(--line); }
 .pcard{ padding:24px 22px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
 .pcard:last-child{ border-right:none; }
 .pcard .modality{ display:inline-block; margin-bottom:10px; }
@@ -116,7 +116,8 @@ section + section{ border-top:1px solid var(--line); }
 .pcard p{ color:var(--ink-soft); font-size:.9rem; margin:0 0 14px; }
 .pcard a{ font-family:var(--mono); font-size:.78rem; text-decoration:none; border-bottom:1px solid var(--ink); }
 .pcard a:hover{ color:var(--trace); border-color:var(--trace); }
-@media (max-width:760px){ .card-grid{ grid-template-columns:1fr; } .pcard{ border-right:none; } }
+@media (max-width:900px){ .card-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:600px){ .card-grid{ grid-template-columns:1fr; } .pcard{ border-right:none; } }
 
 /* ---------------- projects ---------------- */
 .project{ display:grid; grid-template-columns:44px 1fr; gap:0 20px; padding:32px 0; border-bottom:1px solid var(--line); }
