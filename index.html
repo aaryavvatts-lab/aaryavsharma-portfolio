@@ -1,176 +1,185 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f4f3ef">
 <title>Aaryav Sharma</title>
-<meta name="description" content="High school student at Eastview High School, Apple Valley, MN. Neuroscience research, lab work, and neurotech projects.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<meta name="description" content="High school student in Apple Valley, Minnesota. I rebuild public brain-recording analyses, publish the honest numbers, and ship a working demo for each of ten projects.">
+<link rel="canonical" href="https://aaryavsharma-portfolio.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aaryav Sharma">
+<meta property="og:description" content="High school student in Apple Valley, Minnesota. I rebuild public brain-recording analyses, publish the honest numbers, and ship a working demo for each of ten projects.">
+<meta property="og:url" content="https://aaryavsharma-portfolio.vercel.app/">
+<meta property="og:image" content="https://aaryavsharma-portfolio.vercel.app/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>/* Runs before first paint. Inline it in <head> on sites without a CSP; load it as a blocking same-origin
+   script where the CSP forbids inline scripts. It marks JavaScript as working and applies a saved theme. */
+(function () {
+  var d = document.documentElement;
+  d.classList.add('js');
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || t === 'light') d.setAttribute('data-theme', t);
+  } catch (e) {}
+})();</script>
+<link rel="preload" href="/assets/fonts/Erode-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/Erode-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to main content</a>
-
-<nav class="site-nav">
-  <div class="wrap">
-    <a class="brand" href="/">Aaryav Sharma</a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span></button>
-    <ul class="nav-links">
-      <li><a href="/" aria-current="page">Home</a></li>
-      <li><a href="/projects.html">Projects</a></li>
-      <li><a href="/involvement.html">Involvement</a></li>
-      <li><a href="/opportunities.html">Opportunities</a></li>
-      <li><a href="/contact.html" class="nav-cta">Contact</a></li>
-    </ul>
+<body class="page">
+<a class="skip" href="#main">Skip to content</a>
+<header class="wrap bar">
+  <a class="bar__mark" href="/">Aaryav Sharma</a>
+  <nav class="bar__links" aria-label="Site">
+    <a href="/" aria-current="page">About</a><a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a>
+    <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
+  </nav>
+  <div class="bar__phone">
+    <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
+    <button class="bar__menu textbtn" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
+</header>
+<nav id="menu" class="sheet" hidden aria-label="Menu">
+  <div class="bar"><span class="bar__mark">Aaryav Sharma</span><button class="textbtn" type="button" data-menu-close>Close</button></div>
+  <div class="sheet__links"><a href="/" style="--i:0" aria-current="page">About</a><a href="/projects" style="--i:1">Projects</a><a href="/involvement" style="--i:2">Involvement</a><a href="/opportunities" style="--i:3">Opportunities</a><a href="/contact" style="--i:4">Contact</a></div>
+  <p class="muted">Email <a class="link" href="mailto:shar0674@umn.edu">shar0674@umn.edu</a></p>
 </nav>
+<main id="main" class="wrap">
 
-<div class="wrap">
-
-  <header class="page-header">
-    <p class="eyebrow">Aaryav Sharma. High school student.</p>
-    <h1>I build and test tools that read signals from the brain and body</h1>
-    <p class="lede">
-      Eastview High School, Apple Valley, MN. Lab assistant in the Moriarty/Webber Lab at the
-      University of Minnesota. I spend my time outside of class running my own neuroscience
-      research on public datasets and building toward a neurotech company of my own.
-    </p>
-  </header>
-
-  <main id="main">
-
-    <section id="about">
-      <div class="section-head">
-        <p class="eyebrow">About</p>
-        <h2>What I actually do</h2>
-      </div>
-      <p style="max-width:66ch; color:var(--ink-soft); margin:0 0 16px;">
-        I am a sophomore, and most of what I do outside of class is take a public brain
-        recording dataset and rebuild the analysis myself, to see if it actually holds up.
-        Eight of those projects are on this site, covering EEG, ECoG, fMRI, MRI, and EMG. I
-        write up what worked, what did not, and why, and I put the code and a working demo
-        online for each one.
-      </p>
-      <p style="max-width:66ch; color:var(--ink-soft); margin:0;">
-        At the University of Minnesota I work as a lab assistant in the Moriarty/Webber Lab
-        under Dr. Richa Kaushal, where I help with iPSC culture, macrophage differentiation,
-        and gene editing work. I have also watched two live neurosurgeries under Dr. Anant Naik.
-        Outside of the lab, I am building a smartphone based peripheral nerve health screening
-        concept. I also founded BioSphere Learning, an education hub connecting students to
-        tutoring organizations, and helped launch NeuroGIDAS, the neuroscience club at my school.
-      </p>
-    </section>
-
-    <section id="featured">
-      <div class="section-head">
-        <p class="eyebrow">Featured work</p>
-        <h2>Four of the eight projects</h2>
-        <p>Each one starts from a public brain recording dataset and ends with a working demo you can run in your browser. Full write-ups for all eight are on the projects page.</p>
-      </div>
-      <div class="card-grid">
-        <article class="pcard">
-          <span class="modality">ECoG, speech</span>
-          <h3>NeuroSpeech</h3>
-          <p>Reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024.</p>
-          <a href="/projects.html#neurospeech">Read the write-up</a>
-        </article>
-        <article class="pcard">
-          <span class="modality">EEG, SSVEP</span>
-          <h3>Octaves in the Visual Cortex</h3>
-          <p>Reads which of four flickering rates a person is looking at from eight dry EEG electrodes. The standard method was quietly wrong.</p>
-          <a href="/projects.html#octaves">Read the write-up</a>
-        </article>
-        <article class="pcard">
-          <span class="modality">fMRI, nerve injury</span>
-          <h3>neuroswitch</h3>
-          <p>Does the brain reorganize after someone loses the use of a hand to nerve damage. Still running as more scans finish processing.</p>
-          <a href="/projects.html#neuroswitch">Read the write-up</a>
-        </article>
-        <article class="pcard">
-          <span class="modality">EEG, data quality</span>
-          <h3>EEG Artifact Scope</h3>
-          <p>Checks whether an EEG recording holds brain activity or just blinks and jaw clenches, checked against 30 people wearing five headsets at once.</p>
-          <a href="/projects.html#artifactscope">Read the write-up</a>
-        </article>
-      </div>
-    </section>
-
-    <section id="pattern">
-      <div class="section-head">
-        <p class="eyebrow">A pattern across the work</p>
-        <h2>The number before the check, and the number after</h2>
-        <p>The same mistake shows up again and again in this kind of analysis. Split the data the easy way and a model looks great. Split it the way a real device would actually see the world, and most of that greatness disappears. This is something I check for in every project, and it is usually the most important finding in the whole write-up.</p>
-      </div>
-
-      <div class="toggle-row">
-        <button class="toggle" id="splitToggle" type="button" aria-pressed="false">
-          <span class="dot"></span>
-          <span id="toggleLabel">show the quick split</span>
-        </button>
-        <span class="toggle-hint">click to flip every number below</span>
-      </div>
-
-      <div id="reversalList">
-        <div class="reversal-row">
-          <span class="rname">SliceWise, Alzheimer's stage from MRI</span>
-          <span class="rvals"><span class="num flag" data-quick="98.9%" data-honest="33.7%" data-quick-class="flag" data-honest-class="trace">98.9%</span></span>
-        </div>
-        <div class="reversal-row">
-          <span class="rname">Gait speed from EEG</span>
-          <span class="rvals"><span class="num flag" data-quick="92.3%" data-honest="52.8%" data-quick-class="flag" data-honest-class="trace">92.3%</span></span>
-        </div>
-        <div class="reversal-row">
-          <span class="rname">MyoDecode, EMG hand gestures</span>
-          <span class="rvals"><span class="num flag" data-quick="98.7%" data-honest="93.4%" data-quick-class="flag" data-honest-class="trace">98.7%</span></span>
-        </div>
-        <div class="reversal-row">
-          <span class="rname">Octaves, SSVEP flicker decoding</span>
-          <span class="rvals"><span class="num flag" data-quick="59%" data-honest="83.9%" data-quick-class="flag" data-honest-class="trace">59%</span></span>
-        </div>
-        <div class="reversal-row">
-          <span class="rname">CorticalTap, transformer vs linear model</span>
-          <span class="rvals"><span class="num flag" data-quick="85.8%" data-honest="87.9%" data-quick-class="flag" data-honest-class="trace">85.8%</span></span>
-        </div>
-      </div>
-    </section>
-
-    <section id="stats">
-      <div class="section-head">
-        <p class="eyebrow">In numbers</p>
-        <h2>The work so far</h2>
-      </div>
-      <div class="ledger">
-        <div class="ledger-item"><span class="ledger-num">8</span><span class="ledger-label">research projects</span></div>
-        <div class="ledger-item"><span class="ledger-num">7</span><span class="ledger-label">public datasets</span></div>
-        <div class="ledger-item"><span class="ledger-num">270+</span><span class="ledger-label">people recorded</span></div>
-        <div class="ledger-item"><span class="ledger-num">1,000+</span><span class="ledger-label">electrodes and sensors</span></div>
-        <div class="ledger-item"><span class="ledger-num">2</span><span class="ledger-label">live neurosurgeries observed</span></div>
-        <div class="ledger-item"><span class="ledger-num">200+</span><span class="ledger-label">volunteer hours</span></div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    <p>
-      Every project on this site starts from a public dataset and gets checked for the kind of
-      leak that quietly inflates most machine learning results on brain data. None of it is a
-      medical device or medical advice.
-    </p>
-    <div class="foot-links">
-      <a href="/projects.html">Projects</a>
-      <a href="/involvement.html">Involvement</a>
-      <a href="/opportunities.html">Opportunities</a>
-      <a href="/contact.html">Contact</a>
-      <a href="https://github.com/aaryavvatts-lab" target="_blank" rel="noopener">GitHub</a>
+  <section class="hero" aria-labelledby="h-title">
+    <div class="hero__text">
+      <h1 id="h-title" class="display lines"><span class="line"><span data-line style="--i:0">Tools that read</span></span><span class="line"><span data-line style="--i:1">the brain and body</span></span></h1>
+      <p class="lead" data-rise style="--i:2">I take public brain recordings, rebuild the analysis myself, and publish what held up and what did not.</p>
+      <p class="small muted" data-rise style="--i:3">Sophomore at Eastview High School, Apple Valley, Minnesota.</p>
+      <div class="hero__actions" data-rise style="--i:4"><a class="button" href="/projects">See the ten projects</a><a class="link" href="/contact">Get in touch</a></div>
     </div>
-    <p class="fineprint">Built and written by Aaryav Sharma.</p>
-  </footer>
+    <div class="hero__stage" data-reveal="fade">
+      <div class="frame" data-crossfade style="--p: var(--acc-slicewise)"><div data-slide data-accent="--acc-slicewise" data-cap="One MRI slice from the OASIS dataset, from a person scored at the moderate stage."><img class="photo " src="/img/slicewise.jpg" alt="One MRI slice from the OASIS dataset, from a person scored at the moderate stage." width="1200" height="1500"></div><div data-slide data-accent="--acc-cortical" data-cap="725 electrode contacts from the eight patients, drawn side on."><img class="only-light " src="/img/corticaltap-light.png" alt="725 electrode contacts from the eight patients, drawn side on." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/corticaltap-dark.png" alt="" width="1200" height="1500" loading="lazy"></div><div data-slide data-accent="--acc-eeg" data-cap="The average blink as four headsets recorded it, with the middle half of blinks shaded."><img class="only-light " src="/img/artifactscope-light.png" alt="The average blink as four headsets recorded it, with the middle half of blinks shaded." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/artifactscope-dark.png" alt="" width="1200" height="1500" loading="lazy"></div><div data-slide data-accent="--acc-speech" data-cap="Activity across 256 channels while the participant tried to say one sentence."><img class="only-light " src="/img/neurospeech-light.png" alt="Activity across 256 channels while the participant tried to say one sentence." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neurospeech-dark.png" alt="" width="1200" height="1500" loading="lazy"></div></div>
+      <p class="frame__cap small muted" data-crossfade-cap aria-live="off">One MRI slice from the OASIS dataset, from a person scored at the moderate stage.</p>
+    </div>
+  </section>
 
-</div>
+  <section class="letter" aria-label="About me" data-reveal>
+    <p>Most of what I do outside of class is take a public brain recording dataset and rebuild the analysis myself, to see if it actually holds up. Ten projects are on this site. Eight start from brain or muscle recordings, EEG, ECoG, fMRI, MRI and EMG, and two are medical prediction demos rebuilt from tutorials to see how far the advertised accuracy holds. I write up what worked, what did not, and why, and I put the code and a working demo online for each one.</p>
+    <p>Until September 2026 I worked as a lab assistant in the Moriarty/Webber Lab at the University of Minnesota under Dr. Richa Kaushal, helping with iPSC culture, macrophage differentiation, and gene editing work. I have also watched two live neurosurgeries under Dr. Anant Naik.</p>
+    <p>Outside of the lab I am building a smartphone based peripheral nerve health screening concept, and I am working toward starting a neurotech company. I founded BioSphere Learning, an education hub connecting students to tutoring organizations, and helped launch NeuroGIDAS, the neuroscience club at my school.</p>
+    <p class="letter__sign">Aaryav Sharma<span class="letter__role">Sophomore, Eastview High School</span></p>
+  </section>
 
-<script src="script.js"></script>
+  <section class="section" aria-labelledby="h-feat">
+    <h2 id="h-feat" class="head" data-reveal>Four of the ten projects</h2>
+    <p class="lead" data-reveal style="--i:1">Each one starts from a public dataset and ends with a demo you can run in your browser. All ten are on the projects page.</p>
+    <ul class="featured">
+    <li style="--p: var(--acc-speech)" data-reveal style="--i:0">
+      <div class="thumb"><img class="only-light " src="/img/neurospeech-light.png" alt="Activity across 256 channels while the participant tried to say one sentence." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neurospeech-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+      <div class="body">
+        <h3>NeuroSpeech</h3>
+        <p>Reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024.</p>
+        <div class="links"><a class="link" href="/projects#neurospeech">Read the write-up</a><a class="link" href="https://neurospeech-chi.vercel.app/" target="_blank" rel="noopener">Open the demo<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </div>
+    </li>
+    <li style="--p: var(--acc-ssvep)" data-reveal style="--i:1">
+      <div class="thumb"><img class="only-light " src="/img/octaves-light.png" alt="The four flicker rates and their harmonics, weighted by the measured signal to noise ratio." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/octaves-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+      <div class="body">
+        <h3>Octaves in the Visual Cortex</h3>
+        <p>Reads which of four flickering rates a person is looking at from eight dry EEG electrodes. The standard method got it wrong.</p>
+        <div class="links"><a class="link" href="/projects#octaves">Read the write-up</a><a class="link" href="https://ssvep-harmonic-decoder.vercel.app/" target="_blank" rel="noopener">Open the decoder<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </div>
+    </li>
+    <li style="--p: var(--acc-neuroswitch)" data-reveal style="--i:2">
+      <div class="thumb"><img class="only-light " src="/img/neuroswitch-light.png" alt="The 241 brain regions of the atlas, seen from above. Left hemisphere in full tone, right hemisphere lighter." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neuroswitch-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+      <div class="body">
+        <h3>neuroswitch</h3>
+        <p>Does the brain reorganize after someone loses the use of a hand to nerve damage. Still running as more scans finish processing.</p>
+        <div class="links"><a class="link" href="/projects#neuroswitch">Read the write-up</a><a class="link" href="https://neuroswitch.vercel.app/" target="_blank" rel="noopener">Open the study<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </div>
+    </li>
+    <li style="--p: var(--acc-eeg)" data-reveal style="--i:3">
+      <div class="thumb"><img class="only-light " src="/img/artifactscope-light.png" alt="The average blink as four headsets recorded it, with the middle half of blinks shaded." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/artifactscope-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+      <div class="body">
+        <h3>EEG Artifact Scope</h3>
+        <p>Checks whether an EEG recording holds brain activity or just blinks and jaw clenches, checked against 30 people wearing five headsets at once.</p>
+        <div class="links"><a class="link" href="/projects#artifactscope">Read the write-up</a><a class="link" href="https://eeg-artifact-scope.vercel.app/" target="_blank" rel="noopener">Open the tool<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </div>
+    </li>
+    </ul>
+    <p style="margin-top:2.5rem" data-reveal><a class="button" href="/projects">All ten projects</a></p>
+  </section>
+
+  <section class="section check" aria-labelledby="h-check">
+    <div class="check__intro">
+      <h2 id="h-check" class="head" data-reveal>The number before the check, and after</h2>
+      <p data-reveal style="--i:1">Split the data the easy way and a model looks great. Split it the way a real device would see the world and the number usually drops, sometimes by half. Twice it went the other way: the textbook SSVEP method lost to a fix that read the whole spectrum, and a transformer lost to plain logistic regression. I check for this in every project, and it is usually the most important finding in the write-up.</p>
+    </div>
+    <div class="check__panel" data-reveal style="--i:2">
+      <div class="split">
+        <span class="split__end">advertised</span>
+        <div class="split__track" id="splitTrack" role="slider" tabindex="0" aria-label="Which numbers to show, from advertised to checked" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="the advertised numbers">
+          <div class="split__fill" id="splitFill"></div>
+          <div class="split__thumb" id="splitThumb"></div>
+        </div>
+        <span class="split__end">checked</span>
+      </div>
+      <div class="split__row"><button class="button button--quiet" id="splitToggle" type="button" aria-pressed="false">Show the checked numbers</button><span class="small muted">Drag the handle or press the button.</span></div>
+      <div class="pairs">
+      <div class="pair">
+        <span class="pair__name">SliceWise, Alzheimer&#x27;s stage from one MRI slice</span>
+        <span class="pair__fig bad" data-advertised="98.9%" data-advertised-label="split by slice" data-advertised-class="bad" data-checked="33.7%" data-checked-label="split by patient" data-checked-class="good">98.9%</span>
+        <span class="pair__label">split by slice</span>
+      </div>
+      <div class="pair">
+        <span class="pair__name">Gait speed from EEG</span>
+        <span class="pair__fig bad" data-advertised="92.3%" data-advertised-label="random split" data-advertised-class="bad" data-checked="52.8%" data-checked-label="held-out person, brain only" data-checked-class="good">92.3%</span>
+        <span class="pair__label">random split</span>
+      </div>
+      <div class="pair">
+        <span class="pair__name">MyoDecode, EMG hand gestures</span>
+        <span class="pair__fig bad" data-advertised="98.7%" data-advertised-label="shuffled split" data-advertised-class="bad" data-checked="93.4%" data-checked-label="new person" data-checked-class="good">98.7%</span>
+        <span class="pair__label">shuffled split</span>
+      </div>
+      <div class="pair">
+        <span class="pair__name">Octaves, SSVEP flicker decoding</span>
+        <span class="pair__fig bad" data-advertised="59%" data-advertised-label="textbook method" data-advertised-class="bad" data-checked="83.9%" data-checked-label="reading the whole spectrum" data-checked-class="good">59%</span>
+        <span class="pair__label">textbook method</span>
+      </div>
+      <div class="pair">
+        <span class="pair__name">CorticalTap, transformer against a linear model</span>
+        <span class="pair__fig bad" data-advertised="85.8%" data-advertised-label="transformer" data-advertised-class="bad" data-checked="87.9%" data-checked-label="plain logistic regression" data-checked-class="good">85.8%</span>
+        <span class="pair__label">transformer</span>
+      </div>
+      </div>
+      <p style="margin-top:1.5rem">Every pair comes from the project's own write-up, where the method behind each number is spelled out.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="h-facts">
+    <h2 id="h-facts" class="head" data-reveal>The work so far</h2>
+    <ul class="facts" data-reveal style="--i:1">
+      <li>10 research projects, each with code and a working demo.</li>
+      <li>9 public datasets, every one credited on its project page.</li>
+      <li>270 or more people in the brain and muscle recordings.</li>
+      <li>1,000 or more electrodes and sensors across the projects.</li>
+      <li>2 live neurosurgeries observed.</li>
+      <li>200 or more volunteer hours.</li>
+    </ul>
+  </section>
+
+</main>
+<footer class="wrap close">
+  <p>Every project here starts from a public dataset and gets checked for the kind of leak that inflates most machine learning results on brain data. None of it is a medical device or medical advice.</p>
+  <p class="close__mark">Aaryav Sharma</p>
+  <div class="close__meta">
+    <a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a><a href="https://github.com/aaryavvatts-lab" target="_blank" rel="noopener">GitHub<span class="sr-only"> (opens in a new tab)</span></a>
+  </div>
+  <p class="small muted">Built and written by Aaryav Sharma. The pictures on this site are drawn from each project's own data.</p>
+</footer>
+<script src="/assets/kit.js" defer></script>
+<script src="/script.js" defer></script>
 </body>
 </html>

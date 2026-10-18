@@ -1,208 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f4f3ef">
 <title>Projects, Aaryav Sharma</title>
-<meta name="description" content="Eight neuroscience and brain-computer interface research projects, built from public datasets. ECoG, EEG, fMRI, MRI, and EMG.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<meta name="description" content="Ten projects built from public datasets: EEG, ECoG, fMRI, MRI and EMG recordings plus two medical prediction demos, each with code and a live demo.">
+<link rel="canonical" href="https://aaryavsharma-portfolio.vercel.app/projects">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Projects, Aaryav Sharma">
+<meta property="og:description" content="Ten projects built from public datasets: EEG, ECoG, fMRI, MRI and EMG recordings plus two medical prediction demos, each with code and a live demo.">
+<meta property="og:url" content="https://aaryavsharma-portfolio.vercel.app/projects">
+<meta property="og:image" content="https://aaryavsharma-portfolio.vercel.app/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>/* Runs before first paint. Inline it in <head> on sites without a CSP; load it as a blocking same-origin
+   script where the CSP forbids inline scripts. It marks JavaScript as working and applies a saved theme. */
+(function () {
+  var d = document.documentElement;
+  d.classList.add('js');
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || t === 'light') d.setAttribute('data-theme', t);
+  } catch (e) {}
+})();</script>
+<link rel="preload" href="/assets/fonts/Erode-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/Erode-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to main content</a>
-
-<nav class="site-nav">
-  <div class="wrap">
-    <a class="brand" href="/">Aaryav Sharma</a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span></button>
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="/projects.html" aria-current="page">Projects</a></li>
-      <li><a href="/involvement.html">Involvement</a></li>
-      <li><a href="/opportunities.html">Opportunities</a></li>
-      <li><a href="/contact.html" class="nav-cta">Contact</a></li>
-    </ul>
+<body class="page">
+<a class="skip" href="#main">Skip to content</a>
+<header class="wrap bar">
+  <a class="bar__mark" href="/">Aaryav Sharma</a>
+  <nav class="bar__links" aria-label="Site">
+    <a href="/">About</a><a href="/projects" aria-current="page">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a>
+    <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
+  </nav>
+  <div class="bar__phone">
+    <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
+    <button class="bar__menu textbtn" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
+</header>
+<nav id="menu" class="sheet" hidden aria-label="Menu">
+  <div class="bar"><span class="bar__mark">Aaryav Sharma</span><button class="textbtn" type="button" data-menu-close>Close</button></div>
+  <div class="sheet__links"><a href="/" style="--i:0">About</a><a href="/projects" style="--i:1" aria-current="page">Projects</a><a href="/involvement" style="--i:2">Involvement</a><a href="/opportunities" style="--i:3">Opportunities</a><a href="/contact" style="--i:4">Contact</a></div>
+  <p class="muted">Email <a class="link" href="mailto:shar0674@umn.edu">shar0674@umn.edu</a></p>
 </nav>
+<main id="main" class="wrap">
 
-<div class="wrap">
-
-  <header class="page-header">
-    <p class="eyebrow">Projects</p>
-    <h1>Eight projects, five kinds of brain data</h1>
-    <p class="lede">
-      Each project below starts from a public research dataset. I rebuild the analysis myself,
-      check it for the mistakes that usually make these numbers look better than they are, and
-      publish the code and a working demo alongside the write-up. Two of the projects are mirrored
-      on a second domain, which is why ten links point to eight projects.
-    </p>
-  </header>
-
-  <main id="main">
-    <section>
-
-      <article class="project" id="corticaltap">
-        <div class="project-num">01</div>
-        <div>
-          <div class="project-title-row">
-            <h3>CorticalTap</h3>
-            <span class="modality">ECoG</span>
-          </div>
-          <p class="desc">I pointed a next word predictor, the kind used for text, at 735 electrodes sitting on the brain surface of 8 epilepsy patients. It was trained to predict movement from a tapping game. Then I built the tests that proved my own headline number wrong.</p>
-          <p class="why"><strong>Why I built it:</strong> everyone assumes a bigger, fancier model wins. I wanted to actually check that against the simplest possible baseline, in public.</p>
-          <p class="stat-line">plain logistic regression <span class="trace">0.879</span> <span class="sep">·</span> transformer <span class="flag">0.858</span> <span class="sep">·</span> training on other patients made it worse in all 8 patients, not better</p>
-          <p class="project-meta">OpenNeuro ds005931, Wayne State University, CC0</p>
-          <div class="project-links">
-            <a href="https://corticaltap.vercel.app/" target="_blank" rel="noopener">Live decoder</a>
-            <a class="secondary" href="https://neurotap-gray.vercel.app/" target="_blank" rel="noopener">Mirror</a>
-          </div>
-        </div>
+  <div class="heading">
+    <h1 class="display lines"><span class="line"><span data-line style="--i:0">Ten projects,</span></span><span class="line"><span data-line style="--i:1">each one checked</span></span></h1>
+    <p class="lead" data-rise style="--i:2">Each project starts from a public dataset. I rebuild the analysis, look for the mistakes that make these numbers look better than they are, and publish the code and a working demo with the write-up.</p>
+  </div>
+  <section class="index" aria-label="Projects">
+    <div class="index__list">
+      <article class="row" id="corticaltap" data-id="corticaltap" data-accent="--acc-cortical" data-cap="725 electrode contacts from the eight patients, drawn side on." style="--p: var(--acc-cortical)">
+        <div class="row__pic"><img class="only-light " src="/img/corticaltap-light.png" alt="725 electrode contacts from the eight patients, drawn side on." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/corticaltap-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://corticaltap.vercel.app/" target="_blank" rel="noopener">CorticalTap</a></h2>
+        <p class="row__kind">ECoG, recordings from the surface of the brain</p>
+        <p class="row__desc">I pointed a next word predictor, the kind used for text, at 735 electrodes sitting on the brain surface of 8 epilepsy patients. It was trained to predict movement from a tapping game. Then I built the tests that proved my own headline number wrong.</p>
+        <p class="row__why"><strong>Why I built it:</strong> everyone assumes a bigger, fancier model wins. I wanted to check that against the simplest possible baseline, in public.</p>
+        <ul class="figs"><li><span class="n">0.879</span><span>plain logistic regression</span></li><li><span class="n">0.858</span><span>transformer</span></li><li><span class="n">8 of 8</span><span>patients where training on other patients made things worse, not better</span></li></ul>
+        <p class="row__src small">OpenNeuro ds005931, Wayne State University, CC0</p>
+        <div class="row__links"><a class="button" href="https://corticaltap.vercel.app/" target="_blank" rel="noopener">Open the decoder<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/corticaltap" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-      <article class="project" id="octaves">
-        <div class="project-num">02</div>
-        <div>
-          <div class="project-title-row">
-            <h3>Octaves in the Visual Cortex</h3>
-            <span class="modality">EEG, SSVEP</span>
-          </div>
-          <p class="desc">Eight dry electrodes on the back of the head can tell which of four flickering rates someone is looking at. That is the core of an interface that lets a person who cannot speak or move pick an answer just by looking at it. The standard method looked fine until I checked what it was actually answering.</p>
-          <p class="why"><strong>Why I built it:</strong> this is the same signal used in real assistive spellers for people with paralysis. I wanted to know if the textbook method people cite actually holds up on real hardware.</p>
-          <p class="stat-line">textbook method <span class="flag">59%</span> <span class="sep">·</span> fixed to read the whole spectrum <span class="trace">83.9%</span> <span class="sep">·</span> live, given two seconds <span class="trace">99.4%</span></p>
-          <p class="project-meta">OpenNeuro ds004745, CC0</p>
-          <div class="project-links">
-            <a href="https://ssvep-harmonic-decoder.vercel.app/#project" target="_blank" rel="noopener">Live demo</a>
-            <a class="secondary" href="https://github.com/aaryavvatts-lab/octaves-in-the-visual-cortex" target="_blank" rel="noopener">Code</a>
-          </div>
-        </div>
+      <article class="row" id="octaves" data-id="octaves" data-accent="--acc-ssvep" data-cap="The decoder running live on a stored recording, from the project’s own screen capture." style="--p: var(--acc-ssvep)">
+        <div class="row__pic"><video class="" src="/img/octaves.mp4" poster="/img/octaves-light.png" muted loop playsinline preload="metadata" aria-label="The decoder running live on a stored recording, from the project’s own screen capture."></video></div>
+        <h2><a class="row__name" href="https://ssvep-harmonic-decoder.vercel.app/" target="_blank" rel="noopener">Octaves in the Visual Cortex</a></h2>
+        <p class="row__kind">EEG, steady-state visual evoked potentials</p>
+        <p class="row__desc">Eight dry electrodes on the back of the head can tell which of four flickering rates someone is looking at. That is the core of an interface that lets a person who cannot speak or move pick an answer just by looking at it. The standard method looked fine until I checked what it was actually answering.</p>
+        <p class="row__why"><strong>Why I built it:</strong> this is the same signal used in real assistive spellers for people with paralysis. I wanted to know if the textbook method people cite actually holds up on real hardware.</p>
+        <ul class="figs"><li><span class="n">59%</span><span>textbook method</span></li><li><span class="n">83.9%</span><span>fixed to read the whole spectrum</span></li><li><span class="n">99.4%</span><span>live, given two seconds to settle</span></li></ul>
+        <p class="row__src small">OpenNeuro ds004745, CC0</p>
+        <div class="row__links"><a class="button" href="https://ssvep-harmonic-decoder.vercel.app/" target="_blank" rel="noopener">Open the decoder<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/octaves-in-the-visual-cortex" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-      <article class="project" id="gait">
-        <div class="project-num">03</div>
-        <div>
-          <div class="project-title-row">
-            <h3>Reading Walking Speed From the Scalp</h3>
-            <span class="modality">EEG + EMG</span>
-          </div>
-          <p class="desc">EEG and leg muscle sensors from 58 people walking at three speeds. I used it to drive a simulated wheelchair speed control. Brain signal alone needs about twelve seconds to settle on an answer. Add the muscle sensors and it takes three.</p>
-          <p class="why"><strong>Why I built it:</strong> this is directly related to the peripheral nerve health idea I am developing. I wanted to see for myself how much a muscle sensor adds over brain signal alone.</p>
-          <p class="stat-line">random split <span class="flag">92.3%</span> (means almost nothing) <span class="sep">·</span> held out person, brain only <span class="flag">52.8%</span> <span class="sep">·</span> brain and muscle together <span class="trace">97.6%</span></p>
-          <p class="project-meta">PhysioNet, Katmah et al. 2026, CC BY 4.0</p>
-          <div class="project-links">
-            <a href="https://eeg-gait-speed.vercel.app/" target="_blank" rel="noopener">Live demo</a>
-            <a class="secondary" href="https://github.com/aaryavvatts-lab/eeg-gait-speed" target="_blank" rel="noopener">Code</a>
-          </div>
-        </div>
+      <article class="row" id="gait" data-id="gait" data-accent="--acc-gait" data-cap="Person S44&#x27;s real treadmill speed as a step line, with the model&#x27;s guess once a second. Brain only above, brain and muscle below." style="--p: var(--acc-gait)">
+        <div class="row__pic"><img class="only-light " src="/img/gait-light.png" alt="Person S44&#x27;s real treadmill speed as a step line, with the model&#x27;s guess once a second. Brain only above, brain and muscle below." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/gait-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://eeg-gait-speed.vercel.app/" target="_blank" rel="noopener">Reading walking speed from the scalp</a></h2>
+        <p class="row__kind">EEG and EMG, 58 people walking at three speeds</p>
+        <p class="row__desc">EEG and leg muscle sensors from 58 people walking at three speeds. I used it to drive a simulated wheelchair speed control. Brain signal alone needs about twelve seconds to settle on an answer. Add the muscle sensors and it takes three.</p>
+        <p class="row__why"><strong>Why I built it:</strong> this is directly related to the peripheral nerve health idea I am developing. I wanted to see for myself how much a muscle sensor adds over brain signal alone.</p>
+        <ul class="figs"><li><span class="n">92.3%</span><span>random split, which means almost nothing</span></li><li><span class="n">52.8%</span><span>held-out person, brain only</span></li><li><span class="n">97.6%</span><span>brain and muscle together</span></li></ul>
+        <p class="row__src small">PhysioNet, Katmah et al. 2026, CC BY 4.0</p>
+        <div class="row__links"><a class="button" href="https://eeg-gait-speed.vercel.app/" target="_blank" rel="noopener">Open the demo<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/eeg-gait-speed" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-      <article class="project" id="neurospeech">
-        <div class="project-num">04</div>
-        <div>
-          <div class="project-title-row">
-            <h3>NeuroSpeech</h3>
-            <span class="modality">ECoG, speech motor cortex</span>
-          </div>
-          <p class="desc">Reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024. I also looked at what the model's mistakes say about how the brain plans mouth movement.</p>
-          <p class="why"><strong>Why I built it:</strong> a short video called this kind of work telepathy, and that word is wrong in a way that matters. Part of the write-up is about what this technology actually is and is not.</p>
-          <p class="stat-line">word error rate <span class="trace">17.08%</span> <span class="sep">·</span> gets the whole sentence right <span class="trace">37.2%</span> of the time <span class="sep">·</span> built from 10,948 attempted sentences</p>
-          <p class="project-meta">Card et al. 2024, NEJM, Dryad 10.5061/dryad.dncjsxm85</p>
-          <div class="project-links">
-            <a href="https://neurospeech-chi.vercel.app/" target="_blank" rel="noopener">Live demo</a>
-          </div>
-        </div>
+      <article class="row" id="neurospeech" data-id="neurospeech" data-accent="--acc-speech" data-cap="Activity across 256 channels while the participant tried to say one sentence." style="--p: var(--acc-speech)">
+        <div class="row__pic"><img class="only-light " src="/img/neurospeech-light.png" alt="Activity across 256 channels while the participant tried to say one sentence." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neurospeech-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://neurospeech-chi.vercel.app/" target="_blank" rel="noopener">NeuroSpeech</a></h2>
+        <p class="row__kind">ECoG, speech motor cortex</p>
+        <p class="row__desc">Reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024. I also looked at what the model&#x27;s mistakes say about how the brain plans mouth movement.</p>
+        <p class="row__why"><strong>Why I built it:</strong> a short video called this kind of work telepathy, and that word is wrong in a way that matters. Part of the write-up is about what this technology actually is and is not.</p>
+        <ul class="figs"><li><span class="n">17.08%</span><span>word error rate</span></li><li><span class="n">37.2%</span><span>of sentences exactly right</span></li><li><span class="n">10,948</span><span>attempted sentences in the data</span></li></ul>
+        <p class="row__src small">Card et al. 2024, NEJM, Dryad 10.5061/dryad.dncjsxm85</p>
+        <div class="row__links"><a class="button" href="https://neurospeech-chi.vercel.app/" target="_blank" rel="noopener">Open the demo<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/neurospeech" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-      <article class="project" id="neuroswitch">
-        <div class="project-num">05</div>
-        <div>
-          <div class="project-title-row">
-            <h3>neuroswitch</h3>
-            <span class="modality">fMRI, nerve injury</span>
-            <span class="modality status-amber">still running</span>
-          </div>
-          <p class="desc">Does the brain reorganize after someone loses the use of a hand to nerve damage, not brain damage. fMRI from 25 patients and 46 people with no injury, recorded while they drew with each hand. I built four separate tests meant to prove the result wrong before I would believe it.</p>
-          <p class="why"><strong>Why I built it:</strong> this question sits right next to the nerve health work I want to build a company around. If the brain does adapt after nerve injury, that changes what a monitoring device should actually be looking for.</p>
-          <p class="stat-line">the basic hand effect showed up in <span class="trace">19 of 19</span> people checked so far <span class="sep">·</span> 17 of about 66 people processed</p>
-          <p class="project-meta">OpenNeuro ds008162, Washington University in St. Louis, CC0</p>
-          <div class="project-links">
-            <a href="https://neuroswitch.vercel.app/" target="_blank" rel="noopener">Live demo</a>
-            <a class="secondary" href="https://github.com/aaryavvatts-lab/neuroswitch" target="_blank" rel="noopener">Code</a>
-          </div>
-        </div>
+      <article class="row" id="neuroswitch" data-id="neuroswitch" data-accent="--acc-neuroswitch" data-cap="The 241 brain regions of the atlas, seen from above. Left hemisphere in full tone, right hemisphere lighter." style="--p: var(--acc-neuroswitch)">
+        <div class="row__pic"><img class="only-light " src="/img/neuroswitch-light.png" alt="The 241 brain regions of the atlas, seen from above. Left hemisphere in full tone, right hemisphere lighter." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neuroswitch-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://neuroswitch.vercel.app/" target="_blank" rel="noopener">neuroswitch</a><span class="tag">still running</span></h2>
+        <p class="row__kind">fMRI, nerve injury</p>
+        <p class="row__desc">Does the brain reorganize after someone loses the use of a hand to nerve damage, not brain damage. fMRI from 25 patients and 46 people with no injury, recorded while they drew with each hand. I built four separate tests meant to prove the result wrong before I would believe it.</p>
+        <p class="row__why"><strong>Why I built it:</strong> this question sits right next to the nerve health work I want to build a company around. If the brain does adapt after nerve injury, that changes what a monitoring device should actually be looking for.</p>
+        <ul class="figs"><li><span class="n">20 of 20</span><span>people checked so far showed the basic hand effect</span></li><li><span class="n">18 of 66</span><span>people processed, so every number will change</span></li></ul>
+        <p class="row__src small">OpenNeuro ds008162, Washington University in St. Louis, CC0</p>
+        <div class="row__links"><a class="button" href="https://neuroswitch.vercel.app/" target="_blank" rel="noopener">Open the study<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/neuroswitch" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-      <article class="project" id="slicewise">
-        <div class="project-num">06</div>
-        <div>
-          <div class="project-title-row">
-            <h3>SliceWise</h3>
-            <span class="modality">MRI, Alzheimer's</span>
-          </div>
-          <p class="desc">A model that reads Alzheimer's stage from one MRI slice scored 99 percent, until I noticed the same person's scans were landing on both sides of the train and test split. Once I fixed that, most of the accuracy was gone. I also built a general checker anyone can use to find the same mistake in their own dataset.</p>
-          <p class="why"><strong>Why I built it:</strong> a video made this look like a weekend project. It is, but the honest version of it is a much smaller result than the video showed, and I wanted to show exactly why.</p>
-          <p class="stat-line">split by slice <span class="flag">98.9%</span> <span class="sep">·</span> split by patient <span class="trace">33.7%</span> <span class="sep">·</span> dementia vs none, judged per patient <span class="trace">0.94 AUC</span></p>
-          <p class="project-meta">OASIS, Washington University in St. Louis</p>
-          <div class="project-links">
-            <a href="https://slicewise-mri.vercel.app/" target="_blank" rel="noopener">Live demo</a>
-            <a class="secondary" href="https://neurolink-ecru.vercel.app/" target="_blank" rel="noopener">Mirror</a>
-            <a class="secondary" href="https://github.com/aaryavvatts-lab/neurolink-alzheimers-mri" target="_blank" rel="noopener">Code</a>
-          </div>
-        </div>
+      <article class="row" id="slicewise" data-id="slicewise" data-accent="--acc-slicewise" data-cap="One MRI slice from the OASIS dataset, from a person scored at the moderate stage." style="--p: var(--acc-slicewise)">
+        <div class="row__pic"><img class="photo " src="/img/slicewise.jpg" alt="One MRI slice from the OASIS dataset, from a person scored at the moderate stage." width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://slicewise-mri.vercel.app/" target="_blank" rel="noopener">SliceWise</a></h2>
+        <p class="row__kind">MRI, Alzheimer&#x27;s stage</p>
+        <p class="row__desc">A model that reads Alzheimer&#x27;s stage from one MRI slice scored 99 percent, until I noticed the same person&#x27;s scans were landing on both sides of the train and test split. Once I fixed that, most of the accuracy was gone. I also built a general checker anyone can use to find the same mistake in their own dataset.</p>
+        <p class="row__why"><strong>Why I built it:</strong> a video made this look like a weekend project. It is, but the honest version of it is a much smaller result than the video showed, and I wanted to show exactly why.</p>
+        <ul class="figs"><li><span class="n">98.9%</span><span>split by slice</span></li><li><span class="n">33.7%</span><span>split by patient</span></li><li><span class="n">0.94</span><span>AUC for dementia versus none, judged per patient</span></li></ul>
+        <p class="row__src small">OASIS, Washington University in St. Louis</p>
+        <div class="row__links"><a class="button" href="https://slicewise-mri.vercel.app/" target="_blank" rel="noopener">Open the demo<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/neurolink-alzheimers-mri" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-      <article class="project" id="myodecode">
-        <div class="project-num">07</div>
-        <div>
-          <div class="project-title-row">
-            <h3>MyoDecode</h3>
-            <span class="modality">EMG, hand gestures</span>
-          </div>
-          <p class="desc">Reads five hand gestures from four muscle sensors on the forearm in under half a second. A method published in 1993 beats a modern neural network here. Most of the accuracy people report for this kind of task turns out to come from how the data gets split, not from the model.</p>
-          <p class="why"><strong>Why I built it:</strong> muscle sensors are the other half of the nerve health idea. I wanted to know how few sensors and how little time I could get away with and still read a gesture reliably.</p>
-          <p class="stat-line">leaky split <span class="flag">98.7%</span> <span class="sep">·</span> tested on a person it had never seen <span class="trace">93.4%</span> <span class="sep">·</span> still works with one sensor <span class="trace">80.6%</span></p>
-          <p class="project-meta">8 subject EMG set, leakage checked against Kapoor and Narayanan, 2023</p>
-          <div class="project-links">
-            <a href="https://myodecode.vercel.app/#latent" target="_blank" rel="noopener">Live demo</a>
-            <a class="secondary" href="https://github.com/aaryavvatts-lab/myodecode" target="_blank" rel="noopener">Code</a>
-          </div>
-        </div>
+      <article class="row" id="myodecode" data-id="myodecode" data-accent="--acc-myo" data-cap="Four forearm muscle sensors during one hand gesture, raw signal." style="--p: var(--acc-myo)">
+        <div class="row__pic"><img class="only-light " src="/img/myodecode-light.png" alt="Four forearm muscle sensors during one hand gesture, raw signal." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/myodecode-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://myodecode.vercel.app/" target="_blank" rel="noopener">MyoDecode</a></h2>
+        <p class="row__kind">EMG, hand gestures</p>
+        <p class="row__desc">Reads five hand gestures from four muscle sensors on the forearm in under half a second. A method published in 1993 beats a modern neural network here. Most of the accuracy people report for this kind of task turns out to come from how the data gets split, not from the model.</p>
+        <p class="row__why"><strong>Why I built it:</strong> muscle sensors are the other half of the nerve health idea. I wanted to know how few sensors and how little time I could get away with and still read a gesture reliably.</p>
+        <ul class="figs"><li><span class="n">98.7%</span><span>leaky split</span></li><li><span class="n">93.4%</span><span>tested on a person it had never seen</span></li><li><span class="n">80.6%</span><span>still works with one sensor</span></li></ul>
+        <p class="row__src small">8 subject EMG set, leakage checked against Kapoor and Narayanan, 2023</p>
+        <div class="row__links"><a class="button" href="https://myodecode.vercel.app/" target="_blank" rel="noopener">Open the demo<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/myodecode" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-      <article class="project" id="artifactscope">
-        <div class="project-num">08</div>
-        <div>
-          <div class="project-title-row">
-            <h3>EEG Artifact Scope</h3>
-            <span class="modality">EEG, data quality</span>
-          </div>
-          <p class="desc">A tool that checks whether an EEG recording actually holds brain activity or just blinks, jaw clenches, and cable movement. Calibrated against 30 people wearing five headsets at once, each doing 20 cued blinks, so the same blink from the same person at the same instant was recorded five different ways.</p>
-          <p class="why"><strong>Why I built it:</strong> most people check this by eye, which stops working once you have forty recordings and a deadline. I wanted a number you could actually put in a methods section instead of a guess. I found four separate bugs while building it, one that scored every recording the same, one that mistook a filter for muscle noise, one that called broken electrodes healthy during heavy blinking, and one that penalized headsets just for having more electrodes to check. All four are written up.</p>
-          <p class="stat-line">blinks found <span class="trace">88 to 100%</span>, depending on headset <span class="sep">·</span> jaw clench scored worse than rest in <span class="trace">30 of 30</span> people <span class="sep">·</span> nothing uploaded, runs in your browser</p>
-          <p class="project-meta">30 subject, 5 headset open dataset, cued blink and jaw clench protocol</p>
-          <div class="project-links">
-            <a href="https://eeg-artifact-scope.vercel.app/" target="_blank" rel="noopener">Live tool</a>
-            <a class="secondary" href="https://github.com/aaryavvatts-lab/eeg-artifact-scope" target="_blank" rel="noopener">Code</a>
-          </div>
-        </div>
+      <article class="row" id="artifactscope" data-id="artifactscope" data-accent="--acc-eeg" data-cap="The average blink as four headsets recorded it, with the middle half of blinks shaded." style="--p: var(--acc-eeg)">
+        <div class="row__pic"><img class="only-light " src="/img/artifactscope-light.png" alt="The average blink as four headsets recorded it, with the middle half of blinks shaded." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/artifactscope-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://eeg-artifact-scope.vercel.app/" target="_blank" rel="noopener">EEG Artifact Scope</a></h2>
+        <p class="row__kind">EEG, data quality</p>
+        <p class="row__desc">A tool that checks whether an EEG recording actually holds brain activity or just blinks, jaw clenches, and cable movement. Calibrated against 30 people wearing five headsets at once, each doing 20 cued blinks, so the same blink from the same person at the same instant was recorded five different ways.</p>
+        <p class="row__why"><strong>Why I built it:</strong> most people check this by eye, which stops working once you have forty recordings and a deadline. I wanted a number you could put in a methods section instead of a guess. I found four separate bugs while building it. One scored every recording the same. One mistook a filter for muscle noise. One called broken electrodes healthy during heavy blinking. One penalized headsets just for having more electrodes to check. All four are written up.</p>
+        <ul class="figs"><li><span class="n">88 to 100%</span><span>of cued blinks found, depending on the headset</span></li><li><span class="n">30 of 30</span><span>people whose jaw clench scored worse than their own rest</span></li><li><span class="n">0 bytes</span><span>of your recording uploaded. It runs in your browser</span></li></ul>
+        <p class="row__src small">30 subject, 5 headset open dataset, cued blink and jaw clench protocol</p>
+        <div class="row__links"><a class="button" href="https://eeg-artifact-scope.vercel.app/" target="_blank" rel="noopener">Open the tool<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/eeg-artifact-scope" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
       </article>
-
-    </section>
-  </main>
-
-  <footer>
-    <p>None of these projects are medical devices or medical advice. Data credited on each project's own page.</p>
-    <div class="foot-links">
-      <a href="/">Home</a>
-      <a href="/involvement.html">Involvement</a>
-      <a href="/opportunities.html">Opportunities</a>
-      <a href="/contact.html">Contact</a>
+      <article class="row" id="diabetes" data-id="diabetes" data-accent="--acc-diabetes" data-cap="The women in the Pima dataset with both measurements recorded, glucose across and BMI up. Darker dots are diagnosed cases." style="--p: var(--acc-diabetes)">
+        <div class="row__pic"><img class="only-light " src="/img/diabetes-light.png" alt="The women in the Pima dataset with both measurements recorded, glucose across and BMI up. Darker dots are diagnosed cases." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/diabetes-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://diabetes-prediction-svm.vercel.app/" target="_blank" rel="noopener">Diabetes Risk Predictor</a></h2>
+        <p class="row__kind">Clinical tables, the Pima Indians Diabetes dataset</p>
+        <p class="row__desc">A diabetes risk model trained on the Pima Indians Diabetes dataset, 768 women aged 21 and over, running entirely in your browser. The tutorial version is a linear support vector machine that scores 77.3% on the test rows but misses about half of the true cases. I added a logistic model with a sensitivity slider so you can see what catching more cases costs in false alarms.</p>
+        <p class="row__why"><strong>Why I built it:</strong> as a teaching demo of how a clinical prediction model behaves, with its limits on the same page as its result.</p>
+        <ul class="figs"><li><span class="n">77.3%</span><span>test accuracy of the tutorial SVM</span></li><li><span class="n">52%</span><span>recall, so about half of true cases are missed</span></li><li><span class="n">614 and 154</span><span>training and test rows</span></li></ul>
+        <p class="row__src small">Pima Indians Diabetes Database (NIDDK), via a public mirror. Tutorial by Siddhardhan.</p>
+        <div class="row__links"><a class="button" href="https://diabetes-prediction-svm.vercel.app/" target="_blank" rel="noopener">Open the predictor<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </article>
+      <article class="row" id="pneumonia" data-id="pneumonia" data-accent="--acc-pneumonia" data-cap="A chest X-ray from the Kaggle test set, a pneumonia case." style="--p: var(--acc-pneumonia)">
+        <div class="row__pic"><img class="photo " src="/img/pneumonia.jpg" alt="A chest X-ray from the Kaggle test set, a pneumonia case." width="1200" height="1500" loading="lazy"></div>
+        <h2><a class="row__name" href="https://aaryav-pneumonia-detector.vercel.app/" target="_blank" rel="noopener">Chest X-ray Pneumonia Detector</a></h2>
+        <p class="row__kind">Chest X-rays, pediatric</p>
+        <p class="row__desc">A VGG16 network fine-tuned on the Kaggle chest X-ray dataset, rebuilt from a tutorial with a proper validation split, class weighting and an honest evaluation. It runs in your browser with ONNX Runtime and shows a Grad-CAM map of where it looked. It is tuned to miss few pneumonia cases, so it raises a false alarm on roughly one in four normal X-rays.</p>
+        <p class="row__why"><strong>Why I built it:</strong> to redo a popular tutorial with a proper validation split and report every number, including the false alarms.</p>
+        <ul class="figs"><li><span class="n">89.9%</span><span>accuracy on the 624 image test set</span></li><li><span class="n">97.9%</span><span>sensitivity, pneumonia caught</span></li><li><span class="n">76.5%</span><span>specificity, normal cleared</span></li></ul>
+        <p class="row__src small">Kermany et al., via Paul Mooney on Kaggle. Children aged 1 to 5 at one hospital in Guangzhou.</p>
+        <div class="row__links"><a class="button" href="https://aaryav-pneumonia-detector.vercel.app/" target="_blank" rel="noopener">Open the detector<span class="sr-only"> (opens in a new tab)</span></a><a class="link" href="https://github.com/aaryavvatts-lab/pneumonia-detector" target="_blank" rel="noopener">Code<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </article>
     </div>
-  </footer>
+    <aside class="index__stage" data-stage aria-hidden="true">
+      <div class="frame" style="--p: var(--acc-cortical)"><img class="only-light " src="/img/corticaltap-light.png" alt="725 electrode contacts from the eight patients, drawn side on." width="1200" height="1500" data-for="corticaltap"><img class="only-dark " src="/img/corticaltap-dark.png" alt="" width="1200" height="1500" data-for="corticaltap"><video class="" src="/img/octaves.mp4" poster="/img/octaves-light.png" muted loop playsinline preload="metadata" aria-label="The decoder running live on a stored recording, from the project’s own screen capture." data-for="octaves"></video><img class="only-light " src="/img/gait-light.png" alt="Person S44&#x27;s real treadmill speed as a step line, with the model&#x27;s guess once a second. Brain only above, brain and muscle below." width="1200" height="1500" loading="lazy" data-for="gait"><img class="only-dark " src="/img/gait-dark.png" alt="" width="1200" height="1500" loading="lazy" data-for="gait"><img class="only-light " src="/img/neurospeech-light.png" alt="Activity across 256 channels while the participant tried to say one sentence." width="1200" height="1500" loading="lazy" data-for="neurospeech"><img class="only-dark " src="/img/neurospeech-dark.png" alt="" width="1200" height="1500" loading="lazy" data-for="neurospeech"><img class="only-light " src="/img/neuroswitch-light.png" alt="The 241 brain regions of the atlas, seen from above. Left hemisphere in full tone, right hemisphere lighter." width="1200" height="1500" loading="lazy" data-for="neuroswitch"><img class="only-dark " src="/img/neuroswitch-dark.png" alt="" width="1200" height="1500" loading="lazy" data-for="neuroswitch"><img class="photo " src="/img/slicewise.jpg" alt="One MRI slice from the OASIS dataset, from a person scored at the moderate stage." width="1200" height="1500" loading="lazy" data-for="slicewise"><img class="only-light " src="/img/myodecode-light.png" alt="Four forearm muscle sensors during one hand gesture, raw signal." width="1200" height="1500" loading="lazy" data-for="myodecode"><img class="only-dark " src="/img/myodecode-dark.png" alt="" width="1200" height="1500" loading="lazy" data-for="myodecode"><img class="only-light " src="/img/artifactscope-light.png" alt="The average blink as four headsets recorded it, with the middle half of blinks shaded." width="1200" height="1500" loading="lazy" data-for="artifactscope"><img class="only-dark " src="/img/artifactscope-dark.png" alt="" width="1200" height="1500" loading="lazy" data-for="artifactscope"><img class="only-light " src="/img/diabetes-light.png" alt="The women in the Pima dataset with both measurements recorded, glucose across and BMI up. Darker dots are diagnosed cases." width="1200" height="1500" loading="lazy" data-for="diabetes"><img class="only-dark " src="/img/diabetes-dark.png" alt="" width="1200" height="1500" loading="lazy" data-for="diabetes"><img class="photo " src="/img/pneumonia.jpg" alt="A chest X-ray from the Kaggle test set, a pneumonia case." width="1200" height="1500" loading="lazy" data-for="pneumonia"></div>
+      <p class="frame__cap small muted" data-stage-cap></p>
+    </aside>
+  </section>
 
-</div>
-
-<script src="script.js"></script>
+</main>
+<footer class="wrap close">
+  <p>Every project here starts from a public dataset and gets checked for the kind of leak that inflates most machine learning results on brain data. None of it is a medical device or medical advice.</p>
+  <p class="close__mark">Aaryav Sharma</p>
+  <div class="close__meta">
+    <a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a><a href="https://github.com/aaryavvatts-lab" target="_blank" rel="noopener">GitHub<span class="sr-only"> (opens in a new tab)</span></a>
+  </div>
+  <p class="small muted">Built and written by Aaryav Sharma. The pictures on this site are drawn from each project's own data.</p>
+</footer>
+<script src="/assets/kit.js" defer></script>
+<script src="/script.js" defer></script>
 </body>
 </html>
