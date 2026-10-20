@@ -4,19 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f4f3ef">
-<title>Page not found, Aaryav Sharma</title>
+<meta name="theme-color" content="#fcfbf8">
+<title>Page not found | Aaryav Sharma</title>
 <meta name="description" content="That page is not here.">
 <link rel="canonical" href="https://aaryavsharma-portfolio.vercel.app/404">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Page not found, Aaryav Sharma">
+<meta property="og:title" content="Page not found | Aaryav Sharma">
 <meta property="og:description" content="That page is not here.">
 <meta property="og:url" content="https://aaryavsharma-portfolio.vercel.app/404">
 <meta property="og:image" content="https://aaryavsharma-portfolio.vercel.app/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<script>/* Runs before first paint. Inline it in <head> on sites without a CSP; load it as a blocking same-origin
-   script where the CSP forbids inline scripts. It marks JavaScript as working and applies a saved theme. */
+<script>/* Runs before first paint. It marks JavaScript as working and applies a saved theme. */
 (function () {
   var d = document.documentElement;
   d.classList.add('js');
@@ -25,47 +24,54 @@
     if (t === 'dark' || t === 'light') d.setAttribute('data-theme', t);
   } catch (e) {}
 })();</script>
-<link rel="preload" href="/assets/fonts/Erode-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/Erode-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/barlow-condensed-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts.css">
-<link rel="stylesheet" href="/assets/tokens.css">
-<link rel="stylesheet" href="/assets/base.css">
 <link rel="stylesheet" href="/styles.css">
+<meta name="robots" content="noindex">
 </head>
 <body class="page">
 <a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
 <header class="wrap bar">
-  <a class="bar__mark" href="/">Aaryav Sharma</a>
-  <nav class="bar__links" aria-label="Site">
-    <a href="/">About</a><a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a>
-    <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
-  </nav>
-  <div class="bar__phone">
-    <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
-    <button class="bar__menu textbtn" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+  <div class="bar__in">
+    <a class="bar__mark" href="/" aria-label="Aaryav Sharma, home"><span class="logo" aria-hidden="true">AS</span><span>Aaryav Sharma</span></a>
+    <nav class="bar__links" aria-label="Site">
+      <a href="/">About</a><a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a><a class="chip" href="https://drive.google.com/file/d/1PW4Nn-z34CHWJqmoNFJ7LJkQCbAGdzI1/view?usp=sharing" target="_blank" rel="noopener">Resume<span class="sr-only"> (opens in a new tab)</span></a>
+      <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
+    </nav>
+    <div class="bar__phone">
+      <button class="theme" type="button" data-theme-toggle aria-pressed="false">Light</button>
+      <button class="bar__menu textbtn" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
   </div>
 </header>
 <nav id="menu" class="sheet" hidden aria-label="Menu">
-  <div class="bar"><span class="bar__mark">Aaryav Sharma</span><button class="textbtn" type="button" data-menu-close>Close</button></div>
-  <div class="sheet__links"><a href="/" style="--i:0">About</a><a href="/projects" style="--i:1">Projects</a><a href="/involvement" style="--i:2">Involvement</a><a href="/opportunities" style="--i:3">Opportunities</a><a href="/contact" style="--i:4">Contact</a></div>
+  <div class="sheet__top"><span class="bar__mark"><span class="logo" aria-hidden="true">AS</span><span>Aaryav Sharma</span></span><button class="textbtn" type="button" data-menu-close>Close</button></div>
+  <div class="sheet__links"><a href="/" style="--i:0">About</a><a href="/projects" style="--i:1">Projects</a><a href="/involvement" style="--i:2">Involvement</a><a href="/opportunities" style="--i:3">Opportunities</a><a href="/contact" style="--i:4">Contact</a><a href="https://drive.google.com/file/d/1PW4Nn-z34CHWJqmoNFJ7LJkQCbAGdzI1/view?usp=sharing" style="--i:5" target="_blank" rel="noopener">Resume<span class="sr-only"> (opens in a new tab)</span></a></div>
   <p class="muted">Email <a class="link" href="mailto:shar0674@umn.edu">shar0674@umn.edu</a></p>
 </nav>
 <main id="main" class="wrap">
-
-  <section class="lost">
-    <h1 class="display">That page is not here</h1>
-    <p class="lead" style="margin-top:1.2rem">The address may have changed. Everything on this site is one link away.</p>
-    <div class="hero__actions"><a class="button" href="/">Go to the start</a><a class="link" href="/projects">See the projects</a></div>
-  </section>
-
+<section class="lost" aria-labelledby="h-lost">
+  <p class="label">Error 404</p>
+  <h1 id="h-lost" class="display">That page is not here</h1>
+  <p class="lead">The address may have changed. Everything on this site is one link away.</p>
+  <div class="actions"><a class="button" href="/">Go to the start</a><a class="button button--ghost" href="/projects">See the projects</a></div>
+</section>
 </main>
-<footer class="wrap close">
-  <p>Every project here starts from a public dataset and gets checked for the kind of leak that inflates most machine learning results on brain data. None of it is a medical device or medical advice.</p>
-  <p class="close__mark">Aaryav Sharma</p>
-  <div class="close__meta">
-    <a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a><a href="https://github.com/aaryavvatts-lab" target="_blank" rel="noopener">GitHub<span class="sr-only"> (opens in a new tab)</span></a>
+<footer class="wrap foot">
+  <div class="foot__in">
+    <div class="foot__top">
+      <a class="bar__mark" href="/" aria-label="Aaryav Sharma, home"><span class="logo" aria-hidden="true">AS</span><span>Aaryav Sharma</span></a>
+      <nav class="foot__nav" aria-label="Footer">
+        <a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a><a href="https://aaryavvatts-lab.github.io/neuroscience-textbook/" target="_blank" rel="noopener">Textbook<span class="sr-only"> (opens in a new tab)</span></a><a href="https://github.com/aaryavvatts-lab" target="_blank" rel="noopener">GitHub<span class="sr-only"> (opens in a new tab)</span></a>
+      </nav>
+    </div>
+    <div class="foot__legal">
+      <span>&copy; 2026 Aaryav Sharma. Student projects, not medical advice.</span>
+      <nav aria-label="Legal"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/cookies">Cookies</a><a href="/accessibility">Accessibility</a></nav>
+    </div>
   </div>
-  <p class="small muted">Built and written by Aaryav Sharma. The pictures on this site are drawn from each project's own data.</p>
 </footer>
 <script src="/assets/kit.js" defer></script>
 <script src="/script.js" defer></script>

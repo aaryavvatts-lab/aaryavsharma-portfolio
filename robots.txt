@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://aaryavsharma-portfolio.vercel.app/sitemap.xml
