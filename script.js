@@ -4,27 +4,18 @@
   'use strict';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- hero: slow crossfade through four project pictures ---------- */
-  var hero = document.querySelector('[data-crossfade]');
-  if (hero) {
-    var slides = Array.prototype.slice.call(hero.querySelectorAll('[data-slide]'));
-    var cap = document.querySelector('[data-crossfade-cap]');
-    var i = 0, timer = 0;
-    function show(n) {
-      slides.forEach(function (s, k) {
-        var on = k === n;
-        s.querySelectorAll('img').forEach(function (im) { im.classList.toggle('is-on', on); });
-        if (on) { hero.style.setProperty('--p', 'var(' + s.getAttribute('data-accent') + ')'); if (cap) cap.textContent = s.getAttribute('data-cap'); }
-      });
+  /* ---------- reading progress: a thin accent line along the top ---------- */
+  var bar = document.querySelector('.progress');
+  if (bar) {
+    var queued = false;
+    function paint() {
+      queued = false;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.setProperty('--read', max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)).toFixed(4) : '0');
     }
-    show(0);
-    if (!reduce && slides.length > 1) {
-      function tick() { i = (i + 1) % slides.length; show(i); }
-      function start() { stop(); timer = setInterval(tick, 5600); }
-      function stop() { if (timer) clearInterval(timer); timer = 0; }
-      start();
-      document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
-    }
+    window.addEventListener('scroll', function () { if (!queued) { queued = true; requestAnimationFrame(paint); } }, { passive: true });
+    window.addEventListener('resize', paint);
+    paint();
   }
 
   /* ---------- projects: the row in the middle of the screen owns the stage ---------- */

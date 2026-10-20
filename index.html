@@ -15,8 +15,7 @@
 <meta property="og:image" content="https://aaryavsharma-portfolio.vercel.app/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<script>/* Runs before first paint. Inline it in <head> on sites without a CSP; load it as a blocking same-origin
-   script where the CSP forbids inline scripts. It marks JavaScript as working and applies a saved theme. */
+<script>/* Runs before first paint. It marks JavaScript as working and applies a saved theme. */
 (function () {
   var d = document.documentElement;
   d.classList.add('js');
@@ -34,6 +33,7 @@
 </head>
 <body class="page">
 <a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
 <header class="wrap bar">
   <a class="bar__mark" href="/">Aaryav Sharma</a>
   <nav class="bar__links" aria-label="Site">
@@ -60,62 +60,72 @@
       <div class="hero__actions" data-rise style="--i:4"><a class="button" href="/projects">See the ten projects</a><a class="link" href="/contact">Get in touch</a></div>
     </div>
     <div class="hero__stage" data-reveal="fade">
-      <div class="frame" data-crossfade style="--p: var(--acc-slicewise)"><div data-slide data-accent="--acc-slicewise" data-cap="One MRI slice from the OASIS dataset, from a person scored at the moderate stage."><img class="photo " src="/img/slicewise.jpg" alt="One MRI slice from the OASIS dataset, from a person scored at the moderate stage." width="1200" height="1500"></div><div data-slide data-accent="--acc-cortical" data-cap="725 electrode contacts from the eight patients, drawn side on."><img class="only-light " src="/img/corticaltap-light.png" alt="725 electrode contacts from the eight patients, drawn side on." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/corticaltap-dark.png" alt="" width="1200" height="1500" loading="lazy"></div><div data-slide data-accent="--acc-eeg" data-cap="The average blink as four headsets recorded it, with the middle half of blinks shaded."><img class="only-light " src="/img/artifactscope-light.png" alt="The average blink as four headsets recorded it, with the middle half of blinks shaded." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/artifactscope-dark.png" alt="" width="1200" height="1500" loading="lazy"></div><div data-slide data-accent="--acc-speech" data-cap="Activity across 256 channels while the participant tried to say one sentence."><img class="only-light " src="/img/neurospeech-light.png" alt="Activity across 256 channels while the participant tried to say one sentence." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neurospeech-dark.png" alt="" width="1200" height="1500" loading="lazy"></div></div>
-      <p class="frame__cap small muted" data-crossfade-cap aria-live="off">One MRI slice from the OASIS dataset, from a person scored at the moderate stage.</p>
+      <div class="array" id="array"></div>
+      <p class="array__cap small muted"><span>64 electrodes. Move across them.</span><span class="array__read" id="arrayRead" aria-hidden="true">rest</span></p>
     </div>
   </section>
 
-  <section class="letter" aria-label="About me" data-reveal>
-    <p>Most of what I do outside of class is take a public brain recording dataset and rebuild the analysis myself, to see if it actually holds up. Ten projects are on this site. Eight start from brain or muscle recordings, EEG, ECoG, fMRI, MRI and EMG, and two are medical prediction demos rebuilt from tutorials to see how far the advertised accuracy holds. I write up what worked, what did not, and why, and I put the code and a working demo online for each one.</p>
-    <p>Until September 2026 I worked as a lab assistant in the Moriarty/Webber Lab at the University of Minnesota under Dr. Richa Kaushal, helping with iPSC culture, macrophage differentiation, and gene editing work. I have also watched two live neurosurgeries under Dr. Anant Naik.</p>
-    <p>Outside of the lab I am building a smartphone based peripheral nerve health screening concept, and I am working toward starting a neurotech company. I founded BioSphere Learning, an education hub connecting students to tutoring organizations, and helped launch NeuroGIDAS, the neuroscience club at my school.</p>
-    <p class="letter__sign">Aaryav Sharma<span class="letter__role">Sophomore, Eastview High School</span></p>
+  <section class="band" aria-label="Simulated EEG trace" data-reveal="fade">
+    <canvas class="band__canvas" id="trace" role="img" aria-label="Six lines of simulated EEG drawn in your browser, with one slow blink crossing the top two."></canvas>
+    <p class="small muted band__cap">Simulated EEG, drawn live in your browser. It is not data from any of my projects.</p>
+  </section>
+
+  <section class="about" aria-labelledby="h-about">
+    <h2 id="h-about" class="about__lead" data-reveal>Most of what I do outside of class is take a public brain recording dataset and rebuild the analysis myself, to see if it holds up.</h2>
+    <div class="about__body" data-reveal>
+      <p>Ten projects are on this site. Eight start from brain or muscle recordings: EEG, ECoG, fMRI, MRI and EMG. Two are medical prediction demos I rebuilt from tutorials, to see how far the advertised accuracy holds. For each one I write up what worked, what did not, and why, and I put the code and a working demo online.</p>
+      <p>Until September 2026 I was a lab assistant in the Moriarty/Webber Lab at the University of Minnesota under Dr. Richa Kaushal, helping with iPSC culture, macrophage differentiation, and gene editing work. I have also watched two live neurosurgeries under Dr. Anant Naik.</p>
+      <p>Outside the lab, I am building a smartphone based peripheral nerve health screening concept and working toward starting a neurotech company. I founded BioSphere Learning, an education hub that connects students to tutoring organizations, and helped launch NeuroGIDAS, the neuroscience club at my school.</p>
+      <p class="letter__sign">Aaryav Sharma<span class="letter__role">Sophomore, Eastview High School</span></p>
+    </div>
   </section>
 
   <section class="section" aria-labelledby="h-feat">
-    <h2 id="h-feat" class="head" data-reveal>Four of the ten projects</h2>
-    <p class="lead" data-reveal style="--i:1">Each one starts from a public dataset and ends with a demo you can run in your browser. All ten are on the projects page.</p>
+    <div class="sechead">
+      <h2 id="h-feat" class="head" data-reveal>Four of the ten projects</h2>
+      <p class="lead" data-reveal>Each one starts from a public dataset and ends with a demo you can run in your browser.</p>
+    </div>
     <ul class="featured">
-    <li style="--p: var(--acc-speech)" data-reveal style="--i:0">
-      <div class="thumb"><img class="only-light " src="/img/neurospeech-light.png" alt="Activity across 256 channels while the participant tried to say one sentence." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neurospeech-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
-      <div class="body">
+    <li class="card card--wide" style="--p: var(--acc-speech)" data-reveal>
+      <a class="card__pic" href="/projects#neurospeech" tabindex="-1" aria-hidden="true"><img class="only-light" src="/img/neurospeech-light.png" alt="" width="1200" height="1500" loading="lazy"><img class="only-dark" src="/img/neurospeech-dark.png" alt="" width="1200" height="1500" loading="lazy"></a>
+      <div class="card__body">
         <h3>NeuroSpeech</h3>
         <p>Reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024.</p>
-        <div class="links"><a class="link" href="/projects#neurospeech">Read the write-up</a><a class="link" href="https://neurospeech-chi.vercel.app/" target="_blank" rel="noopener">Open the demo<span class="sr-only"> (opens in a new tab)</span></a></div>
+        <div class="links"><a class="link" href="/projects#neurospeech">Read the write-up</a><a class="link" href="https://als-speech-decoder.vercel.app/" target="_blank" rel="noopener">Open the demo<span class="sr-only"> (opens in a new tab)</span></a></div>
       </div>
     </li>
-    <li style="--p: var(--acc-ssvep)" data-reveal style="--i:1">
-      <div class="thumb"><img class="only-light " src="/img/octaves-light.png" alt="The four flicker rates and their harmonics, weighted by the measured signal to noise ratio." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/octaves-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
-      <div class="body">
+    <li class="card" style="--p: var(--acc-ssvep)" data-reveal>
+      <a class="card__pic" href="/projects#octaves" tabindex="-1" aria-hidden="true"><img class="only-light" src="/img/octaves-light.png" alt="" width="1200" height="1500" loading="lazy"><img class="only-dark" src="/img/octaves-dark.png" alt="" width="1200" height="1500" loading="lazy"></a>
+      <div class="card__body">
         <h3>Octaves in the Visual Cortex</h3>
         <p>Reads which of four flickering rates a person is looking at from eight dry EEG electrodes. The standard method got it wrong.</p>
-        <div class="links"><a class="link" href="/projects#octaves">Read the write-up</a><a class="link" href="https://ssvep-harmonic-decoder.vercel.app/" target="_blank" rel="noopener">Open the decoder<span class="sr-only"> (opens in a new tab)</span></a></div>
+        <div class="links"><a class="link" href="/projects#octaves">Read the write-up</a><a class="link" href="https://ssvep-bci-decoder.vercel.app/" target="_blank" rel="noopener">Open the decoder<span class="sr-only"> (opens in a new tab)</span></a></div>
       </div>
     </li>
-    <li style="--p: var(--acc-neuroswitch)" data-reveal style="--i:2">
-      <div class="thumb"><img class="only-light " src="/img/neuroswitch-light.png" alt="The 241 brain regions of the atlas, seen from above. Left hemisphere in full tone, right hemisphere lighter." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/neuroswitch-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
-      <div class="body">
+    <li class="card" style="--p: var(--acc-neuroswitch)" data-reveal>
+      <a class="card__pic" href="/projects#neuroswitch" tabindex="-1" aria-hidden="true"><img class="only-light" src="/img/neuroswitch-light.png" alt="" width="1200" height="1500" loading="lazy"><img class="only-dark" src="/img/neuroswitch-dark.png" alt="" width="1200" height="1500" loading="lazy"></a>
+      <div class="card__body">
         <h3>neuroswitch</h3>
-        <p>Does the brain reorganize after someone loses the use of a hand to nerve damage. Still running as more scans finish processing.</p>
-        <div class="links"><a class="link" href="/projects#neuroswitch">Read the write-up</a><a class="link" href="https://neuroswitch.vercel.app/" target="_blank" rel="noopener">Open the study<span class="sr-only"> (opens in a new tab)</span></a></div>
+        <p>Does the brain reorganize after someone loses the use of a hand to nerve damage? Still running as more scans finish processing.</p>
+        <div class="links"><a class="link" href="/projects#neuroswitch">Read the write-up</a><a class="link" href="https://hand-injury-brain-rewiring.vercel.app/" target="_blank" rel="noopener">Open the study<span class="sr-only"> (opens in a new tab)</span></a></div>
       </div>
     </li>
-    <li style="--p: var(--acc-eeg)" data-reveal style="--i:3">
-      <div class="thumb"><img class="only-light " src="/img/artifactscope-light.png" alt="The average blink as four headsets recorded it, with the middle half of blinks shaded." width="1200" height="1500" loading="lazy"><img class="only-dark " src="/img/artifactscope-dark.png" alt="" width="1200" height="1500" loading="lazy"></div>
-      <div class="body">
+    <li class="card card--wide" style="--p: var(--acc-eeg)" data-reveal>
+      <a class="card__pic" href="/projects#artifactscope" tabindex="-1" aria-hidden="true"><img class="only-light" src="/img/artifactscope-light.png" alt="" width="1200" height="1500" loading="lazy"><img class="only-dark" src="/img/artifactscope-dark.png" alt="" width="1200" height="1500" loading="lazy"></a>
+      <div class="card__body">
         <h3>EEG Artifact Scope</h3>
-        <p>Checks whether an EEG recording holds brain activity or just blinks and jaw clenches, checked against 30 people wearing five headsets at once.</p>
-        <div class="links"><a class="link" href="/projects#artifactscope">Read the write-up</a><a class="link" href="https://eeg-artifact-scope.vercel.app/" target="_blank" rel="noopener">Open the tool<span class="sr-only"> (opens in a new tab)</span></a></div>
+        <p>Checks whether an EEG recording holds brain activity or just blinks and jaw clenches, tested against 30 people wearing five headsets at once.</p>
+        <div class="links"><a class="link" href="/projects#artifactscope">Read the write-up</a><a class="link" href="https://eeg-artifact-finder.vercel.app/" target="_blank" rel="noopener">Open the tool<span class="sr-only"> (opens in a new tab)</span></a></div>
       </div>
     </li>
     </ul>
-    <p style="margin-top:2.5rem" data-reveal><a class="button" href="/projects">All ten projects</a></p>
+    <p class="more" data-reveal><a class="button" href="/projects">All ten projects</a></p>
   </section>
 
   <section class="section check" aria-labelledby="h-check">
     <div class="check__intro">
       <h2 id="h-check" class="head" data-reveal>The number before the check, and after</h2>
-      <p data-reveal style="--i:1">Split the data the easy way and a model looks great. Split it the way a real device would see the world and the number usually drops, sometimes by half. Twice it went the other way: the textbook SSVEP method lost to a fix that read the whole spectrum, and a transformer lost to plain logistic regression. I check for this in every project, and it is usually the most important finding in the write-up.</p>
+      <p data-reveal>Split the data the easy way and a model looks great. Split it the way a real device would see the world and the number usually drops, sometimes by half. Twice it went the other way: the textbook SSVEP method lost to a fix that read the whole spectrum, and a transformer lost to plain logistic regression. I check for this in every project, and it is usually the most important finding in the write-up.</p>
     </div>
     <div class="check__panel" data-reveal style="--i:2">
       <div class="split">
@@ -154,25 +164,25 @@
         <span class="pair__label">transformer</span>
       </div>
       </div>
-      <p style="margin-top:1.5rem">Every pair comes from the project's own write-up, where the method behind each number is spelled out.</p>
+      <p class="small muted" style="margin-top:1.5rem">Every pair comes from the project's own write-up, where the method behind each number is spelled out.</p>
     </div>
   </section>
 
   <section class="section" aria-labelledby="h-facts">
     <h2 id="h-facts" class="head" data-reveal>The work so far</h2>
-    <ul class="facts" data-reveal style="--i:1">
-      <li>10 research projects, each with code and a working demo.</li>
-      <li>9 public datasets, every one credited on its project page.</li>
-      <li>270 or more people in the brain and muscle recordings.</li>
-      <li>1,000 or more electrodes and sensors across the projects.</li>
-      <li>2 live neurosurgeries observed.</li>
-      <li>200 or more volunteer hours.</li>
+    <ul class="facts" data-reveal>
+      <li><span class="facts__n">10</span><span>research projects, each with code and a working demo</span></li>
+      <li><span class="facts__n">9</span><span>public datasets, every one credited on its project page</span></li>
+      <li><span class="facts__n">270+</span><span>people in the brain and muscle recordings</span></li>
+      <li><span class="facts__n">1,000+</span><span>electrodes and sensors across the projects</span></li>
+      <li><span class="facts__n">2</span><span>live neurosurgeries observed</span></li>
+      <li><span class="facts__n">200+</span><span>volunteer hours</span></li>
     </ul>
   </section>
 
 </main>
 <footer class="wrap close">
-  <p>Every project here starts from a public dataset and gets checked for the kind of leak that inflates most machine learning results on brain data. None of it is a medical device or medical advice.</p>
+  <p class="close__note">Every project here starts from a public dataset and gets checked for the kind of leak that inflates most machine learning results on brain data. None of it is a medical device or medical advice.</p>
   <p class="close__mark">Aaryav Sharma</p>
   <div class="close__meta">
     <a href="/projects">Projects</a><a href="/involvement">Involvement</a><a href="/opportunities">Opportunities</a><a href="/contact">Contact</a><a href="https://github.com/aaryavvatts-lab" target="_blank" rel="noopener">GitHub<span class="sr-only"> (opens in a new tab)</span></a>
@@ -180,6 +190,9 @@
   <p class="small muted">Built and written by Aaryav Sharma. The pictures on this site are drawn from each project's own data.</p>
 </footer>
 <script src="/assets/kit.js" defer></script>
+<script src="/assets/hairline-kernel.js" defer></script>
+<script src="/assets/hero.js" defer></script>
+<script src="/assets/electrode-array.js" defer></script>
 <script src="/script.js" defer></script>
 </body>
 </html>
