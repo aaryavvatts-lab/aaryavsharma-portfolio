@@ -218,9 +218,9 @@ export function createField(o: FieldOptions) {
     if (pointerActive) {
       ray.setFromCamera(pointerNdc, camera);
       if (ray.ray.intersectPlane(plane, hit)) uniforms.uPointer.value.copy(hit);
-      uniforms.uPointerOn.value += (1 - uniforms.uPointerOn.value) * 0.1;
+      uniforms.uPointerOn.value += (1 - uniforms.uPointerOn.value) * (1 - Math.exp(-dt * 6));
     } else {
-      uniforms.uPointerOn.value *= 0.9;
+      uniforms.uPointerOn.value *= Math.exp(-dt * 6);
     }
     renderer.render(scene, camera);
   }

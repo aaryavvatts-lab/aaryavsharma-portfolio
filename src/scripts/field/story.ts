@@ -37,7 +37,7 @@ export function startStory() {
   let layouts: Layout[] = [];
   let labelSizes: number[][] = [];
   let glTried = false;
-  let lastW = 0, lastH = 0;
+  let lastW = 0, lastH = 0, lastNarrow = false;
   const motion = !reducedMotion();
   const tier = gpuTier();
 
@@ -82,7 +82,7 @@ export function startStory() {
       return Math.min(top + r.height / 2 - vh / 2, max);
     });
     labelSizes = [];
-    lastW = window.innerWidth; lastH = window.innerHeight;
+    lastW = window.innerWidth; lastH = window.innerHeight; lastNarrow = narrowQuery.matches;
     layouts = shapes.map((s, i) => layoutFor(s, i));
     renderer?.setLayouts(layouts);
     renderer?.resize();
@@ -185,20 +185,24 @@ export function startStory() {
   let rt = 0;
   // Phone toolbars change the height a little on every scroll; only re-measure for real resizes.
   window.addEventListener('resize', () => {
-    if (window.innerWidth === lastW && Math.abs(window.innerHeight - lastH) < 150) return;
+    if (window.innerWidth === lastW && Math.abs(window.innerHeight - lastH) < 150 && narrowQuery.matches === lastNarrow) {
+      renderer?.resize();
+      return;
+    }
     clearTimeout(rt); rt = window.setTimeout(measure, 120);
   });
   const main = document.querySelector('main');
   if (main && 'ResizeObserver' in window) {
-    let lastH = 0, ot = 0;
+    let mainH = 0, ot = 0;
     new ResizeObserver(([e]) => {
       const nh = e.contentRect.height;
-      if (Math.abs(nh - lastH) < 2) return;
-      lastH = nh; clearTimeout(ot); ot = window.setTimeout(measure, 150);
+      if (Math.abs(nh - mainH) < 2) return;
+      mainH = nh; clearTimeout(ot); ot = window.setTimeout(measure, 150);
     }).observe(main);
   }
 
   document.addEventListener('themechange', () => { labelSizes = []; });
+  document.fonts?.ready.then(() => { labelSizes = []; });
   document.querySelectorAll<HTMLElement>('.stop-hit').forEach((a) => {
     a.addEventListener('pointerenter', () => renderer?.setHover(true));
     a.addEventListener('pointerleave', () => renderer?.setHover(false));

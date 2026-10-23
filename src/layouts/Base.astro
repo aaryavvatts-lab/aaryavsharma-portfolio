@@ -8,7 +8,7 @@ type Props = { title: string; description: string; image?: string; home?: boolea
 const { title, description, image = '/og.png', home = false, noindex = false } = Astro.props;
 // build.format 'file' makes the build-time path /about.html; Vercel serves it as /about
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/(index)?$/, '');
-const canonical = `${SITE_URL}${path}`;
+const canonical = `${SITE_URL}${path || '/'}`;
 const fullTitle = home ? `${profile.name} | Textbooks, clubs and research` : `${title} | ${profile.name}`;
 const person = {
   '@context': 'https://schema.org',
