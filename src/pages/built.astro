@@ -5,10 +5,10 @@ import ButtonLink from '../components/ButtonLink.astro';
 import Stats from '../components/Stats.astro';
 import { textbooks, websites, projects, totalUsers } from '../content/site';
 ---
-<Base title="Built" description="Everything Aaryav Sharma has built: two free interactive textbooks, websites for SASA and EDAN, and ten research projects with code and live demos.">
+<Base title="Built" description="Everything Aaryav Sharma has built: two free interactive textbooks, websites for SASA and EDAN, and ten research projects with live demos.">
   <PageHead
     title="Things I’ve <em>built</em>"
-    lede={`Two free textbooks, two websites and ten research projects. The four sites have had ${totalUsers} users since they launched, by Google Analytics.`}
+    lede={`Two free textbooks, two websites and ten research projects. The four sites have had ${totalUsers} readers and visitors since they launched, by Google Analytics.`}
     art="book"
   >
     <nav class="jump" aria-label="On this page">
@@ -23,7 +23,7 @@ import { textbooks, websites, projects, totalUsers } from '../content/site';
       {textbooks.map((b, i) => (
         <article class={`feature ${i % 2 ? 'flip' : ''}`} id={b.id} data-reveal>
           <a class="shot" href={b.links[0].href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <img src={b.image.src} alt="" width={b.image.w} height={b.image.h} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+            <img src={b.image.src} alt="" width={b.image.w} height={b.image.h} loading={i === 0 ? "eager" : "lazy"} fetchpriority={i === 0 ? "high" : "auto"} decoding="async" />
           </a>
           <div class="feature-copy">
             <p class="kind">{b.kind}. {b.role}.</p>
@@ -41,7 +41,7 @@ import { textbooks, websites, projects, totalUsers } from '../content/site';
   <section class="section" id="websites" aria-labelledby="web-title">
     <div class="wrap">
       <h2 class="section-title" id="web-title">Websites</h2>
-      <p class="section-intro">Sites I designed and built for groups I’m part of or believe in.</p>
+      <p class="section-intro">Sites I built for my club and for EDAN, an epilepsy data group.</p>
       <div class="site-grid">
         {websites.map((b) => (
           <article class="site-card" id={b.id} data-reveal>
@@ -62,7 +62,7 @@ import { textbooks, websites, projects, totalUsers } from '../content/site';
   <section class="section" id="research" aria-labelledby="rs-title">
     <div class="wrap">
       <h2 class="section-title" id="rs-title">Research projects</h2>
-      <p class="section-intro">Each project starts from a public dataset. I redo the analysis, look for the mistakes that make results look better than they are, and publish the code and a working demo. These are student projects, not medical devices or medical advice.</p>
+      <p class="section-intro">Each project starts from a public dataset. I redo the analysis, look for the mistakes that make results look better than they are, and publish a working demo, with the code for all but one. These are student projects, not medical devices or medical advice.</p>
       <div class="proj-list">
         {projects.map((p) => (
           <article class="proj" id={p.id} data-reveal>

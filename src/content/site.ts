@@ -32,7 +32,7 @@ export const totalUsers = Object.values(usage).reduce((sum, u) => sum + u.users,
 export const nav: Link[] = [
   { label: 'About', href: '/about' },
   { label: 'Built', href: '/built' },
-  { label: 'Leadership & Service', href: '/leadership' },
+  { label: 'Leadership & service', href: '/leadership' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -57,17 +57,17 @@ export const textbooks: Build[] = [
     kind: 'Free interactive textbook',
     role: 'I wrote and built it for SASA',
     summary:
-      'An interactive guide to the cultures of South Asia for high school students. It covers eight countries in 22 chapters, from ancient history and Partition to food, music, cricket and the diaspora. Every chapter has a simulation you can play with, like spinning a festival calendar or drawing a kolam, plus an Ask Your Elders guide for talking with your own family.',
+      'An interactive guide to the cultures of South Asia for high school students. It covers eight countries in 22 chapters: ancient history, Partition, food, music, cricket, the diaspora and more. Every chapter has a simulation you can play with, like spinning a festival calendar or drawing a kolam, plus an Ask Your Elders guide for talking with your own family.',
     why: 'A lot of us grew up with these traditions and never learned the why. Clubs can run a full year of meetings from its Club Kit.',
     stats: [
       { value: String(usage.rootsRivers.users), label: 'readers since launch' },
-      { value: '22', label: 'chapters, each with its own simulation' },
+      { value: '22', label: 'chapters, each with a simulation' },
       { value: '368', label: 'concepts in its learning graph' },
     ],
     links: [
       { label: 'Read Roots & Rivers', href: 'https://aaryavvatts-lab.github.io/south-asian-culture-textbook/', external: true },
     ],
-    image: { src: '/img/shots/roots-rivers.jpg', alt: 'The Roots & Rivers home page, with its chapter list and counts of chapters, simulations and countries.', w: 1440, h: 900 },
+    image: { src: '/img/shots/roots-rivers.webp', alt: 'The Roots & Rivers home page, with its chapter list and counts of chapters, simulations and countries.', w: 1200, h: 750 },
   },
   {
     id: 'neuron-bedside',
@@ -80,12 +80,12 @@ export const textbooks: Build[] = [
     stats: [
       { value: String(usage.neuroBook.users), label: 'readers since launch' },
       { value: String(usage.neuroBook.active), label: 'active readers' },
-      { value: '16', label: 'chapters and 16 simulations' },
+      { value: '16', label: 'chapters, each with a simulation' },
     ],
     links: [
       { label: 'Read the textbook', href: 'https://aaryavvatts-lab.github.io/neuroscience-textbook/', external: true },
     ],
-    image: { src: '/img/shots/neuron-bedside.jpg', alt: 'The From Neuron to Bedside home page.', w: 1440, h: 900 },
+    image: { src: '/img/shots/neuron-bedside.webp', alt: 'The From Neuron to Bedside home page.', w: 1200, h: 750 },
   },
 ];
 
@@ -102,18 +102,18 @@ export const websites: Build[] = [
       { value: '329', label: 'school districts you can look up' },
     ],
     links: [{ label: 'Visit EDAN', href: 'https://edanmn.vercel.app/', external: true }],
-    image: { src: '/img/shots/edan.jpg', alt: 'The EDAN home page, which says 7 in 10 Minnesota districts post no findable seizure plan.', w: 1440, h: 900 },
+    image: { src: '/img/shots/edan.webp', alt: 'The EDAN home page, which says 7 in 10 Minnesota districts post no findable seizure plan.', w: 1200, h: 750 },
   },
   {
     id: 'sasa-site',
     name: 'SASA website',
     kind: 'Website',
-    role: 'I built it for our club',
+    role: 'I designed and built it for our club',
     summary:
       'The website for Eastview’s South Asian Student Association. It has a live countdown to the next meeting, a map of South Asia, and a year of 19 festivals in order, each with a short page about it.',
     stats: [{ value: String(usage.sasaSite.users), label: 'visitors since launch' }],
     links: [{ label: 'Visit the SASA site', href: 'https://evhs-sasa.vercel.app/', external: true }],
-    image: { src: '/img/shots/sasa.jpg', alt: 'The SASA website home page.', w: 1440, h: 900 },
+    image: { src: '/img/shots/sasa.webp', alt: 'The SASA website home page.', w: 1200, h: 750 },
   },
 ];
 
@@ -162,7 +162,7 @@ export const projects: Project[] = [
     tags: ['ECoG', 'Speech'],
     summary:
       'NeuroSpeech reads sentences from 256 electrodes in the speech motor cortex of a man with ALS, using data Stanford released in 2024. I also looked at what the model’s mistakes say about how the brain plans mouth movement.',
-    why: 'A short video called this kind of work telepathy, and that word is wrong in a way that matters. Part of the write-up explains what this technology really is and what it is not.',
+    why: 'A short video called this kind of work telepathy, which is wrong. Part of the write-up explains what this technology really is and what it is not.',
     stats: [
       { value: '17.08%', label: 'word error rate' },
       { value: '37.2%', label: 'of sentences exactly right' },
@@ -172,7 +172,7 @@ export const projects: Project[] = [
     demo: 'https://als-speech-decoder.vercel.app/',
     demoLabel: 'Open the demo',
     code: 'https://github.com/aaryavvatts-lab/neurospeech',
-    image: { src: '/img/neurospeech-dark.png', alt: 'Activity across 256 channels while the participant tried to say one sentence.' },
+    image: { src: '/img/neurospeech-dark.webp', alt: 'Activity across 256 channels while the participant tried to say one sentence.' },
   },
   {
     id: 'corticaltap',
@@ -191,7 +191,7 @@ export const projects: Project[] = [
     demo: 'https://ecog-movement-decoder.vercel.app/',
     demoLabel: 'Open the decoder',
     code: 'https://github.com/aaryavvatts-lab/corticaltap',
-    image: { src: '/img/corticaltap-dark.png', alt: '725 electrode contacts from the eight patients, drawn side on.' },
+    image: { src: '/img/corticaltap-dark.webp', alt: '725 electrode contacts from the eight patients, drawn side on.' },
   },
   {
     id: 'octaves',
@@ -248,7 +248,7 @@ export const projects: Project[] = [
     demo: 'https://emg-gesture-decoder.vercel.app/',
     demoLabel: 'Open the demo',
     code: 'https://github.com/aaryavvatts-lab/myodecode',
-    image: { src: '/img/myodecode-dark.png', alt: 'Four forearm muscle sensors during one hand gesture, raw signal.' },
+    image: { src: '/img/myodecode-dark.webp', alt: 'Four forearm muscle sensors during one hand gesture, raw signal.' },
   },
   {
     id: 'artifactscope',
@@ -286,7 +286,7 @@ export const projects: Project[] = [
     demo: 'https://hand-injury-brain-rewiring.vercel.app/',
     demoLabel: 'Open the study',
     code: 'https://github.com/aaryavvatts-lab/neuroswitch',
-    image: { src: '/img/neuroswitch-dark.png', alt: 'The 241 brain regions of the atlas, seen from above.' },
+    image: { src: '/img/neuroswitch-dark.webp', alt: 'The 241 brain regions of the atlas, seen from above.' },
   },
   {
     id: 'pneumonia',
@@ -322,7 +322,7 @@ export const projects: Project[] = [
     source: 'Pima Indians Diabetes Database (NIDDK). Tutorial by Siddhardhan.',
     demo: 'https://diabetes-risk-model.vercel.app/',
     demoLabel: 'Open the predictor',
-    image: { src: '/img/diabetes-dark.png', alt: 'Glucose across and BMI up for the women in the Pima dataset. Darker dots are diagnosed cases.' },
+    image: { src: '/img/diabetes-dark.webp', alt: 'Glucose across and BMI up for the women in the Pima dataset. Darker dots are diagnosed cases.' },
   },
 ];
 
@@ -408,7 +408,7 @@ export const research: Experience[] = [
     title: 'Lab assistant',
     place: 'Moriarty/Weber Lab, University of Minnesota Twin Cities',
     body: 'I worked under Dr. Richa Kaushal in a gene editing and cell therapy lab that sits under the Crane Lab. My day-to-day covered iPSC culture, turning iPSCs into macrophages, media prep, gene editing, passaging cells and running maxipreps. Before I started, I made my own study guide on iPSCs, iPSC-derived macrophages, flow cytometry and cell surface markers, and I kept a running log of my shifts.',
-    image: { src: '/img/macrophages.jpg', alt: 'Cultured macrophages under a microscope.', credit: 'Macrophages, the cell type I helped differentiate. Picture by Buchacher and colleagues, CC BY 4.0, via Wikimedia Commons. Not from the lab I worked in.' },
+    image: { src: '/img/macrophages.webp', alt: 'Cultured macrophages under a microscope.', credit: 'Macrophages, the cell type I helped differentiate. Picture by Buchacher and colleagues, CC BY 4.0, via Wikimedia Commons. Not from the lab I worked in.' },
   },
   {
     when: 'September 2025 to present',
@@ -421,7 +421,7 @@ export const research: Experience[] = [
     title: 'NeuroBridge GBM',
     place: 'HOSA Medical Innovation project',
     body: 'I am building a plan for caregiver communication and symptom tracking in glioblastoma care. So far I have cold-emailed more than 150 neuroscience and medical professionals for interviews and clinical feedback, and I have run surveys and calls to learn what caregivers really struggle with.',
-    image: { src: '/img/glioblastoma-mri.jpg', alt: 'A glioblastoma on MRI before and after surgery.', credit: 'Picture by Ars Neurochirurgica, CC BY 4.0, via Wikimedia Commons.' },
+    image: { src: '/img/glioblastoma-mri.webp', alt: 'A glioblastoma on MRI before and after surgery.', credit: 'Picture by Ars Neurochirurgica, CC BY 4.0, via Wikimedia Commons.' },
   },
   {
     when: 'September to December 2025',
@@ -464,7 +464,7 @@ export type Stop = {
 };
 
 export const impact: Stat[] = [
-  { value: String(totalUsers), label: 'users across four sites I built, by Google Analytics' },
+  { value: String(totalUsers), label: 'readers and visitors across four sites I built, by Google Analytics' },
   { value: '2', label: 'free textbooks, 38 chapters in all' },
   { value: '2', label: 'school clubs I helped start' },
   { value: volunteerHours, label: 'volunteer hours' },
@@ -493,7 +493,7 @@ export const stops: Stop[] = [
     stats: [
       { value: String(usage.neuroBook.users), label: 'readers since launch' },
       { value: String(usage.neuroBook.active), label: 'active readers' },
-      { value: '16', label: 'chapters and simulations' },
+      { value: '16', label: 'chapters, each with a simulation' },
     ],
     primary: { label: 'Read the textbook', href: 'https://aaryavvatts-lab.github.io/neuroscience-textbook/', external: true },
   },

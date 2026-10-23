@@ -35,22 +35,27 @@ export function startStory() {
   let current = 0;
   let renderer: Renderer | null = null;
   let layouts: Layout[] = [];
+  let labelSizes: number[][] = [];
+  let glTried = false;
+  let lastW = 0, lastH = 0;
   const motion = !reducedMotion();
   const tier = gpuTier();
 
-  const wideQuery = window.matchMedia('(min-width: 900px) and (min-aspect-ratio: 21/20)');
+  // Must match the narrow-layout media query in index.astro.
+  const narrowQuery = window.matchMedia('(max-width: 899px), (max-aspect-ratio: 21/20)');
+  const isWide = () => !narrowQuery.matches;
 
   // Place each shape in the free space beside its text (wide screens) or above it (phones).
   function layoutFor(shape: ShapeName, index: number): Layout {
-    const w = window.innerWidth, h = window.innerHeight;
+    const w = canvas?.clientWidth || window.innerWidth, h = canvas?.clientHeight || window.innerHeight;
     const ppu = h / viewSize(w, h).visH; // pixels per world unit at the focal plane
     // rough half-width of each shape in world units, including its sway
     const R = ({ sphere: 1.55, network: 1.5, book: 1.55, southAsia: 1.45, brain: 1.3, helix: 1.25, minnesota: 1.3, galaxy: 2.1 } as Record<ShapeName, number>)[shape];
     const small = sections[index]?.dataset.size === 'small';
     if (shape === 'galaxy') {
-      return { x: 0, y: wideQuery.matches ? -0.04 : 0.06, scale: Math.min(1.05, (w * 0.5) / (2.1 * ppu)) };
+      return { x: 0, y: isWide() ? -0.04 : 0.06, scale: Math.min(1.05, (w * 0.5) / (2.1 * ppu)) };
     }
-    if (wideQuery.matches) {
+    if (isWide()) {
       const copy = sections[index].querySelector<HTMLElement>('.stop-card, .hero-copy');
       const wrap = sections[index].querySelector<HTMLElement>('.stop__inner');
       const left = copy ? copy.getBoundingClientRect().right + 32 : w * 0.5;
@@ -62,7 +67,7 @@ export function startStory() {
       return { x: (cx - w / 2) / (w / 2), y: 0, scale };
     }
     // phones and tall tablets: the shape sits in the top part, the text below it
-    const radiusPx = Math.min(w * 0.44, h * (shape === 'network' ? 0.16 : 0.2));
+    const radiusPx = Math.min(w * 0.44, h * (shape === 'network' ? 0.14 : 0.2));
     const scale = (radiusPx / (R * ppu)) * (small ? 0.88 : 1);
     return { x: 0, y: shape === 'network' ? 0.5 : 0.44, scale };
   }
@@ -76,6 +81,8 @@ export function startStory() {
       if (i === 0) return 0;
       return Math.min(top + r.height / 2 - vh / 2, max);
     });
+    labelSizes = [];
+    lastW = window.innerWidth; lastH = window.innerHeight;
     layouts = shapes.map((s, i) => layoutFor(s, i));
     renderer?.setLayouts(layouts);
     renderer?.resize();
@@ -107,11 +114,12 @@ export function startStory() {
     labelLayer.toggleAttribute('data-on', on);
     if (!on && d > 0.6) return;
     const pts = renderer.nodes();
+    if (!labelSizes.length) labelSizes = labels.map((el) => [el.offsetWidth, el.offsetHeight]);
     const boxes = labels.map((el, i) => {
       const p = pts[i];
-      const bw = el.offsetWidth, bh = el.offsetHeight;
+      const [bw, bh] = labelSizes[i];
       const right = p.sx < window.innerWidth - bw - 24;
-      return { el, x: right ? p.sx + 10 : p.sx - bw - 10, y: p.sy - bh / 2, w: bw, h: bh, ax: p.sx, ay: p.sy };
+      return { el, x: right ? p.sx + 10 : p.sx - bw - 10, y: p.sy - bh / 2, w: bw, h: bh };
     });
     for (let pass = 0; pass < 14; pass++) {
       for (let a = 0; a < boxes.length; a++) for (let b = a + 1; b < boxes.length; b++) {
@@ -123,13 +131,11 @@ export function startStory() {
       }
     }
     const pad = 8;
-    const maxY = wideQuery.matches ? window.innerHeight - pad : window.innerHeight * 0.5;
+    const maxY = isWide() ? window.innerHeight - pad : window.innerHeight * 0.5;
     boxes.forEach((b) => {
       const x = Math.max(pad, Math.min(window.innerWidth - b.w - pad, b.x));
       const y = Math.max(64, Math.min(maxY - b.h, b.y));
       b.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
-      b.el.style.setProperty('--ax', `${(b.ax - x).toFixed(1)}px`);
-      b.el.style.setProperty('--ay', `${(b.ay - y).toFixed(1)}px`);
     });
   }
 
@@ -145,7 +151,6 @@ export function startStory() {
       canvas!.width = Math.round(w * dpr); canvas!.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawShape(ctx, shapes[i], local[i], w, h, isLight(), geo);
-      if (motion) { canvas!.style.opacity = '0'; requestAnimationFrame(() => (canvas!.style.opacity = '1')); }
     }
     return {
       kind: 'flat',
@@ -178,7 +183,11 @@ export function startStory() {
   measure();
   window.addEventListener('scroll', readScroll, { passive: true });
   let rt = 0;
-  window.addEventListener('resize', () => { clearTimeout(rt); rt = window.setTimeout(measure, 120); });
+  // Phone toolbars change the height a little on every scroll; only re-measure for real resizes.
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === lastW && Math.abs(window.innerHeight - lastH) < 150) return;
+    clearTimeout(rt); rt = window.setTimeout(measure, 120);
+  });
   const main = document.querySelector('main');
   if (main && 'ResizeObserver' in window) {
     let lastH = 0, ot = 0;
@@ -189,13 +198,14 @@ export function startStory() {
     }).observe(main);
   }
 
+  document.addEventListener('themechange', () => { labelSizes = []; });
   document.querySelectorAll<HTMLElement>('.stop-hit').forEach((a) => {
     a.addEventListener('pointerenter', () => renderer?.setHover(true));
     a.addEventListener('pointerleave', () => renderer?.setHover(false));
   });
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     window.addEventListener('pointermove', (e) => renderer?.setPointer(e.clientX, e.clientY), { passive: true });
-    document.addEventListener('pointerleave', () => renderer?.setPointer(null));
+    document.documentElement.addEventListener('mouseleave', () => renderer?.setPointer(null));
   }
   document.addEventListener('themechange', () => renderer?.setTheme(isLight()));
 
@@ -203,15 +213,16 @@ export function startStory() {
     let geo: GeoData | null = null;
     const { loadGeo } = await import('./shapes');
     try { geo = await loadGeo(); } catch { geo = null; }
-    const useGl = tier !== 'none' && motion && geo;
+    const useGl = tier !== 'none' && motion;
     if (useGl) {
       try {
         const { createField } = await import('./field');
+        glTried = true;
         renderer = createField({
-          canvas: canvas!, shapes, geo: geo!, count: COUNTS[tier as 'low' | 'mid' | 'high'],
+          canvas: canvas!, shapes, geo: geo ?? { southAsia: null, minnesota: null }, count: COUNTS[tier as 'low' | 'mid' | 'high'],
           dpr: Math.min(window.devicePixelRatio || 1, tier === 'high' ? 2 : 1.5),
-          light: isLight(), motion,
-          onLost: () => { renderer = createFlatSwap(geo); },
+          light: isLight(), motion, halfRate: tier === 'low',
+          onLost: () => { const old = renderer; renderer = createFlatSwap(geo); old?.destroy(); },
         });
         document.documentElement.dataset.field = 'webgl';
       } catch {
@@ -222,13 +233,16 @@ export function startStory() {
     }
     renderer.setLayouts(layouts);
     renderer.resize();
+    current = target; // start where the reader already is, not at the top
+    renderer.setStage(current);
     requestAnimationFrame(() => canvas!.classList.add('is-ready'));
     raf = requestAnimationFrame(tick);
   }
 
   // A lost WebGL context cannot be reused for 2D, so swap in a fresh canvas.
   function createFlatSwap(geo: GeoData | null): Renderer {
-    if (renderer?.kind === 'webgl' && canvas) {
+    // A canvas that ever had a WebGL context can't give a 2D one.
+    if (glTried && canvas) {
       const fresh = canvas.cloneNode() as HTMLCanvasElement;
       canvas.replaceWith(fresh);
       canvas = fresh;

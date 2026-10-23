@@ -4,18 +4,23 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_URL, profile } from '../content/site';
 
-type Props = { title: string; description: string; image?: string; home?: boolean };
-const { title, description, image = '/og.png', home = false } = Astro.props;
-const path = Astro.url.pathname.replace(/\/$/, '');
-const canonical = `${SITE_URL}${path || ''}` || SITE_URL;
+type Props = { title: string; description: string; image?: string; home?: boolean; noindex?: boolean };
+const { title, description, image = '/og.png', home = false, noindex = false } = Astro.props;
+// build.format 'file' makes the build-time path /about.html; Vercel serves it as /about
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/(index)?$/, '');
+const canonical = `${SITE_URL}${path}`;
 const fullTitle = home ? `${profile.name} | Textbooks, clubs and research` : `${title} | ${profile.name}`;
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: profile.name,
   url: SITE_URL,
-  email: `mailto:${profile.email}`,
-  affiliation: { '@type': 'HighSchool', name: profile.school, address: profile.town },
+  email: profile.email,
+  affiliation: {
+    '@type': 'HighSchool',
+    name: profile.school,
+    address: { '@type': 'PostalAddress', addressLocality: 'Apple Valley', addressRegion: 'MN', addressCountry: 'US' },
+  },
   sameAs: [profile.github],
 };
 ---
@@ -27,6 +32,7 @@ const person = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#0b0d12" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -53,7 +59,7 @@ const person = {
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <Header />
-    <main id="main">
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />

@@ -5,8 +5,8 @@
 export type ShapeName = 'sphere' | 'book' | 'brain' | 'southAsia' | 'helix' | 'network' | 'minnesota' | 'galaxy';
 
 export type GeoData = {
-  southAsia: { n: number; pts: number[] };
-  minnesota: { n: number; pts: number[] };
+  southAsia: { n: number; pts: number[] } | null;
+  minnesota: { n: number; pts: number[] } | null;
 };
 
 // mulberry32: deterministic so the same particle lands in the same place every load
@@ -134,7 +134,7 @@ function brain(n: number, r: () => number) {
   return out;
 }
 
-function southAsia(n: number, r: () => number, data: GeoData['southAsia']) {
+function southAsia(n: number, r: () => number, data: NonNullable<GeoData['southAsia']>) {
   const out = new Float32Array(n * 4);
   const m = data.n;
   for (let i = 0; i < n; i++) {
@@ -227,7 +227,7 @@ function network(n: number, r: () => number) {
   return out;
 }
 
-function minnesota(n: number, r: () => number, data: GeoData['minnesota']) {
+function minnesota(n: number, r: () => number, data: NonNullable<GeoData['minnesota']>) {
   const out = new Float32Array(n * 4);
   const m = data.n;
   for (let i = 0; i < n; i++) {
@@ -258,24 +258,25 @@ function galaxy(n: number, r: () => number) {
 }
 
 export function buildShape(name: ShapeName, n: number, geo: GeoData | null, seed = 7): Float32Array {
-  const r = rng(seed * 9973 + name.length * 131);
+  const r = rng(seed * 9973 + SEEDS[name]);
   switch (name) {
     case 'sphere': return sphere(n, r);
     case 'book': return book(n, r);
     case 'brain': return brain(n, r);
-    case 'southAsia': return geo ? southAsia(n, r, geo.southAsia) : sphere(n, r);
+    case 'southAsia': return geo?.southAsia ? southAsia(n, r, geo.southAsia) : sphere(n, r);
     case 'helix': return helix(n, r);
     case 'network': return network(n, r);
-    case 'minnesota': return geo ? minnesota(n, r, geo.minnesota) : sphere(n, r);
+    case 'minnesota': return geo?.minnesota ? minnesota(n, r, geo.minnesota) : sphere(n, r);
     case 'galaxy': return galaxy(n, r);
   }
 }
 
+const SEEDS: Record<ShapeName, number> = { sphere: 101, book: 211, brain: 307, southAsia: 401, helix: 503, network: 601, minnesota: 701, galaxy: 809 };
+
+// Each map loads on its own; if one fails, that stop falls back to the sphere.
 export async function loadGeo(): Promise<GeoData> {
-  const [southAsia, minnesota] = await Promise.all([
-    fetch('/shapes/south-asia.json').then((res) => res.json()),
-    fetch('/shapes/minnesota.json').then((res) => res.json()),
-  ]);
+  const get = (url: string) => fetch(url).then((res) => (res.ok ? res.json() : null)).catch(() => null);
+  const [southAsia, minnesota] = await Promise.all([get('/shapes/south-asia.json'), get('/shapes/minnesota.json')]);
   return { southAsia, minnesota };
 }
 

@@ -82,6 +82,7 @@ export type FieldOptions = {
   light: boolean;
   motion: boolean;
   onLost: () => void;
+  halfRate?: boolean;
 };
 
 export function createField(o: FieldOptions) {
@@ -181,11 +182,14 @@ export function createField(o: FieldOptions) {
   let clock = 0;
   const tmp = new THREE.Vector3();
 
+  let odd = false;
   function frame(now: number) {
     raf = requestAnimationFrame(frame);
-    const dt = Math.min(0.05, (now - last) / 1000);
+    if (document.hidden) { last = now; return; }
+    odd = !odd;
+    if (o.halfRate && odd) return; // weak devices draw at 30 fps
+    const dt = Math.min(0.08, (now - last) / 1000);
     last = now;
-    if (document.hidden) return;
     if (o.motion) clock += dt;
     uniforms.uTime.value = clock;
 

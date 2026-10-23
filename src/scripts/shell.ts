@@ -26,11 +26,12 @@ window.addEventListener('scroll', onScroll, { passive: true });
 const menu = document.getElementById('mobile-nav');
 const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
 const closeBtn = document.querySelector<HTMLButtonElement>('[data-menu-close]');
-function setMenu(open: boolean) {
+function setMenu(open: boolean, moveFocus = true) {
   if (!menu || !openBtn) return;
   menu.toggleAttribute('data-open', open);
   openBtn.setAttribute('aria-expanded', String(open));
   document.body.style.overflow = open ? 'hidden' : '';
+  if (!moveFocus) return;
   if (open) closeBtn?.focus(); else openBtn.focus();
 }
 openBtn?.addEventListener('click', () => setMenu(true));
@@ -44,7 +45,7 @@ document.addEventListener('keydown', (e) => {
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
 });
-window.matchMedia('(min-width: 900px)').addEventListener('change', (e) => { if (e.matches && menu?.hasAttribute('data-open')) setMenu(false); });
+window.matchMedia('(min-width: 900px)').addEventListener('change', (e) => { if (e.matches && menu?.hasAttribute('data-open')) setMenu(false, false); });
 
 const reveal = document.querySelectorAll<HTMLElement>('[data-reveal]');
 if ('IntersectionObserver' in window) {

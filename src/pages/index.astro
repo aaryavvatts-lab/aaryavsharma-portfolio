@@ -25,7 +25,7 @@ import { stops, projects, impact, profile } from '../content/site';
     <div class="wrap stop__inner">
       <div class="hero-copy">
         <h1 id="hero-title">Aaryav <em>Sharma</em></h1>
-        <p class="hero-lede">I’m a {profile.grade} at {profile.school} in {profile.town}. I write free textbooks, help run two clubs I started, build websites for causes I care about, and check brain research to see if it holds up.</p>
+        <p class="hero-lede">I’m a {profile.grade} at {profile.school} in {profile.town}. I write free textbooks, helped start two clubs at school, build websites for my club and for an epilepsy group, and check brain research to see if it holds up.</p>
         <div class="btn-row">
           <ButtonLink link={{ label: 'See what I’ve built', href: '/built' }} />
           <ButtonLink link={{ label: 'About me', href: '/about' }} variant="ghost" />
@@ -70,7 +70,7 @@ import { stops, projects, impact, profile } from '../content/site';
         <p class="end-note">I’m looking for research positions, neurotech internships and mentors who will tell me what I’m getting wrong.</p>
         <div class="btn-row end-actions">
           <ButtonLink link={{ label: 'Get in touch', href: '/contact' }} />
-          <ButtonLink link={{ label: 'Leadership & Service', href: '/leadership' }} variant="ghost" />
+          <ButtonLink link={{ label: 'Leadership & service', href: '/leadership' }} variant="ghost" />
         </div>
       </div>
     </div>
@@ -114,9 +114,11 @@ import { stops, projects, impact, profile } from '../content/site';
   .stop-card :global(.stat) { min-width: 0; }
 
   .stop-hit { position: absolute; inset: 0 0 0 48%; z-index: 1; cursor: pointer; pointer-events: auto; }
+  /* On touch screens and in the narrow layout a big invisible link causes stray taps; the buttons do the job. */
+  @media (hover: none), (max-width: 899px), (max-aspect-ratio: 21/20) { .stop-hit { display: none; } }
 
   .project-list { list-style: none; display: flex; flex-wrap: wrap; margin-top: var(--space-5); gap: var(--space-1) var(--space-4); font-size: var(--step--1); }
-  .project-list a { display: inline-block; padding: 0.2rem 0; }
+  .project-list a { display: inline-flex; align-items: center; min-height: 32px; }
 
   .node-labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--ease); }
   .node-labels[data-on] { opacity: 1; }
@@ -147,7 +149,6 @@ import { stops, projects, impact, profile } from '../content/site';
     .stop-card { max-width: 36rem; background: var(--scrim); padding: var(--space-5); border-radius: var(--radius); border: 1px solid var(--line); margin-inline: calc(var(--space-2) * -1); }
     .stop-card h2 { font-size: var(--step-3); }
     .stop-card > p { font-size: var(--step-0); }
-    .stop-hit { inset: 0 0 50% 0; }
     .stop--hero { align-items: flex-end; }
     .stop--hero .stop__inner { padding-top: 0; }
     .hero-copy { padding: 46svh 0 var(--space-8); }
@@ -159,7 +160,7 @@ import { stops, projects, impact, profile } from '../content/site';
     .end-note { font-size: var(--step-0); margin: var(--space-5) auto; }
   }
   @media (max-width: 420px) {
-    .node { font-size: 0.78rem; min-height: 28px; padding: 0 0.55rem; }
+    .node { font-size: 0.78rem; min-height: 32px; padding: 0 0.6rem; }
   }
 </style>
 
