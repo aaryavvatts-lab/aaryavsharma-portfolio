@@ -3,6 +3,17 @@ import Base from '../layouts/Base.astro';
 import ButtonLink from '../components/ButtonLink.astro';
 import Stats from '../components/Stats.astro';
 import { stops, projects, impact, profile } from '../content/site';
+import counties from '../content/edan-counties.json';
+
+// The six small sculptures on the hero orbit, in the same order as RING_WORKS in shapes.ts.
+const orbit = [
+  { id: 'roots-rivers', label: 'Roots & Rivers' },
+  { id: 'neuron-bedside', label: 'From Neuron to Bedside' },
+  { id: 'sasa', label: 'SASA' },
+  { id: 'neurogidas', label: 'NeuroGIDAS' },
+  { id: 'research', label: '10 research projects' },
+  { id: 'edan', label: 'EDAN' },
+];
 ---
 <Base
   home
@@ -13,6 +24,14 @@ import { stops, projects, impact, profile } from '../content/site';
 
   <canvas id="field" class="field" aria-hidden="true"></canvas>
 
+  <div id="ring-labels" class="node-labels ring-labels" aria-hidden="true">
+    {orbit.map((o, i) => <a class="node node--ring" data-node={i} href={`#${o.id}`} tabindex="-1">{o.label}</a>)}
+  </div>
+
+  <a id="county-tip" class="county-tip" href="https://edanmn.vercel.app/counties/" target="_blank" rel="noopener">
+    <span data-tip-text></span><span class="county-tip__go">Open on EDAN <span aria-hidden="true">↗</span></span>
+  </a>
+
   <div id="node-labels" class="node-labels" aria-hidden="true">
     {projects.map((p, i) => (
       <a class="node" data-node={i} href={p.demo} target="_blank" rel="noopener" tabindex="-1">
@@ -21,7 +40,7 @@ import { stops, projects, impact, profile } from '../content/site';
     ))}
   </div>
 
-  <section class="stop stop--hero" data-stop data-shape="sphere" data-size="hero" aria-labelledby="hero-title">
+  <section class="stop stop--hero" data-stop data-shape="ring" data-size="hero" aria-labelledby="hero-title">
     <div class="wrap stop__inner">
       <div class="hero-copy">
         <h1 id="hero-title">Aaryav <em>Sharma</em></h1>
@@ -37,7 +56,8 @@ import { stops, projects, impact, profile } from '../content/site';
 
   {stops.map((s) => (
     <section class={`stop stop--${s.size}`} id={s.id} data-stop data-shape={s.shape} data-size={s.size} aria-labelledby={`${s.id}-title`}>
-      {s.primary && s.shape !== 'network' && (
+      {s.shape === 'minnesota' && <div id="county-hit" class="county-hit" aria-hidden="true"></div>}
+      {s.primary && s.shape !== 'network' && s.shape !== 'minnesota' && (
         <a class="stop-hit" href={s.primary.href} tabindex="-1" aria-hidden="true"
           {...(s.primary.external ? { target: '_blank', rel: 'noopener' } : {})}></a>
       )}
@@ -50,6 +70,18 @@ import { stops, projects, impact, profile } from '../content/site';
             {s.primary && <ButtonLink link={s.primary} />}
             {s.secondary && <ButtonLink link={s.secondary} variant="ghost" />}
           </div>
+          {s.shape === 'minnesota' && (
+            <div class="county-pick">
+              <label for="county-pick">Look up a county</label>
+              <div class="county-pick__row">
+                <select id="county-pick">
+                  <option value="">Choose a county</option>
+                  {counties.map((c, i) => <option value={i}>{c.name}</option>)}
+                </select>
+                <a id="county-open" class="link county-open" href="https://edanmn.vercel.app/counties/" target="_blank" rel="noopener"><span data-open-label>See every county on EDAN</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+              </div>
+            </div>
+          )}
           {s.shape === 'network' && (
             <ul class="project-list" role="list">
               {projects.map((p) => (
@@ -114,11 +146,12 @@ import { stops, projects, impact, profile } from '../content/site';
   .stop-card :global(.stat) { min-width: 0; }
 
   .stop-hit { position: absolute; inset: 0 0 0 48%; z-index: 1; cursor: pointer; pointer-events: auto; }
-  /* On touch screens and in the narrow layout a big invisible link causes stray taps; the buttons do the job. */
+  /* On touch screens and in the narrow layout a big invisible link causes stray taps; the buttons do the job.
+     The county layer stays: on phones it covers the map above the card, and a tap only picks a county. */
   @media (hover: none), (max-width: 899px), (max-aspect-ratio: 21/20) { .stop-hit { display: none; } }
 
   .project-list { list-style: none; display: flex; flex-wrap: wrap; margin-top: var(--space-5); gap: var(--space-1) var(--space-4); font-size: var(--step--1); }
-  .project-list a { display: inline-flex; align-items: center; min-height: 32px; }
+  .project-list a { display: inline-flex; align-items: center; min-height: 34px; }
 
   .node-labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--ease); }
   .node-labels[data-on] { opacity: 1; }
@@ -131,6 +164,31 @@ import { stops, projects, impact, profile } from '../content/site';
     transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
   }
   .node:hover, .node:focus-visible { border-color: var(--accent); color: var(--accent); }
+  .ring-labels[data-on] .node[data-back] { opacity: 0; pointer-events: none; }
+  .node--ring { font-family: var(--serif); font-size: 0.95rem; transition: opacity 0.35s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease); }
+
+  .county-hit { position: absolute; inset: 0 0 0 48%; z-index: 1; pointer-events: auto; touch-action: pan-y; }
+  .county-tip {
+    position: fixed; left: 0; top: 0; z-index: 30; max-width: min(22rem, calc(100vw - 16px));
+    display: grid; gap: 0.35rem; padding: 0.75rem 0.95rem; border-radius: var(--radius-sm);
+    background: var(--panel); border: 1px solid var(--line-strong); color: var(--text);
+    font-size: 0.9rem; line-height: 1.4; text-decoration: none; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    opacity: 0; pointer-events: none; transition: opacity 0.18s var(--ease);
+  }
+  .county-tip[data-on] { opacity: 1; }
+  .county-tip__go { color: var(--accent); font-weight: 600; font-size: 0.85rem; }
+  @media (hover: none), (max-width: 899px), (max-aspect-ratio: 21/20) { .county-tip[data-on] { pointer-events: auto; } }
+
+  .county-pick { margin-top: var(--space-6); display: grid; gap: var(--space-2); }
+  .county-pick label { font-size: var(--step--1); color: var(--muted); }
+  .county-pick__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+  .county-pick select {
+    min-height: 44px; padding: 0 2.2rem 0 0.9rem; border-radius: 999px; border: 1px solid var(--line-strong);
+    background: var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23a6abb8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.8rem center / 12px;
+    color: var(--text); font: 500 var(--step--1) var(--sans); appearance: none; cursor: pointer;
+  }
+  .county-pick select:hover { border-color: var(--text); }
+  .county-open { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--step--1); }
 
   .stop--end { min-height: 100svh; text-align: center; }
   .end-card { margin-inline: auto; max-width: 58rem; background: var(--scrim); border: 1px solid var(--line); border-radius: calc(var(--radius) * 1.5); padding: var(--space-7) var(--space-6); }
@@ -148,6 +206,7 @@ import { stops, projects, impact, profile } from '../content/site';
     .stop__inner { padding-top: 52svh; }
     .stop-card { max-width: 36rem; background: var(--scrim); padding: var(--space-5); border-radius: var(--radius); border: 1px solid var(--line); margin-inline: calc(var(--space-2) * -1); }
     .stop-card h2 { font-size: var(--step-3); }
+    .county-hit { inset: auto 0; top: 10svh; height: 50svh; }
     .stop-card > p { font-size: var(--step-0); }
     .stop--hero { align-items: flex-end; }
     .stop--hero .stop__inner { padding-top: 0; }

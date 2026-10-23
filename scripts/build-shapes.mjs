@@ -8,7 +8,7 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { geoArea, geoBounds, geoContains, geoMercator } from 'd3-geo';
-import { feature } from 'topojson-client';
+import { feature, mesh } from 'topojson-client';
 
 const require = createRequire(import.meta.url);
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -71,14 +71,16 @@ function sampleEqualArea(features, target, rng, jitter = 0.32) {
 
 // Project [lon,lat] with Mercator, flip y so north is positive, then center
 // the bounding box on 0,0 and scale so the longest side spans exactly 2.
-function makeNormalizer(lonlats) {
+// `ref` (defaults to the points themselves) defines the bounding box.
+function makeNormalizer(lonlats, ref = lonlats) {
   const proj = geoMercator().scale(1).translate([0, 0]).precision(0);
-  const xy = lonlats.map((p) => {
+  const project = (p) => {
     const [x, y] = proj(p);
     return [x, -y];
-  });
+  };
+  const xy = lonlats.map(project);
   let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-  for (const [x, y] of xy) {
+  for (const [x, y] of ref === lonlats ? xy : ref.map(project)) {
     if (x < x0) x0 = x;
     if (x > x1) x1 = x;
     if (y < y0) y0 = y;
@@ -231,48 +233,120 @@ function buildSouthAsia() {
 }
 
 // ---------------------------------------------------------------- Minnesota
-function buildMinnesota() {
-  const rng = mulberry32(0x27);
-  const us = loadJSON('us-atlas/states-10m.json');
-  const mn = feature(us, us.objects.states).features.find((f) => f.id === '27');
-  if (!mn) throw new Error('Minnesota (27) not found');
+// Per-county shape for the EDAN map. Uses us-atlas counties-10m, whose
+// counties and states objects share one topology, so county lines and the
+// state outline coincide exactly.
+// EDAN's per-county labels, copied from edanmn.vercel.app on 2026-10-23.
+const EDAN_SRC = new URL('./data/edan-county-labels.json', import.meta.url);
+const EDAN_BASE = 'https://edanmn.vercel.app/counties/';
+const countySlug = (name) => name.toLowerCase().replace(/\./g, '').trim().replace(/\s+/g, '-');
 
-  const interior = sampleEqualArea([mn], 2800, rng).map((p) => [p[0], p[1], 0]);
-
-  // Border: ~700 points evenly spaced by arc length across all outer rings,
-  // measured in projected space so spacing looks even on screen.
-  const polys = mn.geometry.type === 'Polygon' ? [mn.geometry.coordinates] : mn.geometry.coordinates;
-  const rings = polys.map((p) => p[0]);
+// Points evenly spaced by projected arc length along a set of polylines.
+function sampleLines(lines, count, rng) {
   const proj = geoMercator().scale(1).translate([0, 0]).precision(0);
   const segs = [];
   let total = 0;
-  for (const ring of rings) {
-    for (let i = 0; i < ring.length - 1; i++) {
-      const a = proj(ring[i]), b = proj(ring[i + 1]);
+  for (const line of lines) {
+    for (let i = 0; i < line.length - 1; i++) {
+      const a = proj(line[i]), b = proj(line[i + 1]);
       const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
       if (len === 0) continue;
-      segs.push({ a: ring[i], b: ring[i + 1], start: total, len });
+      segs.push({ a: line[i], b: line[i + 1], start: total, len });
       total += len;
     }
   }
-  const BORDER_N = 700;
-  const step = total / BORDER_N;
-  const border = [];
-  let si = 0;
+  const step = total / count;
   const phase = rng() * step;
-  for (let k = 0; k < BORDER_N; k++) {
+  const out = [];
+  let si = 0;
+  for (let k = 0; k < count; k++) {
     const s = phase + k * step;
     while (si < segs.length - 1 && segs[si].start + segs[si].len < s) si++;
     const g = segs[si];
     const t = Math.max(0, Math.min(1, (s - g.start) / g.len));
-    border.push([g.a[0] + (g.b[0] - g.a[0]) * t, g.a[1] + (g.b[1] - g.a[1]) * t, 1]);
+    out.push([g.a[0] + (g.b[0] - g.a[0]) * t, g.a[1] + (g.b[1] - g.a[1]) * t]);
   }
+  return out;
+}
 
-  const all = [...interior, ...border];
-  const xy = makeNormalizer(all.map((p) => [p[0], p[1]]));
+function buildMinnesota() {
+  const rng = mulberry32(0x27);
+  const topo = loadJSON('us-atlas/counties-10m.json');
+  const isMN = (g) => String(g.id).startsWith('27');
+  const state = feature(topo, topo.objects.states).features.find((f) => f.id === '27');
+  if (!state) throw new Error('Minnesota (27) not found');
+
+  const edan = JSON.parse(readFileSync(EDAN_SRC, 'utf8'));
+  const feats = feature(topo, topo.objects.counties).features
+    .filter(isMN)
+    .map((f) => ({ f, name: f.properties.name, slug: countySlug(f.properties.name) }))
+    .sort((a, b) => a.slug.localeCompare(b.slug));
+  const unmatched = feats.filter((c) => !(c.slug in edan)).map((c) => `${c.name} -> ${c.slug}`);
+  const unused = Object.keys(edan).filter((s) => !feats.some((c) => c.slug === s));
+  if (feats.length !== 87 || unmatched.length || unused.length) {
+    throw new Error(`County match failed: ${feats.length} counties; unmatched [${unmatched.join(', ')}]; unused EDAN slugs [${unused.join(', ')}]`);
+  }
+  const features = feats.map((c) => c.f);
+
+  // e=0 interior, c = county containing the point.
+  const interior = sampleEqualArea(features, 4500, rng).map(([lon, lat, c]) => [lon, lat, 0, c]);
+
+  // e=1 state border (outer rings of the state polygon).
+  const polys = state.geometry.type === 'Polygon' ? [state.geometry.coordinates] : state.geometry.coordinates;
+  const stateRings = polys.map((p) => p[0]);
+  const stateBorder = sampleLines(stateRings, 700, rng).map(([lon, lat]) => [lon, lat, 1]);
+
+  // e=2 internal county lines: arcs shared by two different MN counties.
+  // Arcs on the state line border another state's county or nothing, so the
+  // filter drops them and nothing is doubled with e=1.
+  const internal = mesh(topo, topo.objects.counties, (a, b) => a !== b && isMN(a) && isMN(b));
+  const countyBorder = sampleLines(internal.coordinates, 1800, rng).map(([lon, lat]) => [lon, lat, 2]);
+
+  // County for a border point: the containing county, else nearest interior point's county.
+  const boxes = features.map((f) => geoBounds(f));
+  const assign = ([lon, lat]) => {
+    for (let i = 0; i < features.length; i++) {
+      const b = boxes[i];
+      if (lon < b[0][0] || lon > b[1][0] || lat < b[0][1] || lat > b[1][1]) continue;
+      if (geoContains(features[i], [lon, lat])) return i;
+    }
+    const k = Math.cos(lat * DEG);
+    let best = Infinity, bc = 0;
+    for (const p of interior) {
+      const d = ((p[0] - lon) * k) ** 2 + (p[1] - lat) ** 2;
+      if (d < best) { best = d; bc = p[3]; }
+    }
+    return bc;
+  };
+  const edges = [...stateBorder, ...countyBorder].map((p) => [p[0], p[1], p[2], assign(p)]);
+
+  const all = [...interior, ...edges];
+  // Normalize on the exact state outline so the frame doesn't depend on sampling.
+  const xy = makeNormalizer(all.map((p) => [p[0], p[1]]), stateRings.flat());
   const flat = [];
-  for (let i = 0; i < all.length; i++) flat.push(r3(xy[i][0]), r3(xy[i][1]), all[i][2]);
-  return { data: { n: all.length, pts: flat }, interior: interior.length, border: border.length };
+  for (let i = 0; i < all.length; i++) flat.push(r3(xy[i][0]), r3(xy[i][1]), all[i][2], all[i][3]);
+
+  // Anchor: mean of the county's interior points, snapped to the nearest one.
+  const counties = feats.map((c, ci) => {
+    const idx = [];
+    for (let i = 0; i < interior.length; i++) if (interior[i][3] === ci) idx.push(i);
+    if (!idx.length) throw new Error(`No interior points for ${c.name}`);
+    const mx = idx.reduce((s, i) => s + xy[i][0], 0) / idx.length;
+    const my = idx.reduce((s, i) => s + xy[i][1], 0) / idx.length;
+    let best = Infinity, bi = idx[0];
+    for (const i of idx) {
+      const d = (xy[i][0] - mx) ** 2 + (xy[i][1] - my) ** 2;
+      if (d < best) { best = d; bi = i; }
+    }
+    return { slug: c.slug, name: c.name, x: r3(xy[bi][0]), y: r3(xy[bi][1]), _n: idx.length };
+  });
+
+  const content = feats.map((c) => ({ slug: c.slug, name: c.name, label: edan[c.slug], url: `${EDAN_BASE}${c.slug}/` }));
+  return {
+    data: { n: all.length, pts: flat, counties: counties.map(({ _n, ...rest }) => rest) },
+    content,
+    stats: { interior: interior.length, state: stateBorder.length, county: countyBorder.length, perCounty: counties },
+  };
 }
 
 // ---------------------------------------------------------------- main
@@ -287,4 +361,11 @@ sa.NAMES.forEach((n, i) => console.log(`  ${i} ${n.padEnd(12)} ${sa.counts[i]}`)
 const mn = buildMinnesota();
 const mnJson = JSON.stringify(mn.data);
 writeFileSync(join(OUT_DIR, 'minnesota.json'), mnJson);
-console.log(`minnesota.json   n=${mn.data.n} (interior ${mn.interior}, border ${mn.border})  ${(mnJson.length / 1024).toFixed(1)} KB`);
+const contentDir = join(ROOT, 'src', 'content');
+mkdirSync(contentDir, { recursive: true });
+writeFileSync(join(contentDir, 'edan-counties.json'), JSON.stringify(mn.content, null, 2) + '\n');
+const pc = mn.stats.perCounty.map((c) => c._n);
+const small = [...mn.stats.perCounty].sort((a, b) => a._n - b._n).slice(0, 3).map((c) => `${c.name} ${c._n}`);
+console.log(`minnesota.json   n=${mn.data.n} (interior ${mn.stats.interior}, state border ${mn.stats.state}, county border ${mn.stats.county})  ${(mnJson.length / 1024).toFixed(1)} KB`);
+console.log(`  interior pts per county: min ${Math.min(...pc)} max ${Math.max(...pc)}; smallest: ${small.join(', ')}`);
+console.log(`edan-counties.json  ${mn.content.length} counties`);

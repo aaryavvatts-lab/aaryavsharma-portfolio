@@ -539,7 +539,7 @@ export const stops: Stop[] = [
     shape: 'minnesota',
     size: 'small',
     title: 'A website for EDAN',
-    body: 'I designed and built the website for the Epilepsy Data & Advocacy Network, which checks whether Minnesota’s 329 school districts post a seizure plan families can find.',
+    body: 'I designed and built the website for the Epilepsy Data & Advocacy Network, which checks whether Minnesota’s 329 school districts post a seizure plan families can find. Point at a county on the map to see what its districts post, and click to open it on EDAN’s site.',
     stats: [{ value: String(usage.edan.users), label: 'visitors since launch' }],
     primary: { label: 'Visit EDAN', href: 'https://edanmn.vercel.app/', external: true },
   },

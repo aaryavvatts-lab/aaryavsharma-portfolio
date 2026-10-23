@@ -2,7 +2,7 @@
 // Used when WebGL is missing or slow, when reduced motion is on, and for the
 // small static pictures at the top of inner pages.
 
-import { buildShape, TINTS, NETWORK_NODES, type ShapeName, type GeoData } from './shapes';
+import { buildShape, mnCounty, TINTS, RING_WORKS, type ShapeName, type GeoData } from './shapes';
 
 export type Layout = { x: number; y: number; scale: number };
 
@@ -10,7 +10,7 @@ export const FOV = 35;
 export const CAM_Z = 5.2;
 
 export const POSE: Record<ShapeName, number> = {
-  sphere: 0.3, book: 0, brain: -0.35, southAsia: 0, helix: 0.4, network: 0.1, minnesota: 0, galaxy: 0.6,
+  sphere: 0.3, ring: 0, book: 0, brain: -0.35, southAsia: 0, helix: 0.4, network: 0.1, minnesota: 0, galaxy: 0.6,
 };
 
 export function viewSize(w: number, h: number) {
@@ -27,37 +27,44 @@ export function project(p: [number, number, number], rotY: number, layout: Layou
   const z = (-p[0] * s + p[2] * c) * layout.scale;
   const d = CAM_Z - z;
   const f = (h / 2) / Math.tan(((FOV / 2) * Math.PI) / 180);
-  return { sx: w / 2 + (x * f) / d, sy: h / 2 - (y * f) / d, depth: d };
+  return { sx: w / 2 + (x * f) / d, sy: h / 2 - (y * f) / d, depth: d, back: z < -0.05 * layout.scale };
 }
 
 const cache = new Map<string, Float32Array>();
 
 export function drawShape(
   ctx: CanvasRenderingContext2D, shape: ShapeName, layout: Layout,
-  w: number, h: number, light: boolean, geo: GeoData | null, count = 9000,
+  w: number, h: number, light: boolean, geo: GeoData | null, count = 9000, county = -1,
 ) {
   const key = `${shape}:${count}:${geo ? 1 : 0}`;
   let pts = cache.get(key);
   if (!pts) { pts = buildShape(shape, count, geo); cache.set(key, pts); }
   const tint = light ? TINTS[shape].light : TINTS[shape].dark;
+  const ringCols = RING_WORKS.map((r) => (light ? TINTS[r].light : TINTS[r].dark));
+  const hot = light ? '#1a140a' : '#fff6e6';
   ctx.clearRect(0, 0, w, h);
   ctx.save();
   ctx.globalCompositeOperation = light ? 'source-over' : 'lighter';
   ctx.fillStyle = tint;
   const base = Math.max(1, Math.min(w, h) / 520);
   for (let i = 0; i < pts.length; i += 4) {
-    const wgt = pts[i + 3];
+    let wgt = pts[i + 3];
+    const isHot = shape === 'minnesota' && county >= 0 && mnCounty(i / 4, geo?.minnesota ?? null) === county;
+    if (isHot) wgt = 1;
     const { sx, sy, depth } = project([pts[i], pts[i + 1], pts[i + 2]], POSE[shape], layout, w, h);
     if (sx < -4 || sy < -4 || sx > w + 4 || sy > h + 4) continue;
-    const size = base * (0.7 + wgt * 1.1) * (5.2 / depth);
+    const size = base * (0.7 + wgt * 1.1) * (5.2 / depth) * (isHot ? 1.5 : 1);
+    if (shape === 'ring') ctx.fillStyle = ringCols[(i / 4) % ringCols.length];
+    if (shape === 'ring' && wgt < 0.2) ctx.fillStyle = tint;
+    else if (shape === 'minnesota') ctx.fillStyle = isHot ? hot : tint;
     ctx.globalAlpha = light ? 0.25 + wgt * 0.55 : 0.18 + wgt * 0.6;
     ctx.fillRect(sx - size / 2, sy - size / 2, size, size);
   }
   ctx.restore();
 }
 
-export function nodeScreen(layout: Layout, w: number, h: number, rotY = POSE.network) {
-  return NETWORK_NODES.map((p) => project(p, rotY, layout, w, h));
+export function projectAll(pts: [number, number, number][], shape: ShapeName, layout: Layout, w: number, h: number) {
+  return pts.map((p) => project(p, POSE[shape], layout, w, h));
 }
 
 // A static canvas that fills its parent; redraws on resize and theme change.

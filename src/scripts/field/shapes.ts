@@ -2,7 +2,7 @@
 // [x, y, z, w] where w (0..1) is brightness. Pure math, no three.js import, so the
 // flat 2D fallback can share it without pulling three into the page.
 
-export type ShapeName = 'sphere' | 'book' | 'brain' | 'southAsia' | 'helix' | 'network' | 'minnesota' | 'galaxy';
+export type ShapeName = 'sphere' | 'ring' | 'book' | 'brain' | 'southAsia' | 'helix' | 'network' | 'minnesota' | 'galaxy';
 
 export type GeoData = {
   southAsia: { n: number; pts: number[] } | null;
@@ -227,19 +227,97 @@ function network(n: number, r: () => number) {
   return out;
 }
 
+export const MN_SCALE = 1.3;
+export const MN_TILT = -0.45;
+
+// Minnesota from minnesota.json: [x, y, e, county] per point, where e is
+// 0 inside a county, 1 on the state border and 2 on a county border.
 function minnesota(n: number, r: () => number, data: NonNullable<GeoData['minnesota']>) {
   const out = new Float32Array(n * 4);
   const m = data.n;
+  const stride = data.pts.length / m;
   for (let i = 0; i < n; i++) {
-    const k = (i % m) * 3;
-    const edge = data.pts[k + 2] === 1;
-    out[i * 4] = data.pts[k] * 1.3 + gauss(r) * (edge ? 0.004 : 0.01);
-    out[i * 4 + 1] = data.pts[k + 1] * 1.3 + gauss(r) * (edge ? 0.004 : 0.01);
-    out[i * 4 + 2] = gauss(r) * 0.015;
-    out[i * 4 + 3] = edge ? 1 : 0.35;
+    const k = (i % m) * stride;
+    const e = data.pts[k + 2];
+    const jitter = e === 0 ? 0.008 : 0.003;
+    out[i * 4] = data.pts[k] * MN_SCALE + gauss(r) * jitter;
+    out[i * 4 + 1] = data.pts[k + 1] * MN_SCALE + gauss(r) * jitter;
+    out[i * 4 + 2] = gauss(r) * 0.012;
+    out[i * 4 + 3] = e === 1 ? 1 : e === 2 ? 0.62 : 0.26;
   }
-  tiltX(out, -0.45);
+  tiltX(out, MN_TILT);
   return out;
+}
+
+// County index for particle i of the Minnesota shape (-1 when the data has no counties).
+export function mnCounty(i: number, data: GeoData['minnesota']) {
+  if (!data) return -1;
+  const stride = data.pts.length / data.n;
+  return stride >= 4 ? data.pts[(i % data.n) * stride + 3] : -1;
+}
+
+// Where a point of minnesota.json sits in shape space (before the scene transform).
+export function mnPoint(x: number, y: number): [number, number, number] {
+  const c = Math.cos(MN_TILT), s = Math.sin(MN_TILT);
+  const py = y * MN_SCALE;
+  return [x * MN_SCALE, py * c, py * s];
+}
+
+// The hero: a small particle version of each thing on the home page, orbiting on one
+// tilted ring. Particle i keeps the same index it has in its full-size shape, so when
+// the reader scrolls, the small book grows straight into the big one. A few particles
+// trace the orbit itself (group 6).
+export const RING_WORKS: ShapeName[] = ['book', 'brain', 'southAsia', 'helix', 'network', 'minnesota'];
+export const RING_R = 1.75, RING_S = 0.42, RING_TILT = 0.34;
+
+export function ringCenter(k: number, angle: number): [number, number, number] {
+  const a = (k / RING_WORKS.length) * Math.PI * 2 + angle;
+  const x = Math.sin(a) * RING_R, z = Math.cos(a) * RING_R;
+  return [x, -z * Math.sin(RING_TILT), z * Math.cos(RING_TILT)];
+}
+
+export function ringCenters(angle = 0): [number, number, number][] {
+  return RING_WORKS.map((_, k) => ringCenter(k, angle));
+}
+
+// Positions relative to each sculpture's own centre, plus which group each particle is in.
+export function ringLocal(n: number, geo: GeoData | null, seed = 7) {
+  const pos = new Float32Array(n * 4);
+  const group = new Float32Array(n);
+  const parts = RING_WORKS.map((w) => buildShape(w, n, geo, seed));
+  const r = rng(seed * 31 + 7);
+  const k = RING_WORKS.length;
+  for (let i = 0; i < n; i++) {
+    if (r() < 0.1) {
+      const th = r() * Math.PI * 2;
+      const [x, y, z] = [Math.sin(th) * RING_R, 0, Math.cos(th) * RING_R];
+      pos[i * 4] = x + gauss(r) * 0.012;
+      pos[i * 4 + 1] = -z * Math.sin(RING_TILT) + y + gauss(r) * 0.012;
+      pos[i * 4 + 2] = z * Math.cos(RING_TILT);
+      pos[i * 4 + 3] = 0.16;
+      group[i] = k;
+      continue;
+    }
+    const g = i % k;
+    const src = parts[g];
+    pos[i * 4] = src[i * 4] * RING_S;
+    pos[i * 4 + 1] = src[i * 4 + 1] * RING_S;
+    pos[i * 4 + 2] = src[i * 4 + 2] * RING_S;
+    pos[i * 4 + 3] = Math.min(1, src[i * 4 + 3] * 1.15);
+    group[i] = g;
+  }
+  return { pos, group };
+}
+
+// The orbit frozen at angle 0, for the flat fallback.
+function ring(n: number, geo: GeoData | null, seed: number) {
+  const { pos, group } = ringLocal(n, geo, seed);
+  for (let i = 0; i < n; i++) {
+    if (group[i] >= RING_WORKS.length) continue;
+    const [cx, cy, cz] = ringCenter(group[i], 0);
+    pos[i * 4] += cx; pos[i * 4 + 1] += cy; pos[i * 4 + 2] += cz;
+  }
+  return pos;
 }
 
 function galaxy(n: number, r: () => number) {
@@ -261,6 +339,7 @@ export function buildShape(name: ShapeName, n: number, geo: GeoData | null, seed
   const r = rng(seed * 9973 + SEEDS[name]);
   switch (name) {
     case 'sphere': return sphere(n, r);
+    case 'ring': return ring(n, geo, seed);
     case 'book': return book(n, r);
     case 'brain': return brain(n, r);
     case 'southAsia': return geo?.southAsia ? southAsia(n, r, geo.southAsia) : sphere(n, r);
@@ -271,7 +350,7 @@ export function buildShape(name: ShapeName, n: number, geo: GeoData | null, seed
   }
 }
 
-const SEEDS: Record<ShapeName, number> = { sphere: 101, book: 211, brain: 307, southAsia: 401, helix: 503, network: 601, minnesota: 701, galaxy: 809 };
+const SEEDS: Record<ShapeName, number> = { ring: 151, sphere: 101, book: 211, brain: 307, southAsia: 401, helix: 503, network: 601, minnesota: 701, galaxy: 809 };
 
 // Each map loads on its own; if one fails, that stop falls back to the sphere.
 export async function loadGeo(): Promise<GeoData> {
@@ -283,6 +362,7 @@ export async function loadGeo(): Promise<GeoData> {
 // Tint per shape, for the dark and the light theme.
 export const TINTS: Record<ShapeName, { dark: string; light: string }> = {
   sphere: { dark: '#f2c879', light: '#8a4f08' },
+  ring: { dark: '#f4d29a', light: '#7a4a0a' },
   book: { dark: '#f3b45a', light: '#9a5a0c' },
   brain: { dark: '#7fd6ea', light: '#0d6f87' },
   southAsia: { dark: '#f29b4b', light: '#a5470f' },
