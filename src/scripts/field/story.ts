@@ -67,9 +67,9 @@ export function startStory() {
       return { x: (cx - w / 2) / (w / 2), y: 0, scale };
     }
     // phones and tall tablets: the shape sits in the top part, the text below it
-    const radiusPx = Math.min(w * 0.44, h * (shape === 'network' ? 0.14 : 0.2));
+    const radiusPx = Math.min(w * 0.44, h * 0.2);
     const scale = (radiusPx / (R * ppu)) * (small ? 0.88 : 1);
-    return { x: 0, y: shape === 'network' ? 0.5 : 0.44, scale };
+    return { x: 0, y: 0.44, scale };
   }
 
   function measure() {
@@ -110,7 +110,8 @@ export function startStory() {
   function placeLabels() {
     if (!labelLayer || researchIndex < 0 || !renderer) return;
     const d = Math.abs(current - researchIndex);
-    const on = d < 0.22;
+    // Phones get the project list in the card instead; ten labels don't fit around a small network.
+    const on = d < 0.22 && isWide();
     labelLayer.toggleAttribute('data-on', on);
     if (!on && d > 0.6) return;
     const pts = renderer.nodes();
