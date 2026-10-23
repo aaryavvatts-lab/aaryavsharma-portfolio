@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import Stats from '../components/Stats.astro';
+import { textbooks, websites, projects, totalUsers } from '../content/site';
+---
+<Base title="Built" description="Everything Aaryav Sharma has built: two free interactive textbooks, websites for SASA and EDAN, and ten research projects with code and live demos.">
+  <PageHead
+    title="Things I’ve <em>built</em>"
+    lede={`Two free textbooks, two websites and ten research projects. The four sites have had ${totalUsers} users since they launched, by Google Analytics.`}
+    art="book"
+  >
+    <nav class="jump" aria-label="On this page">
+      <a href="#textbooks">Textbooks</a><a href="#websites">Websites</a><a href="#research">Research</a>
+    </nav>
+  </PageHead>
+
+  <section class="section" id="textbooks" aria-labelledby="tb-title">
+    <div class="wrap">
+      <h2 class="section-title" id="tb-title">Textbooks</h2>
+      <p class="section-intro">Both are free, need no account and show no ads.</p>
+      {textbooks.map((b, i) => (
+        <article class={`feature ${i % 2 ? 'flip' : ''}`} id={b.id} data-reveal>
+          <a class="shot" href={b.links[0].href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+            <img src={b.image.src} alt="" width={b.image.w} height={b.image.h} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+          </a>
+          <div class="feature-copy">
+            <p class="kind">{b.kind}. {b.role}.</p>
+            <h3>{b.name}</h3>
+            <p>{b.summary}</p>
+            {b.why && <p class="muted">{b.why}</p>}
+            <Stats stats={b.stats} />
+            <div class="btn-row">{b.links.map((l) => <ButtonLink link={l} />)}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" id="websites" aria-labelledby="web-title">
+    <div class="wrap">
+      <h2 class="section-title" id="web-title">Websites</h2>
+      <p class="section-intro">Sites I designed and built for groups I’m part of or believe in.</p>
+      <div class="site-grid">
+        {websites.map((b) => (
+          <article class="site-card" id={b.id} data-reveal>
+            <a class="shot" href={b.links[0].href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+              <img src={b.image.src} alt="" width={b.image.w} height={b.image.h} loading="lazy" decoding="async" />
+            </a>
+            <p class="kind">{b.role}</p>
+            <h3>{b.name}</h3>
+            <p>{b.summary}</p>
+            <Stats stats={b.stats} />
+            <div class="btn-row">{b.links.map((l) => <ButtonLink link={l} variant="ghost" />)}</div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="research" aria-labelledby="rs-title">
+    <div class="wrap">
+      <h2 class="section-title" id="rs-title">Research projects</h2>
+      <p class="section-intro">Each project starts from a public dataset. I redo the analysis, look for the mistakes that make results look better than they are, and publish the code and a working demo. These are student projects, not medical devices or medical advice.</p>
+      <div class="proj-list">
+        {projects.map((p) => (
+          <article class="proj" id={p.id} data-reveal>
+            <div class="proj-media"><img src={p.image.src} alt={p.image.alt} loading="lazy" decoding="async" width="560" height="350" /></div>
+            <div class="proj-copy">
+              <ul class="chips" role="list">
+                {p.tags.map((t) => <li class="chip">{t}</li>)}
+                {p.status && <li class="chip chip--live">{p.status}</li>}
+              </ul>
+              <h3>{p.name}</h3>
+              <p>{p.summary}</p>
+              <p class="muted"><strong>Why I built it:</strong> {p.why}</p>
+              <Stats stats={p.stats} class="stats--sm" />
+              <p class="source">Data: {p.source}</p>
+              <div class="btn-row">
+                <ButtonLink link={{ label: p.demoLabel, href: p.demo, external: true }} variant="ghost" />
+                {p.code && <a class="link code-link" href={p.code} target="_blank" rel="noopener">Code<span class="visually-hidden"> for {p.name} (opens in a new tab)</span></a>}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .jump { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-6); }
+  .jump a { padding: 0.5rem 1rem; border: 1px solid var(--line-strong); border-radius: 999px; text-decoration: none; font-size: var(--step--1); min-height: 40px; display: inline-flex; align-items: center; }
+  .jump a:hover { border-color: var(--text); }
+
+  .kind { color: var(--accent); font-size: var(--step--1); font-weight: 500; margin-bottom: var(--space-2); }
+  .shot { display: block; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+  .shot img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; transition: transform 0.8s var(--ease); }
+  .shot:hover img { transform: scale(1.025); }
+
+  .feature { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--space-7); align-items: center; padding: var(--space-6) 0; }
+  .feature.flip .shot { order: 2; }
+  .feature h3 { font-size: var(--step-3); margin-bottom: var(--space-4); }
+  .feature-copy > p:not(.kind) { max-width: 54ch; }
+  @media (max-width: 860px) { .feature { grid-template-columns: 1fr; gap: var(--space-5); } .feature.flip .shot { order: 0; } }
+
+  .site-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-7); }
+  .site-card .shot { margin-bottom: var(--space-5); }
+  .site-card h3 { margin-bottom: var(--space-3); }
+  @media (max-width: 760px) { .site-grid { grid-template-columns: 1fr; } }
+
+  .proj-list { display: grid; gap: var(--space-8); }
+  .proj { display: grid; grid-template-columns: minmax(0, 0.9fr) 1.6fr; gap: var(--space-6); align-items: start; }
+  .proj-media img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--panel); }
+  .proj h3 { margin: var(--space-3) 0 var(--space-3); }
+  .proj-copy > p { max-width: 62ch; }
+  .chip--live { color: var(--accent); border-color: var(--accent); }
+  :global(.stats--sm .stat b) { font-size: var(--step-2); }
+  .source { color: var(--muted); font-size: var(--step--1); }
+  .code-link { display: inline-flex; align-items: center; min-height: 46px; padding: 0 0.5rem; }
+  @media (max-width: 760px) { .proj { grid-template-columns: 1fr; gap: var(--space-4); } }
+</style>

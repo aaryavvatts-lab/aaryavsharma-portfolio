@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+import { nav, profile } from '../content/site';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const current = (href: string) => (path === href ? 'page' : undefined);
+---
+<header class="site-header" id="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label={`${profile.name}, home`}>{profile.name}</a>
+    <nav aria-label="Main">
+      <ul class="tabs">
+        {nav.map((l) => <li><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+        <Icon name="moon" /><Icon name="sun" />
+      </button>
+      <button class="icon-btn menu-btn" type="button" data-menu-open aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+<div class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Menu">
+  <button class="icon-btn close" type="button" data-menu-close aria-label="Close menu"><Icon name="close" /></button>
+  <a class="big" href="/" aria-current={current('/')}>Home</a>
+  {nav.map((l) => <a class="big" href={l.href} aria-current={current(l.href)}>{l.label}</a>)}
+  <p class="meta"><a class="link" href={`mailto:${profile.email}`}>{profile.email}</a></p>
+</div>

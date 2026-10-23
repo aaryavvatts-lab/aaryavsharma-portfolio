@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import Stats from '../components/Stats.astro';
+import { leadership, service, volunteerHours, volunteerNote } from '../content/site';
+---
+<Base title="Leadership & Service" description="Clubs Aaryav Sharma co-founded and leads (SASA and NeuroGIDAS), his outreach role at Flow State Framework, and 260+ volunteer hours.">
+  <PageHead
+    title="Leadership <em>&amp;</em> service"
+    lede="Two clubs I helped start at Eastview, the groups I work with, and where I volunteer."
+    art="helix"
+  />
+
+  <section class="section" aria-labelledby="lead-title">
+    <div class="wrap">
+      <h2 class="section-title visually-hidden" id="lead-title">Leadership</h2>
+      <div class="roles">
+        {leadership.map((r) => (
+          <article class="role" id={r.id} data-reveal>
+            <div class="role-meta">
+              <p class="when">{r.when}</p>
+              {r.stats && <Stats stats={r.stats} class="stats--sm stats--stack" />}
+            </div>
+            <div class="role-copy">
+              <h3>{r.name}</h3>
+              <p class="title">{r.title}</p>
+              {r.body.map((b) => <p>{b}</p>)}
+              {r.links && <div class="btn-row">{r.links.map((l, i) => <ButtonLink link={l} variant={i === 0 ? 'primary' : 'ghost'} />)}</div>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="svc-title">
+    <div class="wrap">
+      <div class="svc-head">
+        <h2 class="section-title" id="svc-title">Service and activities</h2>
+        <div class="hours" data-reveal><b>{volunteerHours}</b><span>volunteer hours</span></div>
+      </div>
+      <p class="section-intro">{volunteerNote}</p>
+      <ul class="svc" role="list">
+        {service.map((s) => (
+          <li data-reveal><h3>{s.name}</h3><p>{s.body}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .roles { display: grid; gap: var(--space-8); }
+  .role { display: grid; grid-template-columns: minmax(11rem, 1fr) 2.2fr; gap: var(--space-6); scroll-margin-top: 96px; }
+  .when { color: var(--accent); font-size: var(--step--1); font-weight: 500; padding-top: 0.6em; }
+  :global(.stats--stack) { flex-direction: column; gap: var(--space-4); }
+  :global(.stats--sm .stat b) { font-size: var(--step-2); }
+  .role-copy h3 { font-size: var(--step-3); }
+  .title { color: var(--muted); margin: var(--space-2) 0 var(--space-5); }
+  .role-copy > p:not(.title) { max-width: 62ch; }
+  .role-copy :global(.btn-row) { margin-top: var(--space-5); }
+  @media (max-width: 760px) {
+    .role { grid-template-columns: 1fr; gap: var(--space-3); }
+    .role-meta { order: 2; }
+    :global(.stats--stack) { flex-direction: row; }
+  }
+  .svc-head { display: flex; justify-content: space-between; align-items: end; gap: var(--space-5); flex-wrap: wrap; }
+  .hours { text-align: right; }
+  .hours b { display: block; font-family: var(--serif); font-weight: 400; font-size: var(--step-4); line-height: 1; color: var(--accent); }
+  .hours span { color: var(--muted); font-size: var(--step--1); }
+  .svc { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+  .svc li { padding: var(--space-5); border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+  .svc h3 { font-size: var(--step-1); margin-bottom: var(--space-2); }
+  .svc p { color: var(--muted); margin: 0; font-size: var(--step--1); }
+  @media (max-width: 900px) { .svc { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .svc { grid-template-columns: 1fr; } .hours { text-align: left; } }
+</style>

@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import Icon from '../components/Icon.astro';
+import { profile, lookingFor } from '../content/site';
+---
+<Base title="Contact" description="How to reach Aaryav Sharma, and the research, internship and mentorship opportunities he is looking for.">
+  <PageHead
+    title="Get in <em>touch</em>"
+    lede="Email is the best way to reach me. I usually reply within a day or two."
+    art="galaxy"
+  >
+    <a class="email" href={`mailto:${profile.email}`}><Icon name="mail" />{profile.email}</a>
+    <div class="btn-row" style="margin-top:1.5rem">
+      <ButtonLink link={{ label: 'Resume', href: profile.resume, external: true }} variant="ghost" />
+      <ButtonLink link={{ label: 'GitHub', href: profile.github, external: true }} variant="ghost" />
+    </div>
+  </PageHead>
+
+  <section class="section" aria-labelledby="want-title">
+    <div class="wrap">
+      <h2 class="section-title" id="want-title">What I’m looking for</h2>
+      <p class="section-intro">I’m a sophomore, so I know most of this is a couple of years early. I would rather say what I want than wait until it is normal to ask.</p>
+      <ul class="wants" role="list">
+        {lookingFor.map((w) => <li data-reveal><h3>{w.title}</h3><p>{w.body}</p></li>)}
+      </ul>
+      <p class="close-line">If any of this sounds like you, <a class="link" href={`mailto:${profile.email}`}>email me</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .email {
+    display: inline-flex; align-items: center; gap: 0.6rem; margin-top: var(--space-6);
+    font-family: var(--serif); font-size: var(--step-3); text-decoration: none; color: var(--accent);
+    border-bottom: 1px solid currentColor; padding-bottom: 0.15em; word-break: break-all;
+  }
+  .email :global(svg) { width: 0.8em; height: 0.8em; flex: none; }
+  .email:hover { color: var(--accent-hover); }
+  .wants { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6) var(--space-7); }
+  .wants h3 { font-size: var(--step-2); margin-bottom: var(--space-3); }
+  .wants p { color: var(--muted); max-width: 52ch; }
+  .close-line { margin-top: var(--space-7); font-size: var(--step-1); }
+  @media (max-width: 760px) { .wants { grid-template-columns: 1fr; } }
+</style>

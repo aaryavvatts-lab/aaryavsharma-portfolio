@@ -1,0 +1,37 @@
+---
+import { nav, profile } from '../content/site';
+const year = 2026;
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h2>{profile.name}</h2>
+        <p>Sophomore at {profile.school} in {profile.town}. I write free textbooks, build websites, lead two clubs and check brain research.</p>
+        <a class="link" href={`mailto:${profile.email}`}>{profile.email}</a>
+      </div>
+      <div>
+        <p class="footer-label">Pages</p>
+        <ul class="footer-list">
+          <li><a href="/">Home</a></li>
+          {nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <p class="footer-label">Elsewhere</p>
+        <ul class="footer-list">
+          <li><a href="https://aaryavvatts-lab.github.io/south-asian-culture-textbook/" target="_blank" rel="noopener">Roots & Rivers<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+          <li><a href="https://aaryavvatts-lab.github.io/neuroscience-textbook/" target="_blank" rel="noopener">From Neuron to Bedside<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+          <li><a href={profile.github} target="_blank" rel="noopener">GitHub<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+          <li><a href={profile.resume} target="_blank" rel="noopener">Resume<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© {year} {profile.name}. Student projects, not medical advice.</span>
+      <nav aria-label="Legal">
+        <a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/cookies">Cookies</a><a href="/accessibility">Accessibility</a>
+      </nav>
+    </div>
+  </div>
+</footer>

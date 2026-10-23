@@ -1,0 +1,22 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { profile } from '../content/site';
+---
+<Legal title="Accessibility" description="How this site works for different people and devices, and how to report a problem." lede="How this site works for different people and devices, and how to tell me when it does not.">
+  <h2>My goal</h2>
+  <p>I want everyone to be able to use this site, including people who use screen readers, keyboards, voice control or magnification. I aim to meet the Web Content Accessibility Guidelines (WCAG) 2.1 at level AA.</p>
+  <h2>What I have done</h2>
+  <ul>
+    <li>Everything can be used with a keyboard, with a visible focus outline.</li>
+    <li>Text meets at least a 4.5 to 1 contrast ratio in both the dark and light themes.</li>
+    <li>The moving 3D picture on the home page is decoration. Every fact and link it shows is also written out as normal text and links next to it.</li>
+    <li>The site follows your device’s reduced motion setting. With it on, the 3D picture stays still and other animations are turned off.</li>
+    <li>If your browser can’t run 3D graphics, the site shows a flat version with the same links.</li>
+    <li>Text can be enlarged and the layout still works down to a 320 pixel wide screen.</li>
+    <li>Pictures have descriptions for screen readers, and links that open a new tab say so.</li>
+  </ul>
+  <h2>Known limits</h2>
+  <p>The textbooks and project demos live on separate sites, and some of them draw charts or images that are harder to describe in words. Each one tries to give a written summary next to the visual, but I may have missed some.</p>
+  <h2>Tell me about a problem</h2>
+  <p>If you have trouble using any part of this site, email <a href={`mailto:${profile.email}`}>{profile.email}</a> with the page and what happened. I will reply within a few days and fix what I can, or find another way to give you the information.</p>
+</Legal>

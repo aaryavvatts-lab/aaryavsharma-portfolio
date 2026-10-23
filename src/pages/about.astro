@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import { academics, research, skills, profile } from '../content/site';
+---
+<Base title="About" description="About Aaryav Sharma: school, courses, math, lab work at the University of Minnesota, neurosurgery mentorship and research.">
+  <PageHead
+    title="About <em>me</em>"
+    lede="I’m a sophomore at Eastview High School in Apple Valley, Minnesota. Most of what I do outside class is write, build and check things, and then put them online so anyone can use them."
+    art="brain"
+  >
+    <div class="btn-row" style="margin-top:2rem">
+      <ButtonLink link={{ label: 'Resume', href: profile.resume, external: true }} />
+      <ButtonLink link={{ label: 'Contact', href: '/contact' }} variant="ghost" />
+    </div>
+  </PageHead>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <h2 class="section-title">School</h2>
+      <dl class="facts">
+        {academics.map((a) => (
+          <div class="fact" data-reveal>
+            <dt>{a.label}</dt>
+            <dd>{a.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="section-title">Research and medicine</h2>
+      <p class="section-intro">Where I have worked and learned alongside doctors and scientists. My own projects are on the <a class="link" href="/built#research">Built</a> page.</p>
+      <ol class="timeline" role="list">
+        {research.map((r) => (
+          <li class="t-item" data-reveal>
+            <p class="t-when">{r.when}</p>
+            <div class="t-body">
+              <h3>{r.title}</h3>
+              <p class="t-place">{r.place}</p>
+              <p>{r.body}</p>
+              {r.image && (
+                <figure>
+                  <img src={r.image.src} alt={r.image.alt} loading="lazy" decoding="async" width="640" height="400" />
+                  <figcaption>{r.image.credit}</figcaption>
+                </figure>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <h2 class="section-title">What I’m working toward</h2>
+      <div class="prose" data-reveal>
+        <p>I am building a smartphone-based screening idea for peripheral nerve health, and I am working toward starting a neurotech company.</p>
+        <h3 class="skills-title">Skills</h3>
+        <ul class="chips" role="list">{skills.map((s) => <li class="chip">{s}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .two-col { display: grid; grid-template-columns: minmax(12rem, 1fr) 2.2fr; gap: var(--space-6); align-items: start; }
+  @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+  .facts { margin: 0; display: grid; gap: 0; }
+  .fact { display: grid; grid-template-columns: 8rem 1fr; gap: var(--space-4); padding: var(--space-4) 0; border-bottom: 1px solid var(--line); }
+  .fact:first-child { padding-top: 0; }
+  .fact dt { color: var(--muted); font-size: var(--step--1); padding-top: 0.15em; }
+  .fact dd { margin: 0; }
+  @media (max-width: 480px) { .fact { grid-template-columns: 1fr; gap: var(--space-1); } }
+
+  .timeline { list-style: none; display: grid; gap: var(--space-7); }
+  .t-item { display: grid; grid-template-columns: minmax(10rem, 1fr) 2.2fr; gap: var(--space-6); }
+  .t-when { color: var(--accent); font-size: var(--step--1); font-weight: 500; padding-top: 0.5em; }
+  .t-body h3 { font-size: var(--step-2); }
+  .t-place { color: var(--muted); margin: var(--space-2) 0 var(--space-4); }
+  .t-body > p:last-of-type { max-width: 62ch; }
+  figure { margin: var(--space-5) 0 0; max-width: 34rem; }
+  figure img { border-radius: var(--radius-sm); border: 1px solid var(--line); aspect-ratio: 16 / 10; object-fit: cover; width: 100%; }
+  figcaption { color: var(--muted); font-size: var(--step--1); margin-top: var(--space-2); line-height: 1.45; }
+  @media (max-width: 760px) { .t-item { grid-template-columns: 1fr; gap: var(--space-2); } }
+  .skills-title { font-size: var(--step-1); margin: var(--space-6) 0 var(--space-3); font-family: var(--sans); font-weight: 600; }
+</style>

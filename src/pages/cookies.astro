@@ -1,0 +1,27 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { profile } from '../content/site';
+---
+<Legal title="Cookie Policy" description="This site sets no cookies. It saves one theme preference." lede="This site sets no cookies. It saves one theme preference, and that is all.">
+  <h2>The short version</h2>
+  <p>This site does not use cookies. It saves one small preference in your browser so your light or dark theme is remembered. It has no advertising, analytics or tracking technology, so there is no cookie banner.</p>
+  <h2>What this site stores</h2>
+  <table>
+    <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">What it does</th><th scope="col">How long</th></tr></thead>
+    <tbody><tr><td><code>theme</code></td><td>Local storage, first party</td><td>Remembers whether you picked the light or dark theme.</td><td>Until you clear your browser data</td></tr></tbody>
+  </table>
+  <p>That is the complete list. The item holds the word “light” or “dark” and nothing else. It is not sent anywhere and it does not identify you. It is only saved when you press the theme button.</p>
+  <h2>What this site does not use</h2>
+  <ul>
+    <li>No advertising or marketing cookies.</li>
+    <li>No analytics or tracking tools.</li>
+    <li>No social media buttons or embedded videos that set their own cookies.</li>
+    <li>No fingerprinting.</li>
+  </ul>
+  <h2>Other sites you may visit</h2>
+  <p>If you follow a link to another website, such as my textbooks, project sites, GitHub or Google Drive, that site may set its own cookies. They are covered by that site’s policy, not this one.</p>
+  <h2>How to control it</h2>
+  <p>You can delete the saved theme any time by clearing this site’s data in your browser settings. If you block site storage, the site still works. It just will not remember your theme.</p>
+  <h2>Questions</h2>
+  <p>Email <a href={`mailto:${profile.email}`}>{profile.email}</a>.</p>
+</Legal>

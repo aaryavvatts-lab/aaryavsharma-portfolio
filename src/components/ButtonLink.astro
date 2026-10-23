@@ -1,0 +1,15 @@
+---
+import Icon from './Icon.astro';
+import type { Link } from '../content/site';
+type Props = { link: Link; variant?: 'primary' | 'ghost'; class?: string };
+const { link, variant = 'primary', class: cls = '' } = Astro.props;
+---
+<a
+  class={`btn btn--${variant} ${cls}`}
+  href={link.href}
+  {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}
+>
+  {link.label}
+  {link.external ? <span class="visually-hidden">(opens in a new tab)</span> : null}
+  <Icon name={link.external ? 'out' : 'arrow'} />
+</a>

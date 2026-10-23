@@ -1,0 +1,28 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { profile } from '../content/site';
+---
+<Legal title="Terms and Conditions" description="The rules for using this site. Nothing here is medical advice." lede="The rules for using this site. The most important one: nothing here is medical advice.">
+  <h2>Using this site</h2>
+  <p>By using this website you agree to these terms. If you do not agree, please do not use the site. These terms apply to this portfolio only. My textbooks and project websites may have their own notes.</p>
+  <h2>What this site is</h2>
+  <p>This is the personal portfolio of Aaryav Sharma, a high school student. It shows my school projects, clubs, activities and interests. The projects are made to learn and to be looked at. They are not products, and I do not offer them as a service.</p>
+  <h2>Not medical advice</h2>
+  <p>Nothing on this site is medical advice, a diagnosis or a recommendation for treatment. None of my projects, demos, models or code is a medical device or part of one, and none has been tested or approved for use with real patients. This includes the diabetes risk, pneumonia, Alzheimer’s, gait, speech, gesture and EEG tools. Do not use them, or the code behind them, to make a decision about anyone’s health, care, safety or equipment. If you have a health concern, talk to a qualified health professional. In an emergency, call your local emergency number.</p>
+  <h2>Accuracy</h2>
+  <p>I report my results as honestly as I can, and every project number comes from the write-up of the project it belongs to. Usage numbers for my textbooks and websites come from Google Analytics and count users since each site launched. Still, I am a student. The projects may contain mistakes, and the information may be out of date.</p>
+  <h2>Ownership and licenses</h2>
+  <p>The text, design and code I wrote for this site and my projects belong to me. Code in my GitHub repositories is shared under the license shown in each repository. Please credit me if you reuse it. The datasets I use belong to the people who made them and are used under the licenses credited on each project. Pictures by other people are credited under the picture, with their licenses. My textbooks, From Neuron to Bedside and Roots & Rivers, are licensed CC BY-NC-SA 4.0, as stated on their own sites. The SASA and EDAN websites belong to those groups.</p>
+  <h2>How you can use the site</h2>
+  <p>You are welcome to read it, share links to it and try my demos. Please do not try to break the site, overload it, copy it and present it as your own, or use it to do anything illegal or harmful.</p>
+  <h2>Links to other sites</h2>
+  <p>This site links to websites I do not run, such as GitHub, Google Drive and the datasets’ own pages. I do not control them and I am not responsible for their content or practices.</p>
+  <h2>No warranty</h2>
+  <p>The site and everything on it are provided “as is” and “as available,” without any promise that it is correct, complete, always online or right for any purpose. To the fullest extent the law allows, I give no warranties of any kind, express or implied.</p>
+  <h2>Limit of liability</h2>
+  <p>To the fullest extent the law allows, I am not liable for any loss, damage or harm that comes from using this site, my demos or my code, or from not being able to use them. Nothing in these terms limits any rights you have by law that cannot be limited.</p>
+  <h2>Governing law</h2>
+  <p>These terms are governed by the laws of the State of Minnesota, United States, without regard to its conflict-of-law rules.</p>
+  <h2>Changes and contact</h2>
+  <p>If these terms change, I will update the date at the top. Questions go to <a href={`mailto:${profile.email}`}>{profile.email}</a>.</p>
+</Legal>

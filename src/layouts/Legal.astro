@@ -1,0 +1,27 @@
+---
+import Base from './Base.astro';
+type Props = { title: string; description: string; lede: string };
+const { title, description, lede } = Astro.props;
+---
+<Base title={title} description={description}>
+  <header class="page-head legal-head">
+    <div class="wrap">
+      <h1>{title}</h1>
+      <p class="lede">{lede}</p>
+      <p class="muted updated">Last updated October 23, 2026</p>
+    </div>
+  </header>
+  <section class="section legal">
+    <div class="wrap prose"><slot /></div>
+  </section>
+</Base>
+<style>
+  .legal-head { padding-bottom: var(--space-5); }
+  .legal-head h1 { font-size: var(--step-4); }
+  .updated { margin-top: var(--space-4); font-size: var(--step--1); }
+  .legal { padding-top: var(--space-5); }
+  .legal :global(h2:first-child) { margin-top: 0; }
+  .legal :global(table) { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--step--1); }
+  .legal :global(th), .legal :global(td) { text-align: left; padding: var(--space-3); border-bottom: 1px solid var(--line); vertical-align: top; }
+  .legal :global(a) { color: var(--accent); }
+</style>

@@ -1,0 +1,169 @@
+---
+import Base from '../layouts/Base.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import Stats from '../components/Stats.astro';
+import { stops, projects, impact, profile } from '../content/site';
+---
+<Base
+  home
+  title="Home"
+  description="Aaryav Sharma, a sophomore at Eastview High School in Minnesota. Two free textbooks, two school clubs, websites for SASA and EDAN, and ten checked research projects."
+>
+  <link slot="head" rel="preload" href="/shapes/south-asia.json" as="fetch" crossorigin />
+
+  <canvas id="field" class="field" aria-hidden="true"></canvas>
+
+  <div id="node-labels" class="node-labels" aria-hidden="true">
+    {projects.map((p, i) => (
+      <a class="node" data-node={i} href={p.demo} target="_blank" rel="noopener" tabindex="-1">
+        {p.short}
+      </a>
+    ))}
+  </div>
+
+  <section class="stop stop--hero" data-stop data-shape="sphere" data-size="hero" aria-labelledby="hero-title">
+    <div class="wrap stop__inner">
+      <div class="hero-copy">
+        <h1 id="hero-title">Aaryav <em>Sharma</em></h1>
+        <p class="hero-lede">I’m a {profile.grade} at {profile.school} in {profile.town}. I write free textbooks, help run two clubs I started, build websites for causes I care about, and check brain research to see if it holds up.</p>
+        <div class="btn-row">
+          <ButtonLink link={{ label: 'See what I’ve built', href: '/built' }} />
+          <ButtonLink link={{ label: 'About me', href: '/about' }} variant="ghost" />
+        </div>
+      </div>
+    </div>
+    <p class="scroll-cue" aria-hidden="true"><span></span>Scroll</p>
+  </section>
+
+  {stops.map((s) => (
+    <section class={`stop stop--${s.size}`} id={s.id} data-stop data-shape={s.shape} data-size={s.size} aria-labelledby={`${s.id}-title`}>
+      {s.primary && s.shape !== 'network' && (
+        <a class="stop-hit" href={s.primary.href} tabindex="-1" aria-hidden="true"
+          {...(s.primary.external ? { target: '_blank', rel: 'noopener' } : {})}></a>
+      )}
+      <div class="wrap stop__inner">
+        <article class="stop-card" data-reveal>
+          <h2 id={`${s.id}-title`}>{s.title}</h2>
+          <p>{s.body}</p>
+          {s.stats && <Stats stats={s.stats} />}
+          <div class="btn-row">
+            {s.primary && <ButtonLink link={s.primary} />}
+            {s.secondary && <ButtonLink link={s.secondary} variant="ghost" />}
+          </div>
+          {s.shape === 'network' && (
+            <ul class="project-list" role="list">
+              {projects.map((p) => (
+                <li><a class="link" href={p.demo} target="_blank" rel="noopener">{p.name}<span class="visually-hidden"> (opens in a new tab)</span></a></li>
+              ))}
+            </ul>
+          )}
+        </article>
+      </div>
+    </section>
+  ))}
+
+  <section class="stop stop--end" data-stop data-shape="galaxy" data-size="end" aria-labelledby="end-title">
+    <div class="wrap stop__inner">
+      <div class="end-card" data-reveal>
+        <h2 id="end-title">So far</h2>
+        <Stats stats={impact} class="stats--end" />
+        <p class="end-note">I’m looking for research positions, neurotech internships and mentors who will tell me what I’m getting wrong.</p>
+        <div class="btn-row end-actions">
+          <ButtonLink link={{ label: 'Get in touch', href: '/contact' }} />
+          <ButtonLink link={{ label: 'Leadership & Service', href: '/leadership' }} variant="ghost" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .field {
+    position: fixed; inset: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0;
+    pointer-events: none; opacity: 0; transition: opacity 1.2s var(--ease);
+  }
+  .field:global(.is-ready) { opacity: 1; }
+  :global(main) { position: relative; }
+  .stop { position: relative; z-index: 2; pointer-events: none; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; }
+  .stop--big { min-height: 125svh; }
+  .stop--small { min-height: 100svh; }
+  #research .stop-card h2 { font-size: var(--step-3); }
+  .stop__inner { position: relative; z-index: 2; width: min(100% - 2 * var(--gutter), var(--max)); pointer-events: none; }
+  .stop__inner > * { pointer-events: auto; }
+  .scroll-cue { pointer-events: none; }
+
+  .stop--hero { min-height: 100svh; }
+  .hero-copy { max-width: min(34rem, 52vw); padding-top: 64px; }
+  .stop--hero h1 { font-size: clamp(3.2rem, 1.6rem + 6vw, 7.6rem); line-height: 0.95; letter-spacing: -0.03em; }
+  .stop--hero h1 em { color: var(--accent); font-weight: 350; }
+  .hero-lede { font-size: var(--step-1); color: var(--muted); margin: var(--space-5) 0 var(--space-6); max-width: 36rem; }
+  .scroll-cue {
+    position: absolute; left: 50%; bottom: max(1.25rem, env(safe-area-inset-bottom)); transform: translateX(-50%);
+    margin: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-size: 0.8rem; color: var(--muted); letter-spacing: 0.04em;
+  }
+  .scroll-cue span { width: 1px; height: 36px; background: var(--line-strong); position: relative; overflow: hidden; }
+  .scroll-cue span::after { content: ''; position: absolute; inset: 0; background: var(--text); transform: translateY(-100%); animation: cue 2.2s var(--ease) infinite; }
+  @keyframes cue { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
+
+  .stop-card { max-width: min(31rem, 48vw); }
+  .stop-card h2 { font-size: var(--step-4); margin-bottom: var(--space-5); }
+  .stop--small .stop-card h2 { font-size: var(--step-3); }
+  .stop-card > p { font-size: var(--step-1); color: var(--muted); line-height: 1.55; }
+  .stop-card :global(.stats) { margin: var(--space-6) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); gap: var(--space-5); }
+  .stop-card :global(.stat) { min-width: 0; }
+
+  .stop-hit { position: absolute; inset: 0 0 0 48%; z-index: 1; cursor: pointer; pointer-events: auto; }
+
+  .project-list { list-style: none; display: flex; flex-wrap: wrap; margin-top: var(--space-5); gap: var(--space-1) var(--space-4); font-size: var(--step--1); }
+  .project-list a { display: inline-block; padding: 0.2rem 0; }
+
+  .node-labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--ease); }
+  .node-labels[data-on] { opacity: 1; }
+  .node-labels[data-on] .node { pointer-events: auto; }
+  .node {
+    position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; min-height: 32px;
+    padding: 0 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 500; white-space: nowrap;
+    color: var(--text); background: var(--scrim); border: 1px solid var(--line-strong); text-decoration: none;
+    pointer-events: none; will-change: transform;
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .node:hover, .node:focus-visible { border-color: var(--accent); color: var(--accent); }
+
+  .stop--end { min-height: 100svh; text-align: center; }
+  .end-card { margin-inline: auto; max-width: 58rem; background: var(--scrim); border: 1px solid var(--line); border-radius: calc(var(--radius) * 1.5); padding: var(--space-7) var(--space-6); }
+  .end-card h2 { font-size: var(--step-5); margin-bottom: var(--space-6); }
+  .end-card :global(.stats--end) { justify-content: center; gap: var(--space-6) var(--space-7); }
+  .end-card :global(.stats--end .stat span) { margin-inline: auto; }
+  .end-note { color: var(--muted); max-width: 42ch; margin: var(--space-6) auto; font-size: var(--step-1); }
+  .end-actions { justify-content: center; }
+
+  @media (max-width: 899px), (max-aspect-ratio: 21/20) {
+    .hero-copy { max-width: 36rem; }
+    .stop-card { max-width: 36rem; }
+    .stop { align-items: flex-end; padding-bottom: var(--space-7); }
+    .stop--big, .stop--small { min-height: 118svh; }
+    .stop__inner { padding-top: 52svh; }
+    .stop-card { max-width: 36rem; background: var(--scrim); padding: var(--space-5); border-radius: var(--radius); border: 1px solid var(--line); margin-inline: calc(var(--space-2) * -1); }
+    .stop-card h2 { font-size: var(--step-3); }
+    .stop-card > p { font-size: var(--step-0); }
+    .stop-hit { inset: 0 0 50% 0; }
+    .stop--hero { align-items: flex-end; }
+    .stop--hero .stop__inner { padding-top: 0; }
+    .hero-copy { padding: 46svh 0 var(--space-8); }
+    .stop--end { align-items: center; }
+    .stop--end .stop__inner { padding-top: 0; }
+    .end-card { padding: var(--space-6) var(--space-4); }
+    .end-card h2 { font-size: var(--step-4); margin-bottom: var(--space-5); }
+    .end-card :global(.stats--end) { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5) var(--space-4); }
+    .end-note { font-size: var(--step-0); margin: var(--space-5) auto; }
+  }
+  @media (max-width: 420px) {
+    .node { font-size: 0.78rem; min-height: 28px; padding: 0 0.55rem; }
+  }
+</style>
+
+<script>
+  import { startStory } from '../scripts/field/story';
+  startStory();
+</script>

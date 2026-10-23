@@ -1,0 +1,8 @@
+---
+import type { Stat } from '../content/site';
+type Props = { stats: Stat[]; class?: string };
+const { stats, class: cls = '' } = Astro.props;
+---
+<ul class={`stats ${cls}`} role="list">
+  {stats.map((s) => <li class="stat"><b>{s.value}</b> <span>{s.label}</span></li>)}
+</ul>
