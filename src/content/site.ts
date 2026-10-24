@@ -60,7 +60,7 @@ export const textbooks: Build[] = [
       'An interactive guide to the cultures of South Asia for high school students. It covers eight countries in 22 chapters: ancient history, Partition, food, music, cricket, the diaspora and more. Every chapter has a simulation you can play with, like spinning a festival calendar or drawing a kolam, plus an Ask Your Elders guide for talking with your own family.',
     why: 'A lot of us grew up with these traditions and never learned the why. Its Club Kit plans 20 monthly meetings over two school years.',
     stats: [
-      { value: String(usage.rootsRivers.users), label: 'readers since launch' },
+      { value: String(usage.rootsRivers.users), label: 'Google Analytics users since launch' },
       { value: '22', label: 'chapters, each with a simulation' },
       { value: '248,000', label: 'words in the whole book' },
     ],
@@ -78,14 +78,32 @@ export const textbooks: Build[] = [
       'A free, interactive neuroscience textbook for high school students and future doctors. Each chapter has a hands-on simulation you run in your browser and ends with a clinical case that follows a doctor’s reasoning from symptoms to the part of the nervous system that is affected. It also covers the topics high school neuroscience competitions ask about, with practice questions and a mock exam.',
     why: 'Many high schools teach little or no neuroscience. I wanted a free book that makes it easier to start.',
     stats: [
-      { value: String(usage.neuroBook.users), label: 'readers since launch' },
-      { value: String(usage.neuroBook.active), label: 'active readers' },
+      { value: String(usage.neuroBook.users), label: 'Google Analytics users since launch' },
+      { value: String(usage.neuroBook.active), label: 'active users' },
       { value: '192,000', label: 'words in the whole book' },
     ],
     links: [
       { label: 'Read the textbook', href: 'https://aaryavvatts-lab.github.io/neuroscience-textbook/', external: true },
     ],
     image: { src: '/img/shots/neuron-bedside.webp', alt: 'The From Neuron to Bedside home page.', w: 1200, h: 750 },
+  },
+  {
+    id: 'gut-check',
+    name: 'Gut Check',
+    kind: 'Free interactive textbook',
+    role: 'I wrote and built it',
+    summary:
+      'The neuroscience of how your gut and brain talk, for teens, patients and families. It covers the vagus nerve, the microbiome, stress, IBS and IBD, anxiety and depression, and what food and probiotics can and cannot do. Every popular claim gets a grade from Strong to Hype, and every chapter has an interactive simulation and a case at the bedside.',
+    why: 'Most of what people read online about the gut and the brain is hype. I wanted a free book that shows how strong the evidence really is.',
+    stats: [
+      { value: '264,000', label: 'words in the whole book' },
+      { value: '20', label: 'chapters, each with a simulation' },
+      { value: '239', label: 'sourced references' },
+    ],
+    links: [
+      { label: 'Read Gut Check', href: 'https://aaryavvatts-lab.github.io/gut-brain-textbook/', external: true },
+    ],
+    image: { src: '/img/shots/gut-check.webp', alt: 'The Gut Check home page.', w: 1200, h: 750 },
   },
 ];
 
@@ -351,7 +369,7 @@ export const leadership: Role[] = [
     stats: [
       { value: '26', label: 'members' },
       { value: '6', label: 'people on the team I lead' },
-      { value: String(usage.rootsRivers.users), label: 'readers of Roots & Rivers' },
+      { value: String(usage.rootsRivers.users), label: 'Google Analytics users of Roots & Rivers' },
     ],
     links: [
       { label: 'Read Roots & Rivers', href: 'https://aaryavvatts-lab.github.io/south-asian-culture-textbook/', external: true },
@@ -457,7 +475,7 @@ export const lookingFor: { title: string; body: string }[] = [
 export type Book = {
   id: string; name: string; url: string; cover: string; subject: string;
   words: string; chapters: number; sims: number; quiz: number; glossary: number; refs: number;
-  readers: number; active: number;
+  readers?: number; active?: number;
 };
 
 export const books: Book[] = [
@@ -473,29 +491,34 @@ export const books: Book[] = [
     words: '192,000', chapters: 16, sims: 16, quiz: 160, glossary: 253, refs: 160,
     readers: usage.neuroBook.users, active: usage.neuroBook.active,
   },
+  {
+    id: 'gut-check', name: 'Gut Check', url: 'https://aaryavvatts-lab.github.io/gut-brain-textbook/',
+    cover: '/img/covers/gut-check.webp', subject: 'The neuroscience of how your gut and brain talk',
+    words: '264,000', chapters: 20, sims: 20, quiz: 200, glossary: 337, refs: 239,
+  },
 ];
 
 export const home = {
-  lede: 'I’m a sophomore at Eastview High School in Apple Valley, Minnesota. I wrote two free textbooks, about 440,000 words in all, with 300 users so far. I helped start two clubs, SASA with 26 members and NeuroGIDAS with more than 15, and I redid the analysis on ten public brain and medical datasets.',
+  lede: 'I’m a sophomore at Eastview High School in Apple Valley, Minnesota. I wrote three free textbooks, about 704,000 words in all, and I helped start two clubs at school: SASA, with 26 members, and NeuroGIDAS, with more than 15.',
   books: {
-    title: 'Two free textbooks',
-    why: 'Many high schools teach little or no neuroscience. A lot of South Asian students, me included, grew up with traditions nobody explained.',
-    did: 'So I wrote a free textbook for each. Every chapter has a simulation you can run, a quiz and sourced references, and neither book needs an account or shows ads.',
-    result: 'Google Analytics counts 300 users since they launched: 160 for From Neuron to Bedside and 140 for Roots & Rivers.',
+    title: 'Three free textbooks',
+    why: 'Many high schools teach little or no neuroscience. A lot of South Asian students, me included, grew up with traditions nobody explained. And most of what people read online about the gut and the brain is hype.',
+    did: 'So I wrote a free textbook for each. Every chapter has a simulation you can run, a quiz and sourced references. Gut Check also grades every popular claim from Strong to Hype. None of the books needs an account or shows ads.',
+    result: 'Together they come to about 704,000 words, 58 chapters, 580 quiz questions and 619 sourced references. Google Analytics counts 300 users on the first two since they launched. Gut Check is the newest.',
   },
   sasa: {
     title: 'South Asian Student Association',
     role: 'Co-founder and Co-Vice President',
-    why: 'Growing up, I felt scared to show my culture. SASA had been quiet at Eastview for a couple of years.',
-    did: 'This year a group of us brought it back. I lead a team of 6, built the club’s website, and wrote Roots & Rivers, whose Club Kit plans 20 monthly meetings over two school years.',
+    why: 'SASA had been quiet at Eastview for a couple of years, so there was no club at school for sharing South Asian culture.',
+    did: 'This year a group of us brought it back. I lead a team of 6, and I wrote Roots & Rivers for the club: 22 chapters on the cultures of all eight South Asian countries, with a Club Kit that plans 20 monthly meetings over two school years.',
     result: 'The club has 26 members. Each meeting covers one festival or country, with food and games, and anyone can join.',
     stats: [
       { value: '26', label: 'members' },
       { value: '6', label: 'people on the team I lead' },
-      { value: '19', label: 'festival pages on the club’s website' },
+      { value: '20', label: 'meetings planned in the Club Kit' },
     ],
     links: [
-      { label: 'Club website', href: 'https://evhs-sasa.vercel.app/', external: true },
+      { label: 'Read Roots & Rivers', href: 'https://aaryavvatts-lab.github.io/south-asian-culture-textbook/', external: true },
       { label: 'Leadership & service', href: '/leadership#sasa' },
     ] as Link[],
   },
@@ -528,8 +551,8 @@ export const home = {
   close: {
     title: 'So far',
     stats: [
-      { value: '440,000', label: 'words in two free textbooks' },
-      { value: '300', label: 'textbook users since launch, by Google Analytics' },
+      { value: '704,000', label: 'words in three free textbooks' },
+      { value: '58', label: 'chapters, each with a simulation' },
       { value: '2', label: 'school clubs I helped start' },
       { value: '260+', label: 'volunteer hours' },
     ] as Stat[],

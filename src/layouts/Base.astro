@@ -25,7 +25,7 @@ const person = {
 };
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -50,13 +50,12 @@ const person = {
       (function () {
         var d = document.documentElement;
         d.classList.add('js');
-        try { if (localStorage.getItem('theme') === 'light') d.setAttribute('data-theme', 'light'); } catch (e) {}
       })();
     </script>
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
     <slot name="head" />
   </head>
-  <body>
+  <body class={home ? 'night' : 'paper'}>
     <a class="skip" href="#main">Skip to content</a>
     <Header />
     <main id="main" tabindex="-1">

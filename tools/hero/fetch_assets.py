@@ -6,8 +6,9 @@ MODELS = {  # slug: resolution
     'wooden_table_02': '2k', 'desk_lamp_arm_01': '2k', 'dining_chair_02': '1k',
     'wooden_bookshelf_worn': '1k', 'book_encyclopedia_set_01': '1k', 'potted_plant_04': '1k',
     'tea_set_01': '1k', 'stationery_supplies': '1k', 'office_notepads': '1k', 'alarm_clock_01': '1k',
+    'binder_notebook': '2k', 'round_spectacles': '1k', 'postcard_set_01': '1k', 'hanging_picture_frame_02': '1k', 'clipboard': '1k',
 }
-TEXTURES = {'plastered_wall_04': '2k', 'wood_floor_worn': '2k', 'dark_wooden_planks': '2k'}
+TEXTURES = {'plastered_wall_04': '2k', 'wood_floor_worn': '2k', 'dark_wooden_planks': '2k', 'fabric_pattern_07': '1k'}
 HDRI = {'unfinished_office_night': '2k'}
 
 def get(url, dest):

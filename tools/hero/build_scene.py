@@ -21,14 +21,14 @@ args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 def arg(name, default=None):
     return args[args.index(name) + 1] if name in args else default
 
-FRAMES = 120
-PORTRAIT_FRAMES = 90
+FRAMES = 200
+PORTRAIT_FRAMES = 150
 DESK = Vector((0.15, 1.38, 0.0))      # desk centre on the floor
 TOP = 0.80                            # desk top height
 BOOK = Vector((0.12, 1.24, TOP))      # open book centre (spine) on the desk
 # The lamp's shade sits about 0.24 m out along its local +Y and 0.66 m up, opening forward and down
 # (checked in a side render); turn the lamp so the shade faces the book.
-LAMP_BASE = Vector((DESK.x + 0.41, DESK.y + 0.22, TOP))
+LAMP_BASE = Vector((DESK.x + 0.5, DESK.y + 0.24, TOP))
 _to_book = (BOOK - LAMP_BASE).normalized()
 LAMP_ROT = math.atan2(-_to_book.x, _to_book.y)
 LAMP_HEAD = LAMP_BASE + Vector((_to_book.x * 0.24, _to_book.y * 0.24, 0.62))
@@ -193,7 +193,8 @@ def build():
     box('base_b', (X1 - X0, 0.02, 0.12), ((X0 + X1) / 2, Y1 - 0.01, 0.06), base, 0.003)
 
     # Furniture
-    import_gltf('wooden_table_02', '2k', loc=(DESK.x, DESK.y, 0))
+    desk, _ = import_gltf('wooden_table_02', '2k', loc=(DESK.x, DESK.y, 0))
+    desk.scale = (1.35, 1.08, 1.0)  # a real student desk is about 1.5 m wide
     import_gltf('dining_chair_02', '1k', loc=(DESK.x + 0.05, DESK.y - 0.78, 0), rot_z=math.radians(180 + 18))
     SX, SY = X0 + 0.3, 0.55
     import_gltf('wooden_bookshelf_worn', '1k', loc=(SX, SY, 0), rot_z=math.radians(-90))
@@ -205,17 +206,127 @@ def build():
 
     # Desk lamp and props
     import_gltf('desk_lamp_arm_01', '2k', loc=(LAMP_BASE.x, LAMP_BASE.y, TOP), rot_z=LAMP_ROT)
-    import_gltf('tea_set_01', '1k', loc=(DESK.x + 0.46, DESK.y - 0.26, TOP), keep=['cup_small_01', 'saucer_circular_03'])
+    import_gltf('tea_set_01', '1k', loc=(DESK.x + 0.62, DESK.y - 0.24, TOP), keep=['cup_small_01', 'saucer_circular_03'])
+    # the saucer comes out of the set offset from the cup; put it under the cup
+    cup, sau = bpy.data.objects['tea_set_01_cup_small_01'], bpy.data.objects['tea_set_01_saucer_circular_03']
+    bpy.context.view_layer.update()
+    def _centre(o):
+        cs = [o.matrix_world @ Vector(c) for c in o.bound_box]
+        return Vector((sum(c.x for c in cs) / 8, sum(c.y for c in cs) / 8, max(c.z for c in cs)))
+    d = _centre(cup) - _centre(sau)
+    sau.matrix_world.translation += Vector((d.x, d.y, 0))
+    cup.matrix_world.translation += Vector((0, 0, 0.012))
     import_gltf('stationery_supplies', '1k', loc=(DESK.x + 0.15, DESK.y + 0.25, TOP), rot_z=math.radians(-8), keep=['pencilcup', 'pencil_new_a', 'pencil_used', 'pen_fancy'])
-    import_gltf('alarm_clock_01', '1k', loc=(DESK.x - 0.49, DESK.y + 0.27, TOP), rot_z=math.radians(20))
-    import_gltf('office_notepads', '1k', loc=(DESK.x - 0.36, DESK.y - 0.2, TOP), rot_z=math.radians(9), keep=['yellow_pad'])
+    import_gltf('office_notepads', '1k', loc=(DESK.x - 0.27, DESK.y - 0.02, TOP), rot_z=math.radians(-14), keep=['yellow_pad'])
 
     build_open_book()
     build_textbooks()
+    build_clutter()
     build_laptop()
     lights()
     world()
     return sc
+
+
+def pencil(loc, rot, color=(0.85, 0.62, 0.08)):
+    """A hexagonal pencil lying on the desk: painted body, ferrule, eraser, sharpened wood and graphite."""
+    L, r = 0.165, 0.0037
+    paint = mat_flat(f'pencil_paint', color, 0.35)
+    parts = []
+    bpy.ops.mesh.primitive_cylinder_add(vertices=6, radius=r, depth=L * 0.82, location=(0, 0, 0), rotation=(0, math.pi / 2, 0))
+    body = bpy.context.active_object; body.data.materials.append(paint); parts.append(body)
+    bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=r * 1.02, depth=0.011, location=(-L * 0.41 - 0.005, 0, 0), rotation=(0, math.pi / 2, 0))
+    o = bpy.context.active_object; o.data.materials.append(mat_flat('ferrule', (0.75, 0.72, 0.6), 0.3, metal=1.0)); parts.append(o)
+    bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=r * 0.98, depth=0.008, location=(-L * 0.41 - 0.0145, 0, 0), rotation=(0, math.pi / 2, 0))
+    o = bpy.context.active_object; o.data.materials.append(mat_flat('eraser', (0.86, 0.45, 0.45), 0.7)); parts.append(o)
+    bpy.ops.mesh.primitive_cone_add(vertices=6, radius1=r, radius2=0.0006, depth=0.022, location=(L * 0.41 + 0.011, 0, 0), rotation=(0, math.pi / 2, 0))
+    o = bpy.context.active_object; o.data.materials.append(mat_flat('wood', (0.82, 0.66, 0.46), 0.8)); parts.append(o)
+    bpy.ops.object.select_all(action='DESELECT')
+    for o in parts:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = body
+    bpy.ops.object.join()
+    bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+    body.location = (loc[0], loc[1], TOP + r * 0.87)
+    body.rotation_euler = (0, 0, math.radians(rot))
+    return body
+
+
+def build_clutter():
+    """What a real student's desk looks like at night."""
+    paper = mat_flat('crumpled', (0.88, 0.86, 0.8), 0.92)
+    tex_paper = mat_image('notes_print', os.path.join(TEX, 'page_left.jpg'), rough=0.7)
+    # loose printed notes fanned under the open book
+    for i, (dx, dy, rz) in enumerate(((-0.06, 0.04, 8), (0.05, 0.06, -6), (0.0, -0.02, 3))):
+        bpy.ops.mesh.primitive_plane_add(size=1, location=(BOOK.x + dx, BOOK.y + dy, TOP + 0.0004 + i * 0.0003))
+        sh = bpy.context.active_object; sh.scale = (0.21, 0.297, 1); bpy.ops.object.transform_apply(scale=True)
+        sh.rotation_euler = (0, 0, math.radians(90 + rz)); sh.data.materials.append(tex_paper)
+    # a stack of hardcovers in the back left corner
+    cloth = [(0.42, 0.12, 0.1), (0.1, 0.2, 0.3), (0.15, 0.3, 0.2), (0.6, 0.5, 0.35), (0.2, 0.2, 0.22)]
+    z = TOP
+    for i, col in enumerate(cloth):
+        t = random.uniform(0.022, 0.034)
+        w, h = random.uniform(0.15, 0.19), random.uniform(0.21, 0.25)
+        b = box(f'stack_{i}', (w, h, t), (DESK.x - 0.64, DESK.y + 0.2, z + t / 2), mat_flat(f'cloth_{i}', col, 0.7), 0.0012)
+        b.rotation_euler = (0, 0, math.radians(random.uniform(-5, 5)))
+        z += t
+    # pencils and a pen scattered around
+    pencil((BOOK.x + 0.21, BOOK.y - 0.12), 74)
+    pencil((BOOK.x - 0.24, BOOK.y - 0.04), -18, (0.1, 0.32, 0.18))
+    pencil((DESK.x + 0.2, DESK.y + 0.07), 151)
+    bpy.ops.mesh.primitive_cylinder_add(vertices=24, radius=0.0048, depth=0.14, location=(BOOK.x - 0.02, BOOK.y - 0.16, TOP + 0.0048), rotation=(0, math.pi / 2, math.radians(12)))
+    bpy.context.active_object.data.materials.append(mat_flat('pen', (0.03, 0.03, 0.04), 0.25))
+    # open notebook with glasses on it
+    import_gltf('binder_notebook', '2k', loc=(DESK.x - 0.6, DESK.y - 0.22, TOP), rot_z=math.radians(-8), keep=['binder_notebook'])
+    import_gltf('round_spectacles', '1k', loc=(DESK.x - 0.56, DESK.y - 0.2, TOP + 0.012), rot_z=math.radians(25))
+    # steel water bottle (lathe profile), powder-coated sage green with a steel cap
+    prof = [(0.0, 0.0), (0.036, 0.0), (0.037, 0.004), (0.037, 0.2), (0.033, 0.225), (0.022, 0.238), (0.022, 0.25)]
+    me = bpy.data.meshes.new('bottle'); bm = bmesh.new()
+    rings = []
+    for (r, zz) in prof:
+        rings.append([bm.verts.new((r * math.cos(a), r * math.sin(a), zz)) for a in [k * 2 * math.pi / 48 for k in range(48)]])
+    for a_, b_ in zip(rings, rings[1:]):
+        for k in range(48):
+            bm.faces.new((a_[k], a_[(k + 1) % 48], b_[(k + 1) % 48], b_[k]))
+    bm.to_mesh(me); bm.free()
+    for poly in me.polygons: poly.use_smooth = True
+    bo = bpy.data.objects.new('bottle', me); bpy.context.scene.collection.objects.link(bo)
+    coat = mat_flat('bottle_coat', (0.32, 0.42, 0.36), 0.42); bo.data.materials.append(coat)
+    bo.location = (DESK.x + 0.66, DESK.y + 0.06, TOP)
+    bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=0.025, depth=0.03, location=(DESK.x + 0.66, DESK.y + 0.06, TOP + 0.265))
+    cap = bpy.context.active_object; cap.data.materials.append(mat_flat('steel', (0.7, 0.7, 0.72), 0.22, metal=1.0))
+    cap.modifiers.new('bevel', 'BEVEL').width = 0.003
+    # phone, face up, screen off
+    ph = box('phone', (0.072, 0.152, 0.0078), (BOOK.x - 0.27, BOOK.y - 0.2, TOP + 0.0039), mat_flat('phone_body', (0.05, 0.05, 0.06), 0.3, metal=0.6), 0.004)
+    ph.rotation_euler = (0, 0, math.radians(22))
+    bpy.ops.mesh.primitive_plane_add(size=1, location=(0, 0, 0.004))
+    scr = bpy.context.active_object; scr.scale = (0.066, 0.146, 1); bpy.ops.object.transform_apply(scale=True)
+    m = mat_flat('phone_glass', (0.005, 0.005, 0.008), 0.04); m.node_tree.nodes['Principled BSDF'].inputs['Coat Weight'].default_value = 1.0
+    scr.data.materials.append(m); scr.parent = ph
+    # crumpled paper: three on the desk, one on the floor
+    for i, (x, y, zz, r) in enumerate(((DESK.x + 0.3, DESK.y + 0.3, TOP, 0.03), (DESK.x + 0.37, DESK.y + 0.34, TOP, 0.025), (DESK.x - 0.02, DESK.y + 0.32, TOP, 0.027), (DESK.x + 0.65, DESK.y - 0.55, 0.0, 0.032))):
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=r, location=(x, y, zz + r * 0.8))
+        ball = bpy.context.active_object
+        ball.scale = (1.0, 0.92, 0.85)
+        tx = bpy.data.textures.new(f'crumple_{i}', 'VORONOI'); tx.noise_scale = 0.018
+        dm = ball.modifiers.new('crumple', 'DISPLACE'); dm.texture = tx; dm.strength = r * 0.32
+        ball.modifiers.new('soft', 'SUBSURF').levels = 1
+        ball.data.materials.append(paper)
+    # sticky notes on the wall under the window and on the desk
+    for i, (x, z, col, rz) in enumerate(((-0.3, 1.02, (0.98, 0.86, 0.3), 4), (-0.18, 1.0, (0.98, 0.6, 0.65), -6), (0.62, 1.04, (0.6, 0.85, 0.95), 7), (0.73, 0.99, (0.98, 0.86, 0.3), -3))):
+        bpy.ops.mesh.primitive_plane_add(size=0.076, location=(x, 1.795, z), rotation=(math.pi / 2, math.radians(rz), 0))
+        bpy.context.active_object.data.materials.append(mat_flat(f'sticky_{i}', col, 0.8))
+    # postcards pinned to the wall right of the window, a frame to the left
+    import_gltf('postcard_set_01', '1k', loc=(1.25, 1.785, 1.25), rot_z=math.radians(180), keep=['postcard_01', 'postcard_03', 'postcard_05'], scale=0.75)
+    import_gltf('hanging_picture_frame_02', '1k', loc=(-1.05, 1.775, 1.45), rot_z=math.radians(180), scale=0.8)
+    # laptop charging cable running off the back of the desk
+    cu = bpy.data.curves.new('cable', 'CURVE'); cu.dimensions = '3D'; cu.bevel_depth = 0.0022; cu.bevel_resolution = 4
+    sp = cu.splines.new('BEZIER'); sp.bezier_points.add(3)
+    pts = [(DESK.x - 0.5, DESK.y + 0.08, TOP + 0.004), (DESK.x - 0.56, DESK.y + 0.22, TOP + 0.003), (DESK.x - 0.58, DESK.y + 0.33, TOP - 0.05), (DESK.x - 0.6, DESK.y + 0.34, 0.25)]
+    for bp, co in zip(sp.bezier_points, pts):
+        bp.co = co; bp.handle_left_type = bp.handle_right_type = 'AUTO'
+    cob = bpy.data.objects.new('cable', cu); bpy.context.scene.collection.objects.link(cob)
+    cob.data.materials.append(mat_flat('cable', (0.85, 0.85, 0.84), 0.5))
 
 
 def build_open_book():
@@ -240,7 +351,7 @@ def build_open_book():
 
 def build_textbooks():
     """His two textbooks, closed and stacked off to the right."""
-    for i, (name, tex, rot, off) in enumerate((('neuro', 'cover_neuro.jpg', 14, (0.0, 0.0)), ('roots', 'cover_roots.jpg', 4, (-0.035, -0.04)))):
+    for i, (name, tex, rot, off) in enumerate((('neuro', 'cover_neuro.jpg', 14, (0.0, 0.0)), ('roots', 'cover_roots.jpg', 4, (-0.035, -0.04)), ('gut', 'cover_gut.jpg', -7, (-0.01, -0.075)))):
         cover = mat_image(f'cover_{name}', os.path.join(TEX, tex), rough=0.35, coat=0.25)
         side = mat_image(f'edge_{name}', os.path.join(TEX, 'page_edges.jpg'), rough=0.8)
         W, H, T = 0.17, 0.245, 0.024
@@ -256,7 +367,7 @@ def build_textbooks():
 def build_laptop():
     alu = mat_flat('aluminium', (0.62, 0.62, 0.64), 0.28, metal=1.0)
     keys = mat_flat('keys', (0.05, 0.05, 0.055), 0.6)
-    screen = mat_image('screen', os.path.join(TEX, 'screen_edan.png'), rough=0.08, emission=1.6, coat=0.6)
+    screen = mat_image('screen', os.path.join(TEX, 'screen_gut.png'), rough=0.08, emission=0.8, coat=0.35)
     W, D = 0.312, 0.221
     base = box('laptop_base', (W, D, 0.009), (0, 0, 0.0045), alu, 0.0015)
     kb = box('keyboard', (W * 0.86, D * 0.42, 0.001), (0, D * 0.12, 0.0095), keys)
@@ -386,7 +497,7 @@ def key_camera(cam, frames, portrait=False):
         cam.data.keyframe_insert('lens', frame=f)
         cam.data.dof.focus_distance = max(0.08, (l - p).length)
         cam.data.dof.keyframe_insert('focus_distance', frame=f)
-        cam.data.dof.aperture_fstop = 2.8 if t < 0.5 else 2.8 + (t - 0.5) / 0.5 * 8.2
+        cam.data.dof.aperture_fstop = 4.0 if t < 0.5 else 4.0 + (t - 0.5) / 0.5 * 7.0
         cam.data.dof.keyframe_insert('aperture_fstop', frame=f)
         focus.append(l)
     return focus
@@ -473,9 +584,9 @@ if __name__ == '__main__':
         from bpy_extras.object_utils import world_to_camera_view
         land = job in ('land', 'poster4k')
         cam = bpy.data.objects['cam_land' if land else 'cam_port']
-        w, h = (3840, 2160) if job == 'poster4k' else (1920, 1080) if land else (1080, 1920)
+        w, h = (3840, 2160) if job == 'poster4k' else (2560, 1440) if land else (1080, 1920)
         render_settings(sc, 'CYCLES', w, h, int(arg('--samples', 32)))
-        sc.cycles.adaptive_threshold = 0.05
+        sc.cycles.adaptive_threshold = 0.035
         sc.camera = cam
         n = FRAMES if land else PORTRAIT_FRAMES
         sc.frame_start, sc.frame_end = int(arg('--from', 1)), int(arg('--to', 1 if job == 'poster4k' else n))

@@ -40,9 +40,11 @@ paper = '#%02x%02x%02x' % (r, g, b)
 film = {
     'poster': {'land': land, 'port': port},
     'sets': {
+        'land-2560': {'dir': '/hero/v1/land-2560/', 'count': count('land-2560'), 'w': 2560, 'h': 1440, 'ext': 'avif'},
         'land-1920': {'dir': '/hero/v1/land-1920/', 'count': count('land-1920'), 'w': 1920, 'h': 1080, 'ext': 'avif'},
         'land-1280': {'dir': '/hero/v1/land-1280/', 'count': count('land-1280'), 'w': 1280, 'h': 720, 'ext': 'avif'},
         'port-1080': {'dir': '/hero/v1/port-1080/', 'count': count('port-1080'), 'w': 1080, 'h': 1920, 'ext': 'avif'},
+        'port-720': {'dir': '/hero/v1/port-720/', 'count': count('port-720'), 'w': 720, 'h': 1280, 'ext': 'avif'},
     },
     # The camera is always aimed at what matters, so crop around the frame centre on every screen.
     'focal': {'land': [[0.5, 0.5]] * count('land-1920'), 'port': [[0.5, 0.5]] * count('port-1080')},

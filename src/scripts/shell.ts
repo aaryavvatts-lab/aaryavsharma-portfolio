@@ -1,22 +1,5 @@
-// Shared page behavior: theme toggle, header background, mobile menu, reveal on scroll.
-
-const root = document.documentElement;
-
-function syncThemeButton() {
-  const light = root.getAttribute('data-theme') === 'light';
-  document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) =>
-    b.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme'));
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#efe7d6' : '#0c0a08');
-}
-syncThemeButton();
-document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) =>
-  b.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch { /* storage blocked */ }
-    syncThemeButton();
-    document.dispatchEvent(new CustomEvent('themechange'));
-  }));
+import { startSmoothScroll, lenis } from './smooth';
+// Shared page behavior: header background, mobile menu, reveal on scroll.
 
 const header = document.getElementById('site-header');
 const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 24);
@@ -31,6 +14,7 @@ function setMenu(open: boolean, moveFocus = true) {
   menu.toggleAttribute('data-open', open);
   openBtn.setAttribute('aria-expanded', String(open));
   document.body.style.overflow = open ? 'hidden' : '';
+  if (open) lenis?.stop(); else lenis?.start();
   if (!moveFocus) return;
   if (open) closeBtn?.focus(); else openBtn.focus();
 }
@@ -56,3 +40,5 @@ if ('IntersectionObserver' in window) {
 } else {
   reveal.forEach((el) => el.classList.add('is-in'));
 }
+
+startSmoothScroll();

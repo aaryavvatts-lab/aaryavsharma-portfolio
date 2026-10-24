@@ -3,12 +3,12 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import ButtonLink from '../components/ButtonLink.astro';
 import Stats from '../components/Stats.astro';
-import { textbooks, websites, projects, totalUsers } from '../content/site';
+import { textbooks, websites, projects } from '../content/site';
 ---
-<Base title="Built" description="Everything Aaryav Sharma has built: two free interactive textbooks, websites for SASA and EDAN, and ten research projects with live demos.">
+<Base title="Built" description="Everything Aaryav Sharma has built: three free interactive textbooks, websites for SASA and EDAN, and ten research projects with live demos.">
   <PageHead
     title="Things I’ve <em>built</em>"
-    lede={`Two free textbooks, two websites and ten research projects. The four sites have had ${totalUsers} readers and visitors since they launched, by Google Analytics.`}
+    lede="Three free textbooks, two websites and ten research projects. Together the textbooks come to about 704,000 words."
   >
     <nav class="jump" aria-label="On this page">
       <a href="#textbooks">Textbooks</a><a href="#websites">Websites</a><a href="#research">Research</a>
@@ -18,7 +18,7 @@ import { textbooks, websites, projects, totalUsers } from '../content/site';
   <section class="section" id="textbooks" aria-labelledby="tb-title">
     <div class="wrap">
       <h2 class="section-title" id="tb-title">Textbooks</h2>
-      <p class="section-intro">Both are free, need no account and show no ads.</p>
+      <p class="section-intro">All three are free, need no account and show no ads.</p>
       {textbooks.map((b, i) => (
         <article class={`feature ${i % 2 ? 'flip' : ''}`} id={b.id} data-reveal>
           <a class="shot" href={b.links[0].href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">

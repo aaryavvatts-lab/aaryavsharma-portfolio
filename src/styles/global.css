@@ -65,23 +65,28 @@
   color-scheme: dark;
 }
 
-:root[data-theme='light'] {
-  --bg: #efe7d6;
-  --bg-2: #e7ddca;
-  --panel: #f7f1e5;
-  --panel-2: #f1e9da;
-  --line: rgba(34, 29, 24, 0.13);
-  --line-strong: rgba(34, 29, 24, 0.26);
-  --text: #221d18;
-  --muted: #5c5146;
-  --accent: #8a4d12;
+/* Inner pages are the inside of the book: paper and ink. */
+body.paper {
+  --bg: var(--paper);
+  --bg-2: var(--paper-2);
+  --panel: #e6dcc6;
+  --panel-2: #efe7d6;
+  --line: var(--ink-line);
+  --line-strong: rgba(34, 29, 24, 0.28);
+  --text: var(--ink);
+  --muted: var(--ink-muted);
+  --accent: var(--ink-accent);
   --accent-hover: #6f3d0c;
   --on-accent: #fbf6ec;
-  --scrim: rgba(239, 231, 214, 0.88);
-  --focus: #8a4d12;
-  --paper: #f8f3e8;
-  --paper-2: #efe7d6;
+  --scrim: rgba(237, 228, 208, 0.94);
+  --focus: var(--ink-accent);
   color-scheme: light;
+}
+/* The footer is the back cover: night colours on every page. */
+.site-footer {
+  --bg: #0c0a08; --text: #ece4d4; --muted: #b4aa98; --line: rgba(236, 228, 212, 0.11);
+  --accent: #e3a95c; --accent-hover: #f0bd78; --focus: #f0bd78;
+  color: var(--text);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -171,9 +176,6 @@ ul { margin: 0; padding: 0; }
 }
 .icon-btn:hover { border-color: var(--text); }
 .icon-btn svg { width: 18px; height: 18px; }
-.theme-toggle .sun { display: none; }
-:root[data-theme='light'] .theme-toggle .sun { display: block; }
-:root[data-theme='light'] .theme-toggle .moon { display: none; }
 .menu-btn { display: none; }
 
 .mobile-nav {
@@ -249,3 +251,10 @@ main:focus { outline: none; }
 .site-header:is([data-paper], [data-film-paper]) .tabs a { color: var(--ink-muted); }
 .site-header:is([data-paper], [data-film-paper]) .tabs a:hover, .site-header:is([data-paper], [data-film-paper]) .tabs a[aria-current='page'] { background: var(--ink-line); color: var(--ink); }
 .site-header:is([data-paper], [data-film-paper]) .icon-btn { border-color: var(--ink-line); color: var(--ink); }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* focus rings stay visible when the header sits over paper */
+.site-header:is([data-paper], [data-film-paper]) { --focus: var(--ink-accent); }
