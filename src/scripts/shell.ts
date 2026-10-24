@@ -6,7 +6,7 @@ function syncThemeButton() {
   const light = root.getAttribute('data-theme') === 'light';
   document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) =>
     b.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme'));
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#f4f1ea' : '#0b0d12');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#efe7d6' : '#0c0a08');
 }
 syncThemeButton();
 document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) =>
@@ -55,15 +55,4 @@ if ('IntersectionObserver' in window) {
   reveal.forEach((el) => io.observe(el));
 } else {
   reveal.forEach((el) => el.classList.add('is-in'));
-}
-
-// Small static particle pictures at the top of inner pages.
-const arts = document.querySelectorAll<HTMLCanvasElement>('canvas[data-art]');
-if (arts.length) {
-  import('./field/flat').then(({ mountStatic }) => {
-    arts.forEach((c) => {
-      const wide = window.innerWidth >= 760;
-      mountStatic(c, c.dataset.art as Parameters<typeof mountStatic>[1], { x: wide ? 0.25 : 0.2, y: 0, scale: wide ? 0.82 : 0.7 });
-    });
-  });
 }

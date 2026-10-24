@@ -5,3 +5,6 @@ dist
 .env*
 .DS_Store
 scripts/out
+tools/hero/assets
+tools/hero/out
+tools/hero/*.blend*

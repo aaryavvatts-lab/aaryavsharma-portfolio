@@ -1,0 +1,109 @@
+---
+// Minnesota by county, using the shapes and results from EDAN's own map
+// (src/content/edan-map.json, pulled by tools/edan-map/extract.mjs).
+// Every county is a real link to its page on edanmn.vercel.app.
+import map from '../content/edan-map.json';
+
+const step = (v: number) => (v <= 20 ? 0 : v <= 40 ? 1 : v <= 60 ? 2 : v <= 80 ? 3 : 4);
+const counties = map.counties.map((c) => ({ ...c, k: step(c.noPlan), url: `https://edanmn.vercel.app/counties/${c.slug}/` }));
+---
+<figure class="cmap" data-county-map>
+  <div class="cmap__pick">
+      <label for="county-pick">Look up a county</label>
+      <div class="cmap__row">
+        <select id="county-pick" data-pick>
+          <option value="">Choose a county</option>
+          {counties.map((c) => <option value={c.url} data-label={c.label}>{c.name.replace(/ County$/, '')}</option>)}
+        </select>
+        <a class="cmap__open" data-open href="https://edanmn.vercel.app/counties/" target="_blank" rel="noopener"><span data-open-label>See every county on EDAN</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+      </div>
+    </div>
+  <svg viewBox={map.viewBox} role="group" aria-labelledby="cmap-title" class="cmap__svg">
+    <title id="cmap-title">Minnesota's 87 counties, shaded by the share of school districts with no public seizure plan. Each county links to its page on EDAN's website.</title>
+    {counties.map((c) => (
+      <a href={c.url} target="_blank" rel="noopener" aria-label={`${c.label}. Opens EDAN's ${c.name} page in a new tab.`} data-label={c.label} data-id={`c-${c.slug}`}>
+        <path id={`c-${c.slug}`} d={c.d} class={`cmap__county k${c.k}`} />
+      </a>
+    ))}
+    <!-- the highlighted county is redrawn on top so no neighbour covers its outline -->
+    <use class="cmap__hi cmap__hi--outer" data-hi href="#c-hennepin" visibility="hidden" />
+    <use class="cmap__hi" data-hi href="#c-hennepin" visibility="hidden" />
+  </svg>
+  <figcaption class="cmap__cap">
+    <p class="cmap__readout" data-readout>Point at a county, or pick one below.</p>
+    <div class="cmap__legend" aria-hidden="true">
+      <span>Share of districts with no public plan</span>
+      <span class="cmap__scale"><i>less</i>{[0, 1, 2, 3, 4].map((k) => <b class={`k${k}`}></b>)}<i>more</i></span>
+    </div>
+    <p class="cmap__source">Map and results from EDAN’s audit of every Minnesota school district, June 2026.</p>
+  </figcaption>
+</figure>
+
+<style>
+  .cmap { margin: 0; display: grid; gap: var(--space-5); }
+  .cmap__pick { order: 0; }
+  .cmap__svg { width: 100%; height: auto; max-height: 72svh; overflow: visible; }
+  /* Styles go through variables so the highlight copy (a <use> of the same path) can restyle itself. */
+  .cmap__county { stroke: var(--c-stroke, var(--paper)); stroke-width: var(--c-width, 1.6); stroke-linejoin: round; opacity: var(--c-op, 1); transition: fill 0.2s var(--ease), opacity 0.2s var(--ease); }
+  .k0 { fill: var(--c-fill, #d9c39b); }
+  .k1 { fill: var(--c-fill, #d4b083); }
+  .k2 { fill: var(--c-fill, #c08750); }
+  .k3 { fill: var(--c-fill, #a3602b); }
+  .k4 { fill: var(--c-fill, #7c3d16); }
+  .cmap__svg:hover, .cmap__svg:focus-within { --c-op: 0.55; }
+  .cmap__svg a:hover, .cmap__svg a:focus-visible { --c-op: 1; }
+  .cmap__svg a { outline: none; }
+  .cmap__hi { --c-fill: none; --c-op: 1; --c-stroke: var(--ink); --c-width: 3.5; pointer-events: none; }
+  .cmap__hi--outer { --c-stroke: var(--paper); --c-width: 9; }
+  .cmap__readout { font-family: var(--serif); font-size: var(--step-1); color: var(--ink); min-height: 2.6em; margin: 0; }
+  .cmap__legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); font-size: var(--step--1); color: var(--ink-muted); }
+  .cmap__scale { display: inline-flex; align-items: center; gap: 3px; }
+  .cmap__scale i { font-style: normal; padding: 0 6px; }
+  .cmap__scale b { width: 26px; height: 12px; border-radius: 2px; display: inline-block; }
+  .cmap__scale b.k0 { background: #d9c39b; } .cmap__scale b.k1 { background: #d4b083; } .cmap__scale b.k2 { background: #c08750; }
+  .cmap__scale b.k3 { background: #a3602b; } .cmap__scale b.k4 { background: #7c3d16; }
+  .cmap__pick label { display: block; font-size: var(--step--1); color: var(--ink-muted); margin-bottom: var(--space-2); }
+  .cmap__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+  .cmap__row select {
+    min-height: 44px; padding: 0 2.2rem 0 0.9rem; border-radius: 999px; border: 1px solid var(--ink-line);
+    background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%235c5146' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.8rem center / 12px;
+    color: var(--ink); font: 500 var(--step--1) var(--sans); appearance: none; cursor: pointer;
+  }
+  .cmap__row select:hover { border-color: var(--ink); }
+  .cmap__open { color: var(--ink-accent); font-weight: 500; font-size: var(--step--1); min-height: 44px; display: inline-flex; align-items: center; text-underline-offset: 0.22em; }
+  .cmap__source { font-size: 0.82rem; color: var(--ink-muted); margin: 0; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-county-map]').forEach((root) => {
+    const readout = root.querySelector<HTMLElement>('[data-readout]');
+    const pick = root.querySelector<HTMLSelectElement>('[data-pick]');
+    const open = root.querySelector<HTMLAnchorElement>('[data-open]');
+    const openLabel = root.querySelector<HTMLElement>('[data-open-label]');
+    const idle = readout?.textContent ?? '';
+    const his = Array.from(root.querySelectorAll<SVGUseElement>('[data-hi]'));
+    const show = (text: string | null, id?: string) => {
+      if (readout) readout.textContent = text || idle;
+      his.forEach((h) => {
+        if (id) { h.setAttribute('href', `#${id}`); h.setAttribute('visibility', 'visible'); }
+        else h.setAttribute('visibility', 'hidden');
+      });
+    };
+    root.querySelectorAll<HTMLAnchorElement>('svg a').forEach((a) => {
+      const on = () => show(a.dataset.label ?? null, a.dataset.id);
+      a.addEventListener('pointerenter', on);
+      a.addEventListener('focus', on);
+      a.addEventListener('pointerleave', () => show(null));
+      a.addEventListener('blur', () => show(null));
+    });
+    pick?.addEventListener('change', () => {
+      const opt = pick.selectedOptions[0];
+      if (!open || !openLabel) return;
+      if (!pick.value) { open.href = 'https://edanmn.vercel.app/counties/'; openLabel.textContent = 'See every county on EDAN'; show(null); return; }
+      open.href = pick.value;
+      openLabel.textContent = `Open ${opt.textContent} County on EDAN`;
+      const slug = pick.value.split('/counties/')[1]?.replace(/\/$/, '');
+      show(opt.dataset.label ?? null, slug ? `c-${slug}` : undefined);
+    });
+  });
+</script>

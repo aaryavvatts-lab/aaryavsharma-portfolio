@@ -2,228 +2,323 @@
 import Base from '../layouts/Base.astro';
 import ButtonLink from '../components/ButtonLink.astro';
 import Stats from '../components/Stats.astro';
-import { stops, projects, impact, profile } from '../content/site';
-import counties from '../content/edan-counties.json';
+import CountyMap from '../components/CountyMap.astro';
+import { books, home, checks, projects, profile } from '../content/site';
+import film from '../content/film.json';
 
-// The six small sculptures on the hero orbit, in the same order as RING_WORKS in shapes.ts.
-const orbit = [
-  { id: 'roots-rivers', label: 'Roots & Rivers' },
-  { id: 'neuron-bedside', label: 'From Neuron to Bedside' },
-  { id: 'sasa', label: 'SASA' },
-  { id: 'neurogidas', label: 'NeuroGIDAS' },
-  { id: 'research', label: '10 research projects' },
-  { id: 'edan', label: 'EDAN' },
-];
+const byId = Object.fromEntries(projects.map((p) => [p.id, p]));
+const rows = checks.map((c) => ({ ...c, p: byId[c.id] }));
+const poster = film.poster;
 ---
 <Base
   home
   title="Home"
-  description="Aaryav Sharma, a sophomore at Eastview High School in Minnesota. Two free textbooks, two school clubs, websites for SASA and EDAN, and ten checked research projects."
+  description="Aaryav Sharma, a sophomore at Eastview High School in Minnesota: two free textbooks (about 440,000 words), two school clubs, ten research projects, and the website for EDAN."
 >
-  <link slot="head" rel="preload" href="/shapes/south-asia.json" as="fetch" crossorigin />
+  <Fragment slot="head">
+    <link rel="preload" as="image" type="image/avif" imagesrcset={poster.land.map((p) => `${p.avif} ${p.w}w`).join(', ')} imagesizes="100vw" fetchpriority="high" media="(min-aspect-ratio: 4/5)" />
+    <link rel="preload" as="image" type="image/avif" href={poster.port.avif} fetchpriority="high" media="(max-aspect-ratio: 4/5)" />
+  </Fragment>
 
-  <canvas id="field" class="field" aria-hidden="true"></canvas>
-
-  <div id="ring-labels" class="node-labels ring-labels" aria-hidden="true">
-    {orbit.map((o, i) => <a class="node node--ring" data-node={i} href={`#${o.id}`} tabindex="-1">{o.label}</a>)}
-  </div>
-
-  <a id="county-tip" class="county-tip" href="https://edanmn.vercel.app/counties/" target="_blank" rel="noopener">
-    <span data-tip-text></span><span class="county-tip__go">Open on EDAN <span aria-hidden="true">↗</span></span>
-  </a>
-
-  <div id="node-labels" class="node-labels" aria-hidden="true">
-    {projects.map((p, i) => (
-      <a class="node" data-node={i} href={p.demo} target="_blank" rel="noopener" tabindex="-1">
-        {p.short}
-      </a>
-    ))}
-  </div>
-
-  <section class="stop stop--hero" data-stop data-shape="ring" data-size="hero" aria-labelledby="hero-title">
-    <div class="wrap stop__inner">
-      <div class="hero-copy">
-        <h1 id="hero-title">Aaryav <em>Sharma</em></h1>
-        <p class="hero-lede">I’m a {profile.grade} at {profile.school} in {profile.town}. I write free textbooks, helped start two clubs at school, build websites for my club and for an epilepsy group, and check brain research to see if it holds up.</p>
-        <div class="btn-row">
-          <ButtonLink link={{ label: 'See what I’ve built', href: '/built' }} />
-          <ButtonLink link={{ label: 'About me', href: '/about' }} variant="ghost" />
-        </div>
+  <!-- The film: a night reading room, pushed into by scrolling, ending on a page of Roots & Rivers. -->
+  <section class="film" id="top" data-film aria-labelledby="hero-title" style={`--poster-x:${film.focal.land[0][0] * 100}%;--poster-y:${film.focal.land[0][1] * 100}%`}>
+    <div class="film__stage">
+      <picture class="film__poster">
+        <source media="(max-aspect-ratio: 4/5)" type="image/avif" srcset={poster.port.avif} />
+        <source media="(max-aspect-ratio: 4/5)" srcset={poster.port.src} />
+        <source type="image/avif" srcset={poster.land.map((p) => `${p.avif} ${p.w}w`).join(', ')} sizes="100vw" />
+        <img src={poster.land[1].src} srcset={poster.land.map((p) => `${p.src} ${p.w}w`).join(', ')} sizes="100vw"
+          width="1920" height="1080" alt="A desk at night in a dark room, lit by one lamp: an open book, Aaryav's two textbooks and a laptop showing EDAN's Minnesota map." fetchpriority="high" decoding="async" />
+      </picture>
+      <canvas class="film__canvas" aria-hidden="true"></canvas>
+      <div class="film__grain" aria-hidden="true"></div>
+      <div class="film__copy" data-film-copy>
+        <h1 id="hero-title">Aaryav Sharma</h1>
+        <p class="film__lede">{home.lede}</p>
+        <p class="film__cue" aria-hidden="true"><span></span>Scroll into the book</p>
       </div>
+      <div class="film__paper" aria-hidden="true" data-film-paper></div>
     </div>
-    <p class="scroll-cue" aria-hidden="true"><span></span>Scroll</p>
   </section>
 
-  {stops.map((s) => (
-    <section class={`stop stop--${s.size}`} id={s.id} data-stop data-shape={s.shape} data-size={s.size} aria-labelledby={`${s.id}-title`}>
-      {s.shape === 'minnesota' && <div id="county-hit" class="county-hit" aria-hidden="true"></div>}
-      {s.primary && s.shape !== 'network' && s.shape !== 'minnesota' && (
-        <a class="stop-hit" href={s.primary.href} tabindex="-1" aria-hidden="true"
-          {...(s.primary.external ? { target: '_blank', rel: 'noopener' } : {})}></a>
-      )}
-      <div class="wrap stop__inner">
-        <article class="stop-card" data-reveal>
-          <h2 id={`${s.id}-title`}>{s.title}</h2>
-          <p>{s.body}</p>
-          {s.stats && <Stats stats={s.stats} />}
-          <div class="btn-row">
-            {s.primary && <ButtonLink link={s.primary} />}
-            {s.secondary && <ButtonLink link={s.secondary} variant="ghost" />}
-          </div>
-          {s.shape === 'minnesota' && (
-            <div class="county-pick">
-              <label for="county-pick">Look up a county</label>
-              <div class="county-pick__row">
-                <select id="county-pick">
-                  <option value="">Choose a county</option>
-                  {counties.map((c, i) => <option value={i}>{c.name}</option>)}
-                </select>
-                <a id="county-open" class="link county-open" href="https://edanmn.vercel.app/counties/" target="_blank" rel="noopener"><span data-open-label>See every county on EDAN</span><span class="visually-hidden"> (opens in a new tab)</span></a>
-              </div>
-            </div>
-          )}
-          {s.shape === 'network' && (
-            <ul class="project-list" role="list">
-              {projects.map((p) => (
-                <li><a class="link" href={p.demo} target="_blank" rel="noopener">{p.name}<span class="visually-hidden"> (opens in a new tab)</span></a></li>
-              ))}
-            </ul>
-          )}
-        </article>
+  <div class="book" data-paper>
+    <!-- Spread 1: the two textbooks -->
+    <section class="spread" id="textbooks" aria-labelledby="tb-title">
+      <div class="page page--left">
+        <p class="runhead">Aaryav Sharma</p>
+        <h2 id="tb-title">{home.books.title}</h2>
+        <p class="cause">{home.books.why}</p>
+        <p>{home.books.did}</p>
+        <p class="result">{home.books.result}</p>
+        <div class="btn-row">
+          {books.map((b) => <ButtonLink link={{ label: `Read ${b.name}`, href: b.url, external: true }} variant="ghost" class="btn--ink" />)}
+        </div>
+        <p class="folio">1</p>
+      </div>
+      <div class="page page--right">
+        <p class="runhead runhead--right">The books</p>
+        <div class="covers">
+          {books.map((b) => (
+            <a class="cover" href={b.url} target="_blank" rel="noopener">
+              <img src={b.cover} alt={`Cover of ${b.name}`} width="800" height="1200" loading="lazy" decoding="async" />
+              <span class="visually-hidden">Read {b.name} (opens in a new tab)</span>
+            </a>
+          ))}
+        </div>
+        <table class="ledger">
+          <caption class="visually-hidden">What is in each textbook, counted from its source files</caption>
+          <thead><tr><td></td>{books.map((b) => <th scope="col">{b.name}</th>)}</tr></thead>
+          <tbody>
+            <tr><th scope="row">Words</th>{books.map((b) => <td>{b.words}</td>)}</tr>
+            <tr><th scope="row">Chapters, each with a simulation</th>{books.map((b) => <td>{b.chapters}</td>)}</tr>
+            <tr><th scope="row">Quiz questions</th>{books.map((b) => <td>{b.quiz}</td>)}</tr>
+            <tr><th scope="row">Glossary terms</th>{books.map((b) => <td>{b.glossary}</td>)}</tr>
+            <tr><th scope="row">Sourced references</th>{books.map((b) => <td>{b.refs}</td>)}</tr>
+            <tr><th scope="row">Google Analytics users since launch</th>{books.map((b) => <td>{b.readers}</td>)}</tr>
+          </tbody>
+        </table>
+        <p class="folio folio--right">2</p>
       </div>
     </section>
-  ))}
 
-  <section class="stop stop--end" data-stop data-shape="galaxy" data-size="end" aria-labelledby="end-title">
-    <div class="wrap stop__inner">
-      <div class="end-card" data-reveal>
-        <h2 id="end-title">So far</h2>
-        <Stats stats={impact} class="stats--end" />
-        <p class="end-note">I’m looking for research positions, neurotech internships and mentors who will tell me what I’m getting wrong.</p>
-        <div class="btn-row end-actions">
-          <ButtonLink link={{ label: 'Get in touch', href: '/contact' }} />
-          <ButtonLink link={{ label: 'Leadership & service', href: '/leadership' }} variant="ghost" />
+    <!-- Spread 2: SASA -->
+    <section class="spread" id="sasa" aria-labelledby="sasa-title">
+      <div class="page page--left">
+        <p class="runhead">Aaryav Sharma</p>
+        <h2 id="sasa-title">{home.sasa.title}</h2>
+        <p class="role">{home.sasa.role}</p>
+        <p class="cause">{home.sasa.why}</p>
+        <p>{home.sasa.did}</p>
+        <p class="result">{home.sasa.result}</p>
+        <div class="btn-row">{home.sasa.links.map((l) => <ButtonLink link={l} variant="ghost" class="btn--ink" />)}</div>
+        <p class="folio">3</p>
+      </div>
+      <div class="page page--right">
+        <p class="runhead runhead--right">The clubs</p>
+        <Stats stats={home.sasa.stats} class="stats--ink stats--big" />
+        <figure class="plate">
+          <img src="/img/shots/sasa.webp" alt="The SASA website: a 3D marigold, the next meeting and the club's calendar." width="1200" height="750" loading="lazy" decoding="async" />
+          <figcaption>The club’s website, which I built. It counts down to the next meeting and has a page for each of 19 festivals.</figcaption>
+        </figure>
+        <p class="folio folio--right">4</p>
+      </div>
+    </section>
+
+    <!-- Spread 3: NeuroGIDAS -->
+    <section class="spread" id="neurogidas" aria-labelledby="gidas-title">
+      <div class="page page--left">
+        <p class="runhead">Aaryav Sharma</p>
+        <h2 id="gidas-title">{home.gidas.title}</h2>
+        <p class="role">{home.gidas.role}</p>
+        <p class="cause">{home.gidas.why}</p>
+        <p>{home.gidas.did}</p>
+        <p class="result">{home.gidas.result}</p>
+        <div class="btn-row">{home.gidas.links.map((l) => <ButtonLink link={l} variant="ghost" class="btn--ink" />)}</div>
+        <p class="folio">5</p>
+      </div>
+      <div class="page page--right">
+        <p class="runhead runhead--right">The clubs</p>
+        <Stats stats={home.gidas.stats} class="stats--ink stats--big" />
+        <figure class="plate plate--emblem">
+          <img src="/img/neurogidas.png" alt="The NeuroGIDAS emblem." width="520" height="520" loading="lazy" decoding="async" />
+        </figure>
+        <p class="folio folio--right">6</p>
+      </div>
+    </section>
+
+    <!-- Spread 4: research, as one table across both pages -->
+    <section class="spread spread--wide" id="research" aria-labelledby="rs-title">
+      <div class="page page--full">
+        <p class="runhead">Aaryav Sharma <span>Research</span></p>
+        <div class="research-head">
+          <h2 id="rs-title">{home.research.title}</h2>
+          <div>
+            <p class="cause">{home.research.why}</p>
+            <p>{home.research.did}</p>
+            <p class="result">{home.research.result}</p>
+          </div>
         </div>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Research results table">
+          <table class="checks">
+            <caption class="visually-hidden">For each project, the main result and the number to read it next to</caption>
+            <thead><tr><th scope="col">Project</th><th scope="col">Data</th><th scope="col">Result</th><th scope="col">Context</th><th scope="col"><span class="visually-hidden">Links</span></th></tr></thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr>
+                  <th scope="row">{r.p.name}</th>
+                  <td class="muted-ink">{r.p.tags.join(', ')}</td>
+                  <td><b>{r.after}</b> <span>{r.afterLabel}</span></td>
+                  <td><b>{r.before}</b> <span>{r.beforeLabel}</span></td>
+                  <td class="links">
+                    <a href={r.p.demo} target="_blank" rel="noopener">Demo<span class="visually-hidden"> of {r.p.name} (opens in a new tab)</span></a>
+                    {r.p.code && <a href={r.p.code} target="_blank" rel="noopener">Code<span class="visually-hidden"> for {r.p.name} (opens in a new tab)</span></a>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="note-ink">All ten write-ups, with their data sources, are on the <a href="/built#research">Built</a> page.</p>
+        <p class="folio">7</p>
+      </div>
+    </section>
+
+    <!-- Spread 5: EDAN, smaller -->
+    <section class="spread spread--small" id="edan" aria-labelledby="edan-title">
+      <div class="page page--left">
+        <p class="runhead">Aaryav Sharma</p>
+        <h2 id="edan-title">{home.edan.title}</h2>
+        <p class="role">{home.edan.role}</p>
+        <p class="cause">{home.edan.why}</p>
+        <p>{home.edan.did}</p>
+        <p class="result">{home.edan.result}</p>
+        <p class="map-help">{home.edan.mapHelp}</p>
+        <div class="btn-row"><ButtonLink link={{ label: 'Visit EDAN', href: 'https://edanmn.vercel.app/', external: true }} variant="ghost" class="btn--ink" /></div>
+        <p class="folio">8</p>
+      </div>
+      <div class="page page--right">
+        <p class="runhead runhead--right">Websites</p>
+        <CountyMap />
+        <p class="folio folio--right">9</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Back cover -->
+  <section class="close" aria-labelledby="close-title">
+    <div class="wrap">
+      <h2 id="close-title">{home.close.title}</h2>
+      <Stats stats={home.close.stats} class="stats--close" />
+      <p class="close__note">{home.close.note}</p>
+      <div class="btn-row close__actions">
+        <ButtonLink link={{ label: 'Get in touch', href: '/contact' }} />
+        <ButtonLink link={{ label: 'Resume', href: profile.resume, external: true }} variant="ghost" />
       </div>
     </div>
   </section>
 </Base>
 
 <style>
-  .field {
-    position: fixed; inset: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0;
-    pointer-events: none; opacity: 0; transition: opacity 1.2s var(--ease);
+  /* ---------- film ---------- */
+  .film { position: relative; height: 420vh; background: #050403; }
+  .film__stage { position: sticky; top: 0; height: 100vh; height: 100lvh; overflow: hidden; }
+  .film__poster, .film__poster img, .film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .film__poster img { object-fit: cover; object-position: var(--poster-x, 50%) var(--poster-y, 50%); }
+  .film__canvas { opacity: 0; }
+  :global(html[data-film-state='on']) .film__canvas { opacity: 1; }
+  .film__grain {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.08; mix-blend-mode: overlay;
+    background-image: url('/img/grain.png'); background-size: 192px 192px;
   }
-  .field:global(.is-ready) { opacity: 1; }
-  :global(main) { position: relative; }
-  .stop { position: relative; z-index: 2; pointer-events: none; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; }
-  .stop--big { min-height: 125svh; }
-  .stop--small { min-height: 100svh; }
-  #research .stop-card h2 { font-size: var(--step-3); }
-  .stop__inner { position: relative; z-index: 2; width: min(100% - 2 * var(--gutter), var(--max)); pointer-events: none; }
-  .stop__inner > * { pointer-events: auto; }
-  .scroll-cue { pointer-events: none; }
-
-  .stop--hero { min-height: 100svh; }
-  .hero-copy { max-width: min(34rem, 52vw); padding-top: 64px; }
-  .stop--hero h1 { font-size: clamp(3.2rem, 1.6rem + 6vw, 7.6rem); line-height: 0.95; letter-spacing: -0.03em; }
-  .stop--hero h1 em { color: var(--accent); font-weight: 350; }
-  .hero-lede { font-size: var(--step-1); color: var(--muted); margin: var(--space-5) 0 var(--space-6); max-width: 36rem; }
-  .scroll-cue {
-    position: absolute; left: 50%; bottom: max(1.25rem, env(safe-area-inset-bottom)); transform: translateX(-50%);
-    margin: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    font-size: 0.8rem; color: var(--muted); letter-spacing: 0.04em;
+  .film__copy {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 0 var(--gutter) calc(max(7svh, 3rem) + (100lvh - 100svh));
+    max-width: calc(var(--max) + 2 * var(--gutter)); margin-inline: auto; will-change: opacity, transform;
   }
-  .scroll-cue span { width: 1px; height: 36px; background: var(--line-strong); position: relative; overflow: hidden; }
-  .scroll-cue span::after { content: ''; position: absolute; inset: 0; background: var(--text); transform: translateY(-100%); animation: cue 2.2s var(--ease) infinite; }
-  @keyframes cue { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
+  .film__copy h1 { font-size: clamp(3.2rem, 1.6rem + 6vw, 7.6rem); font-weight: 380; letter-spacing: -0.025em; line-height: 0.95; color: #f3ead8; text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5); }
+  .film__lede { max-width: 40rem; margin: var(--space-5) 0 var(--space-6); font-size: var(--step-1); line-height: 1.55; color: #ddd2bd; text-shadow: 0 1px 18px rgba(0, 0, 0, 0.75); }
+  .film__cue { display: flex; align-items: center; gap: 0.75rem; margin: 0; font-size: 0.85rem; color: #cbbfa8; letter-spacing: 0.02em; }
+  .film__cue span { width: 44px; height: 1px; background: #cbbfa8; transform-origin: left; animation: cue 2.4s var(--ease) infinite; }
+  @keyframes cue { 0% { transform: scaleX(0.2); } 60%, 100% { transform: scaleX(1); } }
+  .film__paper { position: absolute; inset: 0; background: var(--paper); opacity: 0; pointer-events: none; }
 
-  .stop-card { max-width: min(31rem, 48vw); }
-  .stop-card h2 { font-size: var(--step-4); margin-bottom: var(--space-5); }
-  .stop--small .stop-card h2 { font-size: var(--step-3); }
-  .stop-card > p { font-size: var(--step-1); color: var(--muted); line-height: 1.55; }
-  .stop-card :global(.stats) { margin: var(--space-6) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); gap: var(--space-5); }
-  .stop-card :global(.stat) { min-width: 0; }
-
-  .stop-hit { position: absolute; inset: 0 0 0 48%; z-index: 1; cursor: pointer; pointer-events: auto; }
-  /* On touch screens and in the narrow layout a big invisible link causes stray taps; the buttons do the job.
-     The county layer stays: on phones it covers the map above the card, and a tap only picks a county. */
-  @media (hover: none), (max-width: 899px), (max-aspect-ratio: 21/20) { .stop-hit { display: none; } }
-
-  .project-list { list-style: none; display: flex; flex-wrap: wrap; margin-top: var(--space-5); gap: var(--space-1) var(--space-4); font-size: var(--step--1); }
-  .project-list a { display: inline-flex; align-items: center; min-height: 34px; }
-
-  .node-labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--ease); }
-  .node-labels[data-on] { opacity: 1; }
-  .node-labels[data-on] .node { pointer-events: auto; }
-  .node {
-    position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; min-height: 32px;
-    padding: 0 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 500; white-space: nowrap;
-    color: var(--text); background: var(--scrim); border: 1px solid var(--line-strong); text-decoration: none;
-    pointer-events: none; will-change: transform;
-    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+  /* ---------- the book ---------- */
+  .book { background: var(--paper); color: var(--ink); position: relative; z-index: 1; padding: var(--space-7) 0 var(--space-9); overflow-x: clip; }
+  .spread {
+    position: relative; width: min(100% - 2 * var(--gutter), 1280px); margin: 0 auto var(--space-9);
+    display: grid; grid-template-columns: 1fr 1fr; background: var(--paper);
+    box-shadow: 0 1px 0 var(--ink-line), 0 30px 60px -40px rgba(60, 40, 20, 0.35);
   }
-  .node:hover, .node:focus-visible { border-color: var(--accent); color: var(--accent); }
-  .ring-labels[data-on] .node[data-back] { opacity: 0; pointer-events: none; }
-  .node--ring { font-family: var(--serif); font-size: 0.95rem; transition: opacity 0.35s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease); }
-
-  .county-hit { position: absolute; inset: 0 0 0 48%; z-index: 1; pointer-events: auto; touch-action: pan-y; }
-  .county-tip {
-    position: fixed; left: 0; top: 0; z-index: 30; max-width: min(22rem, calc(100vw - 16px));
-    display: grid; gap: 0.35rem; padding: 0.75rem 0.95rem; border-radius: var(--radius-sm);
-    background: var(--panel); border: 1px solid var(--line-strong); color: var(--text);
-    font-size: 0.9rem; line-height: 1.4; text-decoration: none; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-    opacity: 0; pointer-events: none; transition: opacity 0.18s var(--ease);
+  .spread::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 60px; transform: translateX(-50%); pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(60, 40, 20, 0.09) 45%, rgba(60, 40, 20, 0.13) 50%, rgba(60, 40, 20, 0.09) 55%, transparent);
   }
-  .county-tip[data-on] { opacity: 1; }
-  .county-tip__go { color: var(--accent); font-weight: 600; font-size: 0.85rem; }
-  @media (hover: none), (max-width: 899px), (max-aspect-ratio: 21/20) { .county-tip[data-on] { pointer-events: auto; } }
+  .spread--wide { display: block; }
+  .spread--wide::after { display: none; }
+  .page { position: relative; padding: clamp(2.5rem, 5vw, 5rem) clamp(1.5rem, 4.5vw, 4.5rem) clamp(4rem, 6vw, 5.5rem); min-width: 0; }
+  .book .runhead { font-family: var(--serif); font-variant: small-caps; letter-spacing: 0.06em; font-size: 0.95rem; color: var(--ink-muted); margin: 0 0 var(--space-7); display: flex; justify-content: space-between; max-width: none; }
+  .book .runhead--right { justify-content: flex-end; }
+  .book .folio { position: absolute; bottom: clamp(1.5rem, 3vw, 2.5rem); left: clamp(1.5rem, 4.5vw, 4.5rem); margin: 0; font-family: var(--serif); color: var(--ink-muted); font-size: 0.95rem; }
+  .book .folio--right { left: auto; right: clamp(1.5rem, 4.5vw, 4.5rem); }
+  .book h2 { font-size: var(--step-4); color: var(--ink); margin-bottom: var(--space-5); }
+  .book p { font-family: var(--serif); font-size: clamp(1.08rem, 1rem + 0.3vw, 1.22rem); line-height: 1.6; max-width: 34em; }
+  .book .role { font-family: var(--sans); font-size: var(--step--1); color: var(--ink-accent); font-weight: 600; margin-top: calc(var(--space-3) * -1); }
+  .cause { color: var(--ink-muted); }
+  .result { font-weight: 560; }
+  .book .btn-row { margin-top: var(--space-6); }
+  .book :global(.btn--ink) { border-color: var(--ink-line); color: var(--ink); }
+  .book :global(.btn--ink:hover) { border-color: var(--ink); }
+  .book a:not(.btn):not(.cover) { color: var(--ink-accent); }
 
-  .county-pick { margin-top: var(--space-6); display: grid; gap: var(--space-2); }
-  .county-pick label { font-size: var(--step--1); color: var(--muted); }
-  .county-pick__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
-  .county-pick select {
-    min-height: 44px; padding: 0 2.2rem 0 0.9rem; border-radius: 999px; border: 1px solid var(--line-strong);
-    background: var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23a6abb8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.8rem center / 12px;
-    color: var(--text); font: 500 var(--step--1) var(--sans); appearance: none; cursor: pointer;
+  .covers { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); margin-bottom: var(--space-6); }
+  .cover { display: block; border-radius: 3px 6px 6px 3px; overflow: hidden; box-shadow: 0 2px 4px rgba(40, 25, 10, 0.25), 0 18px 32px -14px rgba(40, 25, 10, 0.45); transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease); }
+  .cover:hover { transform: translateY(-4px) rotate(-0.6deg); box-shadow: 0 2px 4px rgba(40, 25, 10, 0.25), 0 26px 40px -14px rgba(40, 25, 10, 0.5); }
+  .cover img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
+
+  .ledger { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+  .ledger th, .ledger td { padding: 0.55rem 0.4rem; border-bottom: 1px solid var(--ink-line); text-align: right; font-variant-numeric: tabular-nums; }
+  .ledger th[scope='row'] { text-align: left; font-weight: 400; color: var(--ink-muted); }
+  .ledger thead th { font-family: var(--serif); font-weight: 600; color: var(--ink); vertical-align: bottom; }
+  .ledger td { font-family: var(--serif); font-size: 1.05rem; color: var(--ink); }
+
+  .book :global(.stats--ink .stat b) { color: var(--ink); }
+  .book :global(.stats--ink .stat span) { color: var(--ink-muted); }
+  .book :global(.stats--big .stat b) { font-size: var(--step-5); }
+  .book :global(.stats--big) { margin-top: 0; margin-bottom: var(--space-6); display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: var(--space-5); }
+  .book :global(.stats--big .stat) { min-width: 0; }
+  .plate { margin: 0; }
+  .plate img { width: 100%; border-radius: 4px; border: 1px solid var(--ink-line); box-shadow: 0 16px 30px -18px rgba(40, 25, 10, 0.45); }
+  .plate figcaption { font-family: var(--serif); font-style: italic; color: var(--ink-muted); font-size: var(--step--1); margin-top: var(--space-3); }
+  .plate--emblem img { width: min(70%, 320px); border: 0; box-shadow: none; border-radius: 50%; }
+
+  .research-head { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-7); align-items: start; margin-bottom: var(--space-6); }
+  .table-wrap { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; }
+  .table-wrap:focus-visible { outline: 2px solid var(--ink-accent); outline-offset: 4px; }
+  .checks { width: 100%; border-collapse: collapse; min-width: 720px; }
+  .checks th, .checks td { text-align: left; padding: 0.85rem 0.6rem; border-bottom: 1px solid var(--ink-line); vertical-align: baseline; }
+  .checks thead th { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.02em; }
+  .checks tbody th { font-family: var(--serif); font-weight: 560; font-size: 1.08rem; color: var(--ink); }
+  .checks td b { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .checks td span { display: block; font-size: 0.85rem; color: var(--ink-muted); }
+  .muted-ink { color: var(--ink-muted); font-size: 0.9rem; }
+  .links a { display: inline-flex; align-items: center; min-height: 34px; margin-right: 0.9rem; font-size: 0.9rem; font-weight: 500; }
+  .book .note-ink { margin-top: var(--space-5); font-size: var(--step--1); color: var(--ink-muted); }
+  .book .map-help { font-size: 1.02rem; color: var(--ink-muted); border-left: 2px solid var(--ink-line); padding-left: var(--space-4); }
+
+  /* ---------- back cover ---------- */
+  .close { background: var(--bg); padding: var(--space-9) 0; text-align: center; }
+  .close h2 { font-size: var(--step-5); margin-bottom: var(--space-7); }
+  .close :global(.stats--close) { justify-content: center; gap: var(--space-6) var(--space-8); }
+  .close :global(.stats--close .stat span) { margin-inline: auto; }
+  .close__note { color: var(--muted); max-width: 40ch; margin: var(--space-7) auto var(--space-6); font-size: var(--step-1); }
+  .close__actions { justify-content: center; }
+
+  /* ---------- pages settle onto the desk as they arrive ---------- */
+  :global(.js) .spread { opacity: 0; transform: translateY(48px) perspective(1600px) rotateX(5deg); transform-origin: 50% 0; transition: opacity 0.9s var(--ease), transform 1.1s var(--ease); }
+  :global(.js) .spread.is-in { opacity: 1; transform: none; }
+
+  @media (max-width: 860px) {
+    .spread { grid-template-columns: 1fr; }
+    .spread::after { display: none; }
+    .page--right { border-top: 1px solid var(--ink-line); }
+    .research-head { grid-template-columns: 1fr; gap: var(--space-3); }
+    .film { height: 320vh; }
   }
-  .county-pick select:hover { border-color: var(--text); }
-  .county-open { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--step--1); }
-
-  .stop--end { min-height: 100svh; text-align: center; }
-  .end-card { margin-inline: auto; max-width: 58rem; background: var(--scrim); border: 1px solid var(--line); border-radius: calc(var(--radius) * 1.5); padding: var(--space-7) var(--space-6); }
-  .end-card h2 { font-size: var(--step-5); margin-bottom: var(--space-6); }
-  .end-card :global(.stats--end) { justify-content: center; gap: var(--space-6) var(--space-7); }
-  .end-card :global(.stats--end .stat span) { margin-inline: auto; }
-  .end-note { color: var(--muted); max-width: 42ch; margin: var(--space-6) auto; font-size: var(--step-1); }
-  .end-actions { justify-content: center; }
-
-  @media (max-width: 899px), (max-aspect-ratio: 21/20) {
-    .hero-copy { max-width: 36rem; }
-    .stop-card { max-width: 36rem; }
-    .stop { align-items: flex-end; padding-bottom: var(--space-7); }
-    .stop--big, .stop--small { min-height: 118svh; }
-    .stop__inner { padding-top: 52svh; }
-    .stop-card { max-width: 36rem; background: var(--scrim); padding: var(--space-5); border-radius: var(--radius); border: 1px solid var(--line); margin-inline: calc(var(--space-2) * -1); }
-    .stop-card h2 { font-size: var(--step-3); }
-    .county-hit { inset: auto 0; top: 10svh; height: 50svh; }
-    .stop-card > p { font-size: var(--step-0); }
-    .stop--hero { align-items: flex-end; }
-    .stop--hero .stop__inner { padding-top: 0; }
-    .hero-copy { padding: 46svh 0 var(--space-8); }
-    .stop--end { align-items: center; }
-    .stop--end .stop__inner { padding-top: 0; }
-    .end-card { padding: var(--space-6) var(--space-4); }
-    .end-card h2 { font-size: var(--step-4); margin-bottom: var(--space-5); }
-    .end-card :global(.stats--end) { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5) var(--space-4); }
-    .end-note { font-size: var(--step-0); margin: var(--space-5) auto; }
-  }
-  @media (max-width: 420px) {
-    .node { font-size: 0.78rem; min-height: 32px; padding: 0 0.6rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .film { height: 100vh; height: 100svh; }
+    .film__stage { height: 100vh; height: 100svh; }
+    .film__copy { padding-bottom: max(7svh, 3rem); }
+    .film__cue { display: none; }
+    :global(.js) .spread { opacity: 1; transform: none; transition: none; }
+    .film__cue span { animation: none; }
   }
 </style>
 
 <script>
-  import { startStory } from '../scripts/field/story';
-  startStory();
+  import { startFilm } from '../scripts/film';
+  startFilm();
+  const spreads = document.querySelectorAll<HTMLElement>('.spread');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    spreads.forEach((s) => io.observe(s));
+  } else spreads.forEach((s) => s.classList.add('is-in'));
 </script>

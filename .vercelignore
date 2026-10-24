@@ -1,0 +1,5 @@
+tools/
+scripts/out/
+node_modules/
+dist/
+.astro/

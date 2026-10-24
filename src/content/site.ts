@@ -58,11 +58,11 @@ export const textbooks: Build[] = [
     role: 'I wrote and built it for SASA',
     summary:
       'An interactive guide to the cultures of South Asia for high school students. It covers eight countries in 22 chapters: ancient history, Partition, food, music, cricket, the diaspora and more. Every chapter has a simulation you can play with, like spinning a festival calendar or drawing a kolam, plus an Ask Your Elders guide for talking with your own family.',
-    why: 'A lot of us grew up with these traditions and never learned the why. Clubs can run a full year of meetings from its Club Kit.',
+    why: 'A lot of us grew up with these traditions and never learned the why. Its Club Kit plans 20 monthly meetings over two school years.',
     stats: [
       { value: String(usage.rootsRivers.users), label: 'readers since launch' },
       { value: '22', label: 'chapters, each with a simulation' },
-      { value: '368', label: 'concepts in its learning graph' },
+      { value: '248,000', label: 'words in the whole book' },
     ],
     links: [
       { label: 'Read Roots & Rivers', href: 'https://aaryavvatts-lab.github.io/south-asian-culture-textbook/', external: true },
@@ -80,7 +80,7 @@ export const textbooks: Build[] = [
     stats: [
       { value: String(usage.neuroBook.users), label: 'readers since launch' },
       { value: String(usage.neuroBook.active), label: 'active readers' },
-      { value: '16', label: 'chapters, each with a simulation' },
+      { value: '192,000', label: 'words in the whole book' },
     ],
     links: [
       { label: 'Read the textbook', href: 'https://aaryavvatts-lab.github.io/neuroscience-textbook/', external: true },
@@ -346,10 +346,11 @@ export const leadership: Role[] = [
     when: '2026 to present',
     body: [
       'Growing up, I felt scared to show my culture, and sometimes I did not want to. SASA had been quiet at Eastview for a couple of years, and this year a group of us brought it back so there would be a place where everyone could share theirs openly. You don’t have to be South Asian to join.',
-      'We meet one Friday a month with food, games, and a different festival or country each time. I built the club’s website and wrote Roots & Rivers, a free 22-chapter textbook the club can run a whole year of meetings from.',
+      'We meet one Friday a month with food, games, and a different festival or country each time. I lead a team of 6, built the club’s website, and wrote Roots & Rivers, a free 22-chapter textbook whose Club Kit plans 20 monthly meetings.',
     ],
     stats: [
-      { value: '20+', label: 'students in the club' },
+      { value: '26', label: 'members' },
+      { value: '6', label: 'people on the team I lead' },
       { value: String(usage.rootsRivers.users), label: 'readers of Roots & Rivers' },
     ],
     links: [
@@ -367,8 +368,8 @@ export const leadership: Role[] = [
       'I wrote the proposal that got us a faculty advisor, and I came up with a statewide Brain Cancer Innovation pitch competition that the club is now working to run.',
     ],
     stats: [
-      { value: '15+', label: 'students at meetings' },
-      { value: '5', label: 'person team I lead' },
+      { value: '15+', label: 'members' },
+      { value: '5', label: 'people on the team I lead' },
     ],
   },
   {
@@ -450,97 +451,102 @@ export const lookingFor: { title: string; body: string }[] = [
   { title: 'Collaboration and competitions', body: 'Co-writing a paper, entering a science fair or research competition together, or teaming up on a hackathon.' },
 ];
 
-/* ---------- Home: the scroll story ---------- */
+/* ---------- Home ---------- */
 
-export type Stop = {
-  id: string;
-  shape: 'sphere' | 'book' | 'brain' | 'southAsia' | 'helix' | 'network' | 'minnesota' | 'galaxy';
-  size: 'hero' | 'big' | 'small' | 'end';
-  title: string;
-  body: string;
-  stats?: Stat[];
-  primary?: Link;
-  secondary?: Link;
+// Measured from the books' source files on 2026-10-23.
+export type Book = {
+  id: string; name: string; url: string; cover: string; subject: string;
+  words: string; chapters: number; sims: number; quiz: number; glossary: number; refs: number;
+  readers: number; active: number;
 };
 
-export const impact: Stat[] = [
-  { value: String(totalUsers), label: 'readers and visitors across four sites I built, by Google Analytics' },
-  { value: '2', label: 'free textbooks, 38 chapters in all' },
-  { value: '2', label: 'school clubs I helped start' },
-  { value: volunteerHours, label: 'volunteer hours' },
+export const books: Book[] = [
+  {
+    id: 'roots-rivers', name: 'Roots & Rivers', url: 'https://aaryavvatts-lab.github.io/south-asian-culture-textbook/',
+    cover: '/img/covers/roots-rivers.webp', subject: 'The cultures of all eight South Asian countries',
+    words: '248,000', chapters: 22, sims: 22, quiz: 220, glossary: 368, refs: 220,
+    readers: usage.rootsRivers.users, active: usage.rootsRivers.active,
+  },
+  {
+    id: 'neuron-bedside', name: 'From Neuron to Bedside', url: 'https://aaryavvatts-lab.github.io/neuroscience-textbook/',
+    cover: '/img/covers/neuron-bedside.webp', subject: 'Neuroscience for high school students and future doctors',
+    words: '192,000', chapters: 16, sims: 16, quiz: 160, glossary: 253, refs: 160,
+    readers: usage.neuroBook.users, active: usage.neuroBook.active,
+  },
 ];
 
-export const stops: Stop[] = [
-  {
-    id: 'roots-rivers',
-    shape: 'book',
-    size: 'big',
-    title: 'Roots & Rivers',
-    body: 'A free, interactive textbook I wrote on the cultures of all eight South Asian countries. Every chapter has a story, a simulation you can play with, and an Ask Your Elders guide for talking with your own family.',
-    stats: [
-      { value: String(usage.rootsRivers.users), label: 'readers since launch' },
-      { value: '22', label: 'chapters, each with a simulation' },
-      { value: '368', label: 'concepts in its learning graph' },
-    ],
-    primary: { label: 'Read Roots & Rivers', href: 'https://aaryavvatts-lab.github.io/south-asian-culture-textbook/', external: true },
+export const home = {
+  lede: 'I’m a sophomore at Eastview High School in Apple Valley, Minnesota. I wrote two free textbooks, about 440,000 words in all, with 300 users so far. I helped start two clubs, SASA with 26 members and NeuroGIDAS with more than 15, and I redid the analysis on ten public brain and medical datasets.',
+  books: {
+    title: 'Two free textbooks',
+    why: 'Many high schools teach little or no neuroscience. A lot of South Asian students, me included, grew up with traditions nobody explained.',
+    did: 'So I wrote a free textbook for each. Every chapter has a simulation you can run, a quiz and sourced references, and neither book needs an account or shows ads.',
+    result: 'Google Analytics counts 300 users since they launched: 160 for From Neuron to Bedside and 140 for Roots & Rivers.',
   },
-  {
-    id: 'neuron-bedside',
-    shape: 'brain',
-    size: 'big',
-    title: 'From Neuron to Bedside',
-    body: 'Many high schools teach little or no neuroscience, so I wrote a free textbook for students and future doctors. Every chapter has a hands-on simulation and ends with a clinical case.',
-    stats: [
-      { value: String(usage.neuroBook.users), label: 'readers since launch' },
-      { value: String(usage.neuroBook.active), label: 'active readers' },
-      { value: '16', label: 'chapters, each with a simulation' },
-    ],
-    primary: { label: 'Read the textbook', href: 'https://aaryavvatts-lab.github.io/neuroscience-textbook/', external: true },
-  },
-  {
-    id: 'sasa',
-    shape: 'southAsia',
-    size: 'big',
+  sasa: {
     title: 'South Asian Student Association',
-    body: 'I co-founded SASA at Eastview and serve as its co-vice president. Growing up, I felt scared to show my culture. Now there is a club where anyone can share theirs, with food, games and a different festival or country every month.',
+    role: 'Co-founder and Co-Vice President',
+    why: 'Growing up, I felt scared to show my culture. SASA had been quiet at Eastview for a couple of years.',
+    did: 'This year a group of us brought it back. I lead a team of 6, built the club’s website, and wrote Roots & Rivers, whose Club Kit plans 20 monthly meetings over two school years.',
+    result: 'The club has 26 members. Each meeting covers one festival or country, with food and games, and anyone can join.',
     stats: [
-      { value: '20+', label: 'students in the club' },
-      { value: '8', label: 'countries we cover' },
+      { value: '26', label: 'members' },
+      { value: '6', label: 'people on the team I lead' },
+      { value: '19', label: 'festival pages on the club’s website' },
     ],
-    primary: { label: 'More about SASA', href: '/leadership#sasa' },
-    secondary: { label: 'Club website', href: 'https://evhs-sasa.vercel.app/', external: true },
+    links: [
+      { label: 'Club website', href: 'https://evhs-sasa.vercel.app/', external: true },
+      { label: 'Leadership & service', href: '/leadership#sasa' },
+    ] as Link[],
   },
-  {
-    id: 'neurogidas',
-    shape: 'helix',
-    size: 'big',
+  gidas: {
     title: 'NeuroGIDAS',
-    body: 'I founded our school’s chapter of GIDAS and serve as its co-president. Students use real genetic data to study how diseases work. I wrote the proposal that got us a faculty advisor, and I came up with a statewide Brain Cancer Innovation pitch competition the club is now working to run.',
+    role: 'Founder and Co-President',
+    why: 'Eastview had no club where students could get into neuroscience and genetics.',
+    did: 'I wrote the proposal that got us a faculty advisor and started our chapter of GIDAS, a miRcore program where students use real genetic data to study how diseases work. I also came up with a statewide Brain Cancer Innovation pitch competition that the club is now working to run.',
+    result: 'More than 15 students come to meetings, and I lead a team of 5.',
     stats: [
-      { value: '15+', label: 'students at meetings' },
-      { value: '5', label: 'person team I lead' },
+      { value: '15+', label: 'members' },
+      { value: '5', label: 'people on the team I lead' },
     ],
-    primary: { label: 'More about NeuroGIDAS', href: '/leadership#neurogidas' },
+    links: [{ label: 'Leadership & service', href: '/leadership#neurogidas' }] as Link[],
   },
-  {
-    id: 'research',
-    shape: 'network',
-    size: 'big',
+  research: {
     title: 'Ten research projects',
-    body: 'I redo the analysis on public brain and medical datasets and look for the mistakes that make results look better than they are. In one, an Alzheimer’s model that scored 99% fell to 34% once the test was fair.',
-    stats: [
-      { value: '10', label: 'projects with live demos' },
-      { value: '270+', label: 'people in the brain and muscle recordings' },
-    ],
-    primary: { label: 'See all ten', href: '/built#research' },
+    why: 'A video showed an Alzheimer’s MRI model scoring 99 percent. When I rebuilt it, scans from the same people were in both the training and the test set.',
+    did: 'So for every project I take a public dataset, redo the analysis myself, and test the model on people it never saw in training. Each one has a live demo, and nine have their code online.',
+    result: 'In three, the number dropped once the test was fair. SliceWise fell from 98.9% to 33.7%. In two it went up: plain logistic regression beat a transformer in CorticalTap, and reading the whole spectrum beat the textbook method in Octaves.',
   },
-  {
-    id: 'edan',
-    shape: 'minnesota',
-    size: 'small',
+  edan: {
     title: 'A website for EDAN',
-    body: 'I designed and built the website for the Epilepsy Data & Advocacy Network, which checks whether Minnesota’s 329 school districts post a seizure plan families can find. Point at a county on the map to see what its districts post, and click to open it on EDAN’s site.',
-    stats: [{ value: String(usage.edan.users), label: 'visitors since launch' }],
-    primary: { label: 'Visit EDAN', href: 'https://edanmn.vercel.app/', external: true },
+    role: 'Designed and built the website',
+    why: 'The Epilepsy Data & Advocacy Network, founded by Rishik Kondadadi, checked every Minnesota school district for a seizure plan a family could find.',
+    did: 'I designed and built EDAN’s website: 115 pages, including one for each of Minnesota’s 87 counties.',
+    result: 'Google Analytics shows 120 visitors since it launched.',
+    mapHelp: 'Click or pick a county to open its page on EDAN’s site. Each one shows how many of its school districts post a seizure plan, about how many residents have epilepsy, how far it is to the nearest child neurologist, ambulance times, and the county’s lawmakers.',
   },
+  close: {
+    title: 'So far',
+    stats: [
+      { value: '440,000', label: 'words in two free textbooks' },
+      { value: '300', label: 'textbook users since launch, by Google Analytics' },
+      { value: '2', label: 'school clubs I helped start' },
+      { value: '260+', label: 'volunteer hours' },
+    ] as Stat[],
+    note: 'I’m looking for research positions, neurotech internships and mentors who will tell me what I’m getting wrong.',
+  },
+};
+
+// Two numbers from each project's write-up: the main result, and what it should be read next to.
+export const checks: { id: string; before: string; beforeLabel: string; after: string; afterLabel: string }[] = [
+  { id: 'slicewise', after: '33.7%', afterLabel: 'split by patient', before: '98.9%', beforeLabel: 'the same model, split by slice' },
+  { id: 'gait', after: '52.8%', afterLabel: 'new person, brain only', before: '92.3%', beforeLabel: 'random split' },
+  { id: 'myodecode', after: '93.4%', afterLabel: 'person it never saw', before: '98.7%', beforeLabel: 'leaky split' },
+  { id: 'octaves', after: '83.9%', afterLabel: 'reading the whole spectrum', before: '59%', beforeLabel: 'textbook method' },
+  { id: 'corticaltap', after: '0.879', afterLabel: 'plain logistic regression', before: '0.858', beforeLabel: 'transformer' },
+  { id: 'neurospeech', after: '17.08%', afterLabel: 'word error rate', before: '10,948', beforeLabel: 'attempted sentences in the data' },
+  { id: 'artifactscope', after: '88 to 100%', afterLabel: 'of cued blinks found', before: '4', beforeLabel: 'bugs found and written up' },
+  { id: 'neuroswitch', after: '20 of 20', afterLabel: 'showed the basic hand effect', before: '18 of 66', beforeLabel: 'people processed so far' },
+  { id: 'pneumonia', after: '97.9%', afterLabel: 'pneumonia caught', before: '76.5%', beforeLabel: 'normal X-rays cleared' },
+  { id: 'diabetes', after: '52%', afterLabel: 'of true cases caught', before: '77.3%', beforeLabel: 'accuracy' },
 ];

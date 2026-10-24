@@ -1,9 +1,8 @@
 ---
-type Props = { title: string; lede: string; art: string };
-const { title, lede, art } = Astro.props;
+type Props = { title: string; lede: string };
+const { title, lede } = Astro.props;
 ---
 <header class="page-head">
-  <canvas class="page-art" data-art={art} aria-hidden="true"></canvas>
   <div class="wrap">
     <h1 set:html={title} />
     <p class="lede">{lede}</p>
